@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="area51.budgetbuddy" >
+    package="area51.budgetbuddy"
+    android:name=".AppVariables">
 
     <application
         android:allowBackup="true"
