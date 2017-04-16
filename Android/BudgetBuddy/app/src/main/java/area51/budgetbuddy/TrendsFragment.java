@@ -9,17 +9,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
 
-public class OverviewFragment extends Fragment {
+/**
+ * A simple {@link Fragment} subclass.
+ * Activities that contain this fragment must implement the
+ * {@link TrendsFragment.OnFragmentInteractionListener} interface
+ * to handle interaction events.
+ * Use the {@link TrendsFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
+public class TrendsFragment extends Fragment {
     private int mPage;
 
     public static final String ARG_PAGE = "ARG_PAGE";
 
-    public static OverviewFragment newInstance(int page) {
+    public static TrendsFragment newInstance(int page) {
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, page);
-        OverviewFragment fragment = new OverviewFragment();
+        TrendsFragment fragment = new TrendsFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -36,9 +43,9 @@ public class OverviewFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_overview, container, false);
 
-        // TODO: Customize the UI for the Overview Screen here
+        // TODO: Customize the UI for the Payments Screen here
         TextView textView = (TextView) view.findViewById(R.id.textview);
-        textView.setText("I am the overview screen with page number " + mPage);
+        textView.setText("I am the trends screen with view number " + mPage);
         return view;
     }
 }

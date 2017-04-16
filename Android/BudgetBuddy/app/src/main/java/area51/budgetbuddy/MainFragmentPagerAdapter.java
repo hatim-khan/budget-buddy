@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.util.Log;
 
 /**
  * Created by paige on 4/16/17.
@@ -23,11 +24,21 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
+        // Gets the correct fragment associated with the tab at 'position'
         if (position == 0) {
             return OverviewFragment.newInstance(position + 1);
         }
+
+        else if (position == 1) {
+            return PaymentsFragment.newInstance(position + 1);
+        }
+
+        else if (position == 2) {
+            return TrendsFragment.newInstance(position + 1);
+        }
         // TODO: update this
         else {
+            Log.e("ERROR", "No Fragment associated with position " + position);
             return OverviewFragment.newInstance(position + 1);
         }
     }

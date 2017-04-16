@@ -5,6 +5,9 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+// Holds the tabs for Overview, Payments, and Trends Screen
+// Shouldn't be doing much work in this class, just kinda holds the
+// navigation bar and tabs (should mainly be editing the fragments instead)
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -12,11 +15,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Get the ViewPager and set it's PagerAdapter so that it can display items
+        // Get the ViewPager and set it's PagerAdapter so that it can display our Overview, Payments, and Trends tabs
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPager.setAdapter(new MainFragmentPagerAdapter(getSupportFragmentManager(), MainActivity.this));
 
-        // Give the TabLayout the ViewPager
+        // Associates the tabLayout with the viewpager created above
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
     }
