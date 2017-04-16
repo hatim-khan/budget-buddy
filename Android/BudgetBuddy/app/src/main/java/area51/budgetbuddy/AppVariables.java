@@ -37,7 +37,7 @@ public class AppVariables extends Application {
             allGroups.put(groupName, newGroup);
         }
     }
-    
+
     public static AppVariables getInstance() {
         return singleton;
     }

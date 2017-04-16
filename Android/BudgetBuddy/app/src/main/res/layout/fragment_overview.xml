@@ -1,0 +1,15 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="area51.budgetbuddy.OverviewFragment">
+
+
+    <!--TODO: delete me and replace with pretty UI -->
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/textview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center" />
+
+</FrameLayout>
