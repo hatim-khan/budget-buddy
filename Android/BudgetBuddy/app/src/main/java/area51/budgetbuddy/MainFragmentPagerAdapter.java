@@ -14,7 +14,7 @@ import android.util.Log;
 public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
 
     final int PAGE_COUNT = 3;
-    private String tabTitles[] = new String[] { "Tab1", "Tab2", "Tab3" };
+    private String tabTitles[] = new String[] { "Overview", "Payments", "Trends" };
     private Context context;
 
     public MainFragmentPagerAdapter(FragmentManager fm, Context context) {
@@ -36,7 +36,6 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
         else if (position == 2) {
             return TrendsFragment.newInstance(position + 1);
         }
-        // TODO: update this
         else {
             Log.e("ERROR", "No Fragment associated with position " + position);
             return OverviewFragment.newInstance(position + 1);

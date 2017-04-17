@@ -1,5 +1,10 @@
 package area51.budgetbuddy;
 
+
+/**
+ * Created by paige on 4/16/17.
+ */
+
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,10 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-
-/**
- * created by paige
- */
 public class PaymentsFragment extends Fragment {
     private int mPage;
 
