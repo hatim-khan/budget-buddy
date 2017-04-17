@@ -19,7 +19,6 @@ public class AppVariables extends Application {
     // use this variable to access group and personal budgets
     public static User currentUser;
 
-
     public static User testUser1 = new User("Paige", "password");
 
     public static Map<String, Group> allGroups = new HashMap<String,Group>();

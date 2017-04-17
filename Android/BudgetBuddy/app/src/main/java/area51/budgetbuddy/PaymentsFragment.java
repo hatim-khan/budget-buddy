@@ -37,11 +37,10 @@ public class PaymentsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_overview, container, false);
+        View view = inflater.inflate(R.layout.fragment_payments, container, false);
 
         // TODO: Customize the UI for the Payments Screen here
-        TextView textView = (TextView) view.findViewById(R.id.textview);
-        textView.setText("I am the payments screen with view number " + mPage);
+
         return view;
     }
 }

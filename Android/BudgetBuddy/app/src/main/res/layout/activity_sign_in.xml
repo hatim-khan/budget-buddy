@@ -16,18 +16,20 @@
         android:orientation="vertical">
 
         <EditText
+            android:id="@+id/username_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Username"/>
         <EditText
+            android:id="@+id/password_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Password"/>
         <EditText
+            android:id="@+id/group_name_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Group Name"/>
-
         <Button
             android:id="@+id/sign_in_button"
             android:layout_width="wrap_content"
