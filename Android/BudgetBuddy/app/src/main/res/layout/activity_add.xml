@@ -42,6 +42,7 @@
                 android:text="Amount Spent"
                 android:layout_weight="1"/>
             <EditText
+                android:id="@+id/amount_spent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="$0.00"
@@ -63,7 +64,7 @@
                 android:text="Budget Name"
                 android:layout_weight="1"/>
             <Spinner
-                android:id="@+id/budgets"
+                android:id="@+id/budget_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -89,6 +90,7 @@
                 android:text="Purchase Date"
                 android:layout_weight="1"/>
             <EditText
+                android:id="@+id/purchase_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="3/4/2017"/>
@@ -97,6 +99,7 @@
 
         <!-- Notes Edit Text  -->
         <EditText
+            android:id="@+id/notes"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:lines="5"
