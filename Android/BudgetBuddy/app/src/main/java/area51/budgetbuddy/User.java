@@ -41,10 +41,19 @@ public class User {
         return group.getGroupBudgets();
     }
 
-    // Returns a list of group budgets for the current user
+    // Returns a list of group budgets names the current user
     public ArrayList<String> getUserGroupBudgetStrings() {
         // TODO: search database for the user's group, and get the corresponding budgets
         return group.getGroupBudgetStrings();
+    }
+
+    // Returns a list of personal budgets names for the current user
+    public ArrayList<String> getUserPersonalBudgetStrings() {
+        ArrayList<String> arrayOfStrings = new ArrayList<>();
+        for (Budget budget : personalBudgets) {
+            arrayOfStrings.add(budget.getName());
+        }
+        return arrayOfStrings;
     }
 
     public Budget getUserBudgetFromName(String name, boolean isGroupBudget) {

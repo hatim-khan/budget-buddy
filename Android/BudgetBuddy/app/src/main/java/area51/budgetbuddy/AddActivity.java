@@ -16,6 +16,8 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 
+import java.util.ArrayList;
+
 public class AddActivity extends AppCompatActivity {
 
     @Override
@@ -32,26 +34,35 @@ public class AddActivity extends AppCompatActivity {
         // Setting values for the budgetSpinner
 
         Spinner budgetSpinner = (Spinner) findViewById(R.id.budget_name);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, AppVariables.currentUser.getUserGroupBudgetStrings());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         budgetSpinner.setAdapter(adapter);
-        budgetSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
 
-                    }
-                });
-            }
+        // Set a listener so list of budgets changes when group/personal is toggled
+        RadioGroup personalOrGroup = (RadioGroup) findViewById(R.id.radio_group);
 
+
+
+        personalOrGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+
+                ArrayList<String> dataSourceList = new ArrayList<String>();
+                if (checkedId == R.id.group_radio_button) {
+                    dataSourceList = AppVariables.currentUser.getUserGroupBudgetStrings();
+
+                }
+                else  if (checkedId == R.id.personal_radio_button) {
+                    //do work when radioButton2 is active
+                    dataSourceList = AppVariables.currentUser.getUserPersonalBudgetStrings();
+                }
+                adapter.clear();
+                adapter.addAll(dataSourceList);
+                adapter.notifyDataSetChanged();
             }
         });
-
 
     }
 
