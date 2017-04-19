@@ -10,9 +10,73 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="area51.budgetbuddy.SignInActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        <!--TODO: Make pretty -->
+
+        <!-- Budget Buddy Label -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:text="Budget Buddy"
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimary"/>
+
+        <!-- Sign Up Label -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:text="Sign Up"
+            android:textAlignment="center"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            />
+
+        <!--Username Edit Text-->
+        <EditText
+            android:id="@+id/username_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lines="1"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:hint="Username"/>
+
+        <!-- Password Edit Text -->
+        <EditText
+            android:id="@+id/password_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lines="1"
+            android:hint="Password"/>
+
+        <!-- Group Name Edit Text -->
+        <EditText
+            android:id="@+id/group_name_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lines="1"
+            android:hint="Group Name"/>
+
+        <!-- Sign in Button -->
+        <Button
+            android:id="@+id/sign_in_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sign In"
+            android:layout_gravity="center"
+            android:onClick="signInButtonWasPressed"
+            android:backgroundTint="@color/colorPrimary"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            android:textColor="@color/white"
+            />
+    </LinearLayout>
+
 </RelativeLayout>
