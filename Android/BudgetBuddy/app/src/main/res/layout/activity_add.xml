@@ -33,16 +33,17 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:orientation="horizontal"
+            android:checkedButton="@+id/group_radio_button"
             android:layout_weight="1">
 
             <RadioButton
-                android:id="@+id/rep_radio_button"
+                android:id="@+id/group_radio_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Group"/>
 
-
             <RadioButton
+                android:id="@+id/personal_radio_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Personal"/>

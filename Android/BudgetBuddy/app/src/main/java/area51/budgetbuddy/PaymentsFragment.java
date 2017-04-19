@@ -39,7 +39,8 @@ public class PaymentsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_payments, container, false);
 
-        // TODO: Customize the UI for the Payments Screen here
+        // TODO (Erick): Customize the UI for the Payments Screen here
+        // To get payments
 
         return view;
     }

@@ -34,18 +34,24 @@ public class Payment {
 
     // Helper method for converting a string to a date
     private static Date convertStringToDate(String dateString) {
-        // TODO: update this to take in more formats
         Date date = new Date();
-//        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-//        try {
-//            date = sdf.parse(dateString);
-//        } catch (ParseException ex) {
-//            Log.e("ERROR", "could not parse date string: " + dateString);
-//        }
+        String[] formatStrings = {"M/y", "M/d/y", "M-d-y"};
+        for (String formatString : formatStrings) {
+            try {
+                return new SimpleDateFormat(formatString).parse(dateString);
+            }
+            catch (ParseException e) {
+                Log.e("ERROR", "could not parse date string: " + dateString);
+            }
+        }
         return date;
     }
 
     public double getAmountSpent() {
         return amountSpent;
+    }
+
+    public Date getPurchaseDate() {
+        return purchaseDate;
     }
 }

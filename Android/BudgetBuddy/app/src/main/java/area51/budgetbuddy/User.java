@@ -5,7 +5,9 @@ import android.util.Log;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by paige on 4/16/17.
@@ -46,9 +48,12 @@ public class User {
 
     public Budget getUserBudgetFromName(String name, boolean isGroupBudget) {
         // If its a group budget, iterate through this user's group's budgets
+
         if (isGroupBudget) {
             for (Budget budget : this.getUserGroupBudgets()) {
-                if (budget.getName().equals(name)) {
+                String budgetName = budget.name;
+                if (budgetName.equals(name)) {
+
                     return budget;
                 }
             }
@@ -56,7 +61,8 @@ public class User {
         // else, the budget is in the user's personal budget list
         else {
             for (Budget budget : this.personalBudgets) {
-                if (budget.getName().equals(name)) {
+                String budgetName = budget.name;
+                if (budgetName.equals(name)) {
                     return budget;
                 }
             }
@@ -84,7 +90,19 @@ public class User {
     // 'Payments' screen.
     public ArrayList<Payment> getAllPayments() {
         // TODO: replace
-        return new ArrayList<Payment>();
+        ArrayList<Payment> allPayments = new ArrayList<>();
+        for (Budget budget : this.getUserGroupBudgets()) {
+            allPayments.addAll(budget.getPayments());
+        }
+//        allPayments.sort(new Comparator<Payment>() {
+//            @Override
+//            public int compare(Payment o1, Payment o2) {
+//                return o1.getPurchaseDate().compareTo(o2.getPurchaseDate());
+//            }
+//        });
+//
+//        allPayments.sort(Comparator.comparing(Payment::getDate));
+
     }
 
 }

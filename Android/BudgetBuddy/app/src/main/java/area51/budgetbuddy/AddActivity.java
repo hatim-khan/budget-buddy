@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -62,16 +63,23 @@ public class AddActivity extends AppCompatActivity {
     }
 
     private void createNewPaymentFromFields() {
-        RadioGroup personalOrGroup = (RadioGroup) findViewById(R.id.radio_group);
+
         EditText amountSpentEditText = (EditText) findViewById(R.id.amount_spent);
         Spinner budgetSpinner = (Spinner) findViewById(R.id.budget_name);
-        String date = ((EditText) findViewById(R.id.purchase_date)).toString();
+        EditText dateEditText = (EditText) findViewById(R.id.purchase_date);
         String notes = ((EditText) findViewById(R.id.notes)).getText().toString();
         String budgetName = budgetSpinner.getSelectedItem().toString();
-        Boolean isGroup = personalOrGroup.getCheckedRadioButtonId() == 0;
+
+        // Radio Group Parsing. Group is at index 0, personal is at index 1
+        RadioGroup personalOrGroup = (RadioGroup) findViewById(R.id.radio_group);
+        int radioButtonID = personalOrGroup.getCheckedRadioButtonId();
+        View radioButton = personalOrGroup.findViewById(radioButtonID);
+        int radioButtonIndex = personalOrGroup.indexOfChild(radioButton);
+        Boolean isGroup = radioButtonIndex == 0;
+
         Double amountSpent = Double.valueOf(amountSpentEditText.getText().toString());
         Budget budget = AppVariables.currentUser.getUserBudgetFromName(budgetName, isGroup);
-
+        String date = dateEditText.getText().toString();
         // Create the new payment
         Payment newPayment = new Payment(amountSpent, date, notes);
 

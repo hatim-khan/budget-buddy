@@ -10,7 +10,7 @@ import java.util.List;
 public class Budget {
 
     // The name of the budget (e.g. "Groceries")
-    private String name;
+    public String name;
     private ArrayList<Payment> payments;
     private boolean isGroupBudget;
     private Double budgetLimit;
@@ -53,4 +53,11 @@ public class Budget {
         return budgetLimit - amountSpentInBudget;
     }
 
+    public Double getBudgetLimit() {
+        return budgetLimit;
+    }
+
+    public ArrayList<Payment> getPayments() {
+        return payments;
+    }
 }

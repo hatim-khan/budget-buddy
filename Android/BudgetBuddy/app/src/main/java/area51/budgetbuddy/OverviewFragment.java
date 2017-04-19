@@ -40,9 +40,21 @@ public class OverviewFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_overview, container, false);
 
-        // TODO: Customize the UI for the Overview Screen here
+        // TODO Natalie: Customize the UI for the Overview Screen here
+
+        // TODO Natalie : replace - this is just here for an example on how to get budget data
         TextView textView = (TextView) view.findViewById(R.id.textview);
-        textView.setText("I am the overview screen with page number " + mPage);
+        User currentUser = AppVariables.currentUser;
+        String budgetsString = new String();
+
+        for (Budget budget : currentUser.getUserGroupBudgets()) {
+            String budgetName = budget.name;
+            budgetsString += budgetName + " " +
+                    budget.getAmountSpentInBudget() + " / "
+                    + budget.getBudgetLimit() + "\n";
+        }
+        textView.setText("Budgets: " + budgetsString);
+
         return view;
     }
 }
