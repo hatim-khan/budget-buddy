@@ -81,7 +81,7 @@ public class AddActivity extends AppCompatActivity {
         Budget budget = AppVariables.currentUser.getUserBudgetFromName(budgetName, isGroup);
         String date = dateEditText.getText().toString();
         // Create the new payment
-        Payment newPayment = new Payment(amountSpent, date, notes);
+        Payment newPayment = new Payment(AppVariables.currentUser, budget, amountSpent, date, notes);
 
         // Add the payment to the selected budget
         budget.addUserPayment(newPayment);

@@ -37,8 +37,18 @@ public class TrendsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_trends, container, false);
 
         // TODO: Customize the UI for the Payments Screen here
+        // TODO Susan : replace - this is just here for an example on how to get budget data
         TextView textView = (TextView) view.findViewById(R.id.textview);
-        textView.setText("I am the trends screen with view number " + mPage);
+        User currentUser = AppVariables.currentUser;
+        String budgetsString = new String();
+
+        for (Budget budget : currentUser.getUserGroupBudgets()) {
+            String budgetName = budget.name;
+            budgetsString += budgetName + " " +
+                    budget.getAmountSpentInBudget() + " / "
+                    + budget.getBudgetLimit() + "\n";
+        }
+        textView.setText("Budgets: " + budgetsString);
         return view;
     }
 }

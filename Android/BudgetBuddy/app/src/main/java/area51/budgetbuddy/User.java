@@ -5,6 +5,7 @@ import android.util.Log;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -88,21 +89,30 @@ public class User {
     // TODO: make this helper function return a list of all payments
     // (both group and personal) ordered by date to be used in the
     // 'Payments' screen.
-    public ArrayList<Payment> getAllPayments() {
+    public ArrayList<Payment> getAllPaymentsSorted() {
         // TODO: replace
         ArrayList<Payment> allPayments = new ArrayList<>();
+
+        // adds all the group budget payments to the array
         for (Budget budget : this.getUserGroupBudgets()) {
             allPayments.addAll(budget.getPayments());
         }
-//        allPayments.sort(new Comparator<Payment>() {
-//            @Override
-//            public int compare(Payment o1, Payment o2) {
-//                return o1.getPurchaseDate().compareTo(o2.getPurchaseDate());
-//            }
-//        });
-//
-//        allPayments.sort(Comparator.comparing(Payment::getDate));
 
+        // add all the personal budget payments to the array
+        for (Budget budget : this.personalBudgets) {
+            allPayments.addAll(budget.getPayments());
+        }
+
+        Collections.sort(allPayments, new Comparator<Payment>() {
+            public int compare(Payment m1, Payment m2) {
+                return m1.getPurchaseDate().compareTo(m2.getPurchaseDate());
+            }
+        });
+
+        return allPayments;
     }
 
+    public String getUsername() {
+        return username;
+    }
 }

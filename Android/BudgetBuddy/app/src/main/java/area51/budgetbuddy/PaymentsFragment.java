@@ -6,6 +6,7 @@ package area51.budgetbuddy;
  */
 
 import android.content.Context;
+import android.icu.util.Calendar;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -39,8 +40,22 @@ public class PaymentsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_payments, container, false);
 
-        // TODO (Erick): Customize the UI for the Payments Screen here
-        // To get payments
+        // TODO : Customize the UI for the Payments Screen here
+        // TODO Erick : replace - this is just here for an example on how to get payment data
+
+        TextView textView = (TextView) view.findViewById(R.id.textview);
+        User currentUser = AppVariables.currentUser;
+        String paymentsString = new String();
+
+        // I use the method `getAllPaymentsSorted` and think it works
+        // but you may want to test that it actually sorts by date correctly
+        for (Payment payment : currentUser.getAllPaymentsSorted()) {
+            String username = payment.getPaymentUser().getUsername();
+            String paymentAmount = String.valueOf(payment.getAmountSpent());
+            paymentsString +=  username + " spent $" + paymentAmount +
+                    " on " + payment.getBudget().getName() + "\n";
+        }
+        textView.setText("Payments: " + paymentsString);
 
         return view;
     }
