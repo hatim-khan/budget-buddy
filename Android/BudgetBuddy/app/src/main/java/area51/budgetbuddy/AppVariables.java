@@ -3,6 +3,7 @@ package area51.budgetbuddy;
 import android.app.Application;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,22 +20,26 @@ public class AppVariables extends Application {
     // use this variable to access group and personal budgets
     public static User currentUser;
 
-    public static User testUser1 = new User("Paige", "password");
-
+    // TODO: we'll eventually want to map something like groupID's to group objects (rather than name)
     public static Map<String, Group> allGroups = new HashMap<String,Group>();
 
-    public static void addUserToGroup(User user, String groupName) {
-        if (allGroups.containsKey(groupName)) {
-            Group existingGroup = allGroups.get(groupName);
-            existingGroup.addUserToGroup(user);
-        }
-        else {
-            // TODO: should have some sort of check here
-            Log.d("APPVARIABLES", "creating a new group named '" + groupName + "'");
-            Group newGroup = new Group(groupName);
-            newGroup.addUserToGroup(user);
-            allGroups.put(groupName, newGroup);
-        }
+
+    public static boolean groupWithNameExists(String name) {
+        return allGroups.containsKey(name);
+    }
+
+    // TODO: we'll want to replace this with some sort of ID (rather than checking by name)
+    public static Group getGroupWithName(String name) {
+        return allGroups.get(name);
+    }
+
+    public static ArrayList<Budget> getBudgetsForGroupWithName(String name) {
+        return currentUser.getUserGroupBudgets();
+    }
+
+    // TODO: actually make the name make sense. Right now the `database` is the `allGroups` dictionary
+    public static void addGroupToDatabase(Group group) {
+        allGroups.put(group.getName(), group);
     }
 
     public static AppVariables getInstance() {
@@ -46,7 +51,5 @@ public class AppVariables extends Application {
         super.onCreate();
         singleton = this;
     }
-
-
 
 }
