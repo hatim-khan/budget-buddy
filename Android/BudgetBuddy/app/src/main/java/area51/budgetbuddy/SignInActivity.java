@@ -9,9 +9,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 // Initial view presented to the user (Sign In Page)
 public class SignInActivity extends AppCompatActivity {
-
 
 
     @Override
@@ -47,6 +49,7 @@ public class SignInActivity extends AppCompatActivity {
         EditText usernameEditText = (EditText) findViewById(R.id.username_edit_text);
         EditText groupNameEditText = (EditText) findViewById(R.id.group_name_edit_text);
 
+
         String username = usernameEditText.getText().toString();
         String password = passwordEditText.getText().toString();
         String groupName = groupNameEditText.getText().toString();
@@ -64,7 +67,7 @@ public class SignInActivity extends AppCompatActivity {
 
         else {
             // if all the edit texts have values, create a new user with the given username and password
-            // TODO: right now this just supports creating a new user, not signing in as an existing user
+            // TODO: right now this just supports signing in, not logging in
             if (AppVariables.groupWithNameExists(groupName)) {
                 Group userGroup = AppVariables.getGroupWithName(groupName);
                 AppVariables.currentUser = new User(username, password, userGroup);
