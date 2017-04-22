@@ -9,8 +9,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import static android.content.ContentValues.TAG;
 
 // Initial view presented to the user (Sign In Page)
 public class SignInActivity extends AppCompatActivity {
@@ -20,6 +25,7 @@ public class SignInActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
+        AppVariables.mDatabase = FirebaseDatabase.getInstance().getReference();
 
         // TODO: adding in some test users now. Replace this in final project with database
         setupTestUsers();
@@ -27,6 +33,7 @@ public class SignInActivity extends AppCompatActivity {
 
     private void setupTestUsers() {
         Group testGroup = new Group("Area 51");
+
         Budget testGroupBudget = new Budget("Cleaning Supplies", 50.0,  true);
         Budget testGroupBudget2 = new Budget("Gas and Car Maintenance", 200.0,  true);
         Budget testGroupBudget3 = new Budget("Shared Groceries", 100.0, true);
@@ -38,8 +45,19 @@ public class SignInActivity extends AppCompatActivity {
         User testUser2 = new User("Rupaul Charles", "password", testGroup);
         User testUser3 = new User("Joe Biden", "password", testGroup);
 
+        testGroup.addUserToGroup(testUser1);
+        testGroup.addUserToGroup(testUser2);
+        testGroup.addUserToGroup(testUser3);
+
+        Budget testPersonalBudget = new Budget("Coffee and Tea", 50.0,  false);
+        Payment testPayment = new Payment(2.0, "03/32/2016", "tea at brewed");
+
+        testPersonalBudget.addUserPayment(testPayment);
+        testUser1.addBudgetToUserBudgetList(testPersonalBudget);
+
         // TODO: make sure just adding the group persists all of the users, budgets, etc. during app lifetime
         AppVariables.addGroupToDatabase(testGroup);
+        AppVariables.mDatabase.child("Group").child("Area 51").setValue(testGroup);
     }
 
     // This method is called every time the user taps down on the sign in button
@@ -71,6 +89,7 @@ public class SignInActivity extends AppCompatActivity {
             if (AppVariables.groupWithNameExists(groupName)) {
                 Group userGroup = AppVariables.getGroupWithName(groupName);
                 AppVariables.currentUser = new User(username, password, userGroup);
+
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
             }
@@ -85,5 +104,26 @@ public class SignInActivity extends AppCompatActivity {
                 }).show();
             }
         }
+    }
+
+    public void populateModelsFromDatabase() {
+        ValueEventListener postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Get Post object and use the values to update the UI
+                User user = dataSnapshot.getValue(User.class);
+                // ...
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                // ...
+            }
+        };
+
+
+        AppVariables.mDatabase = FirebaseDatabase.getInstance().getReference();
     }
 }

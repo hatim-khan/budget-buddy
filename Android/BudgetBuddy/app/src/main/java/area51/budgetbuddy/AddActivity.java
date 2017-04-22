@@ -35,7 +35,7 @@ public class AddActivity extends AppCompatActivity {
 
         Spinner budgetSpinner = (Spinner) findViewById(R.id.budget_name);
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, AppVariables.currentUser.getUserGroupBudgetStrings());
+                android.R.layout.simple_spinner_item, AppVariables.currentUser.userGroupBudgetStrings());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         budgetSpinner.setAdapter(adapter);
 
@@ -51,12 +51,12 @@ public class AddActivity extends AppCompatActivity {
 
                 ArrayList<String> dataSourceList = new ArrayList<String>();
                 if (checkedId == R.id.group_radio_button) {
-                    dataSourceList = AppVariables.currentUser.getUserGroupBudgetStrings();
+                    dataSourceList = AppVariables.currentUser.userGroupBudgetStrings();
 
                 }
                 else  if (checkedId == R.id.personal_radio_button) {
                     //do work when radioButton2 is active
-                    dataSourceList = AppVariables.currentUser.getUserPersonalBudgetStrings();
+                    dataSourceList = AppVariables.currentUser.userPersonalBudgetStrings();
                 }
                 adapter.clear();
                 adapter.addAll(dataSourceList);
@@ -92,7 +92,7 @@ public class AddActivity extends AppCompatActivity {
         Budget budget = AppVariables.currentUser.getUserBudgetFromName(budgetName, isGroup);
         String date = dateEditText.getText().toString();
         // Create the new payment
-        Payment newPayment = new Payment(AppVariables.currentUser, budget, amountSpent, date, notes);
+        Payment newPayment = new Payment(amountSpent, date, notes);
 
         // Add the payment to the selected budget
         budget.addUserPayment(newPayment);
