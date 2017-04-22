@@ -38,6 +38,31 @@ public class AppVariables extends Application {
     public static Map<String, Group> allGroups = new HashMap<String,Group>();
 
 
+    // If the user has an account, returns the User object for the user
+    public static boolean signInUser(String username, String password, Group group) {
+        if (allGroups.containsKey(group.getName())) {
+            // TODO: will want to check based off email or something
+            if (group.getGroupMembers().containsKey(username)) {
+                User userInGroup = group.getGroupMembers().get(username);
+                if (userInGroup.getPassword().equals(password)) {
+                    // If the username and password are valid, sign the user in by setting
+                    // the current user equal to the user found in the group
+                    currentUser = userInGroup;
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+            else {
+                return false;
+            }
+        }
+        else {
+            return false;
+        }
+    }
+
     public static boolean groupWithNameExists(String name) {
         return allGroups.containsKey(name);
     }
@@ -52,7 +77,7 @@ public class AppVariables extends Application {
     }
 
     // TODO: actually make the name make sense. Right now the `database` is the `allGroups` dictionary
-    public static void addGroupToDatabase(Group group) {
+    public static void addGroupToAllGroupsDictionary(Group group) {
         allGroups.put(group.getName(), group);
     }
 

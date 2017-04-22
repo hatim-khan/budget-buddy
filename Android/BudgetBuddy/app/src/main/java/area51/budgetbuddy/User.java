@@ -33,11 +33,11 @@ public class User {
 
     // Initializer for a user class
     // This class is just used for now to create some static testing users
-    public User(String username, String password, Group group) {
+    public User(String username, String password, Map<String, Budget> personalBudgets, Group group) {
         this.username = username;
         this.password = password;
         this.group = group;
-        personalBudgets = new HashMap<String, Budget>();
+        this.personalBudgets = personalBudgets;
     }
 
     // Returns a list of group budgets for the current user
@@ -78,7 +78,7 @@ public class User {
         }
         // We should never get to this point, so print out an error
         Log.e("ERROR", "Couldn't find a budget with name " + name);
-        return new Budget("error", 0.0, false);
+        return new Budget("error", new ArrayList<Payment>(), false, 0.0, 0.0);
     }
 
     public void addPaymentToBudget(Payment payment, Budget budget) {
@@ -94,7 +94,11 @@ public class User {
         }
     }
 
-
+    public void addUserBudgetsFromDictionary(Map<String, Budget> budgets) {
+        for (Budget budget : budgets.values()) {
+            this.personalBudgets.put(budget.getName(), budget);
+        }
+    }
 
     public String getUsername() {
         return username;

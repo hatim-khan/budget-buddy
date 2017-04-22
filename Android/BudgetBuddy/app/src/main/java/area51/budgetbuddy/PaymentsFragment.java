@@ -50,7 +50,7 @@ public class PaymentsFragment extends Fragment {
         // I use the method `getAllPaymentsSorted` and think it works
         // but you may want to test that it actually sorts by date correctly
         for (Payment payment : AppVariables.getAllPaymentsSorted(AppVariables.currentUser)) {
-            // TODO: add payments
+            paymentsString += "Payment made for: $" + payment.getAmountSpent();
         }
         textView.setText("Payments: " + paymentsString);
 
