@@ -36,6 +36,13 @@ public class Group {
         groupMembers.put(newUser.getUsername(), newUser);
     }
 
+    // Add all the users from the given Hashmap (easy format for the database pull)
+    public void addUsersToGroup(Map<String, User> usersDict) {
+        for (User user : usersDict.values()) {
+            addUserToGroup(user);
+        }
+    }
+
     public Map<String, Budget> getGroupBudgets() {
         return groupBudgets;
     }
@@ -51,5 +58,12 @@ public class Group {
     public void addGroupBudget(Budget budget) {
         // TODO: make sure budget with same name doesn't already exists
         groupBudgets.put(budget.getName(), budget);
+    }
+
+    // Add all the budgets from the given Hashmap (easy format for the database pull)
+    public void addGroupBudgets(Map<String, Budget> budgets) {
+        for (Budget budget : budgets.values()) {
+            addGroupBudget(budget);
+        }
     }
 }

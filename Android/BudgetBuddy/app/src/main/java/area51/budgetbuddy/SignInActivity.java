@@ -15,11 +15,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import static android.content.ContentValues.TAG;
 
 // Initial view presented to the user (Sign In Page)
 public class SignInActivity extends AppCompatActivity {
 
+    Group group;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,35 +33,117 @@ public class SignInActivity extends AppCompatActivity {
         AppVariables.mDatabase = FirebaseDatabase.getInstance().getReference();
 
         // TODO: adding in some test users now. Replace this in final project with database
-        setupTestUsers();
+        // setupTestUsers();
+        pullFromDatabase();
+
     }
 
+    private void pullFromDatabase() {
+
+        DatabaseReference groupRef = FirebaseDatabase.getInstance().getReference().child("Group").child("Area 51");
+
+        // Attach a listener to read the data at our posts reference. Probably shouldn't do this here
+        // since this means this view will have to stay in memory, but its the easiest place to put
+        // this for now
+        ValueEventListener valueEventListener = groupRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Map<String, Object> newGroupDict = (Map<String, Object>) dataSnapshot.getValue();
+                Log.d("Group", newGroupDict.toString());
+
+                // Create the new group
+                group = new Group(newGroupDict.get("name").toString());
+
+                // Get the group budgets from the database
+                Map<String, Object> groupBudgetDict = (Map<String, Object>) newGroupDict.get("groupBudgets");
+                group.addGroupBudgets(parseBudgets(groupBudgetDict));
+
+                // Get the group users and their payments from the db
+                Map<String, Object> groupMembersDict = (Map<String, Object>) newGroupDict.get("groupMembers");
+                group.addUsersToGroup(parseUsers(groupMembersDict, group));
+                AppVariables.addGroupToAllGroupsDictionary(group);
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d("ERROR", "The read failed");
+            }
+        });
+    }
+
+
+    private Map<String, Budget> parseBudgets(Map<String, Object> budgetDictionary) {
+        Map<String, Budget> parsedBudgets = new HashMap<>();
+        for (String budgetName : budgetDictionary.keySet()) {
+            Map<String, Object> budget =  (Map<String, Object>) budgetDictionary.get(budgetName);
+            // public Budget(String name, ArrayList<Payment> payments, boolean isGroupBudget, Double budgetLimit, Double amountSpentInBudget) {
+            Boolean isGroupBudget = (Boolean) budget.get("groupBudget");
+            Double budgetLimit = new Double(budget.get("budgetLimit").toString());
+            Double amountSpentInBudget = new Double(budget.get("amountSpentInBudget").toString());
+
+            ArrayList<Payment> payments = new ArrayList<Payment>();
+            Map<String, Object> paymentsDict = (Map<String, Object>) budgetDictionary.get("payments");
+            // There may be no payments made, so need to check if it isn't null
+            if (paymentsDict != null) {
+                for (Object paymentObject : paymentsDict.values()) {
+                    Map<String, Object> paymentDict = (Map<String, Object>) paymentObject;
+                    int amountSpent = new Integer(paymentDict.get("amountSpent").toString());
+                    String purchaseDateString = paymentDict.get("purchaseDateString").toString();
+                    String notes = paymentDict.get("notes").toString();
+                    Payment newPayment = new Payment(amountSpent, purchaseDateString, notes);
+                    payments.add(newPayment);
+                }
+            }
+            Budget newBudget = new Budget(budgetName, payments, isGroupBudget, budgetLimit, amountSpentInBudget);
+            parsedBudgets.put(newBudget.getName(), newBudget);
+        }
+        return parsedBudgets;
+    }
+
+    private Map<String, User> parseUsers(Map<String, Object> userDictionary, Group group) {
+        Map<String, User> parsedUsers = new HashMap<>();
+        for (String username : userDictionary.keySet()) {
+            Map<String, Object> user =  (Map<String, Object>) userDictionary.get(username);
+            String password = user.get("password").toString();
+            Map<String, Object> personalBudgets = (Map<String, Object>) user.get("personalBudgets");
+            Map<String, Budget> parsedPersonalBudgets = parseBudgets(personalBudgets);
+            User newUser = new User(username, password, parsedPersonalBudgets, group);
+
+        }
+        return parsedUsers;
+    }
+
+
+    // Creates some test users, budgets, and payments and then adds them to the firebase db.
+    // Call this function to clean up the database if it gets to janked up
     private void setupTestUsers() {
         Group testGroup = new Group("Area 51");
 
-        Budget testGroupBudget = new Budget("Cleaning Supplies", 50.0,  true);
-        Budget testGroupBudget2 = new Budget("Gas and Car Maintenance", 200.0,  true);
-        Budget testGroupBudget3 = new Budget("Shared Groceries", 100.0, true);
+        Budget testGroupBudget = new Budget("Cleaning Supplies", new ArrayList<Payment>(), true, 50.0, 10.0);
+        Budget testGroupBudget2 = new Budget("Gas and Car Maintenance", new ArrayList<Payment>(), true, 50.0, 10.0);
+
+        Budget testGroupBudget3 = new Budget("Shared Groceries", new ArrayList<Payment>(), true, 50.0, 10.0);
         testGroup.addGroupBudget(testGroupBudget);
         testGroup.addGroupBudget(testGroupBudget2);
         testGroup.addGroupBudget(testGroupBudget3);
 
-        User testUser1 = new User("Drake", "password", testGroup);
-        User testUser2 = new User("Rupaul Charles", "password", testGroup);
-        User testUser3 = new User("Joe Biden", "password", testGroup);
+        Payment testPayment0 = new Payment(3.0, "03/32/2016", "tea at brewed");
+
+        User testUser1 = new User("Drake", "password", new HashMap<String, Budget>(), testGroup);
+        User testUser2 = new User("Rupaul Charles", "password", new HashMap<String, Budget>(), testGroup);
+        User testUser3 = new User("Joe Biden", "password", new HashMap<String, Budget>(), testGroup);
+        testUser3.addPaymentToBudget(testPayment0, testGroupBudget);
 
         testGroup.addUserToGroup(testUser1);
         testGroup.addUserToGroup(testUser2);
         testGroup.addUserToGroup(testUser3);
 
-        Budget testPersonalBudget = new Budget("Coffee and Tea", 50.0,  false);
+        Budget testPersonalBudget = new Budget("Coffe and Tea", new ArrayList<Payment>(), true, 50.0, 10.0);
         Payment testPayment = new Payment(2.0, "03/32/2016", "tea at brewed");
 
         testPersonalBudget.addUserPayment(testPayment);
         testUser1.addBudgetToUserBudgetList(testPersonalBudget);
 
-        // TODO: make sure just adding the group persists all of the users, budgets, etc. during app lifetime
-        AppVariables.addGroupToDatabase(testGroup);
+        AppVariables.addGroupToAllGroupsDictionary(testGroup);
         AppVariables.mDatabase.child("Group").child("Area 51").setValue(testGroup);
     }
 
@@ -86,10 +173,7 @@ public class SignInActivity extends AppCompatActivity {
         else {
             // if all the edit texts have values, create a new user with the given username and password
             // TODO: right now this just supports signing in, not logging in
-            if (AppVariables.groupWithNameExists(groupName)) {
-                Group userGroup = AppVariables.getGroupWithName(groupName);
-                AppVariables.currentUser = new User(username, password, userGroup);
-
+            if (AppVariables.signInUser(username, password, group)) {
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
             }
