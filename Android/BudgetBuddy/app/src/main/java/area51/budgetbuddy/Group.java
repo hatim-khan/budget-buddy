@@ -1,7 +1,10 @@
 package area51.budgetbuddy;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by paige on 4/16/17.
@@ -9,16 +12,20 @@ import java.util.List;
 
 public class Group {
 
-    private ArrayList<User> groupMembers;
+    // maps username to User object for each member of the group
+    public static Map<String, User> groupMembers = new HashMap<String,User>();
+
+    // The name of the group
     private String name;
-    private ArrayList<Budget> groupBudgets;
+
+    public static Map<String, Budget> groupBudgets = new HashMap<String,Budget>();
 
     // temporary initializer for a group
     // we'll need to do some database stuff here in the future
     public Group(String groupName) {
         this.name = groupName;
-        this.groupMembers = new ArrayList<>();
-        this.groupBudgets = new ArrayList<>();
+        this.groupMembers = new HashMap<String, User>();
+        this.groupBudgets = new HashMap<String, Budget>();
     }
 
     public String getName() {
@@ -26,23 +33,23 @@ public class Group {
     }
 
     public void addUserToGroup(User newUser) {
-        groupMembers.add(newUser);
+        groupMembers.put(newUser.getUsername(), newUser);
     }
 
-    public ArrayList<Budget> getGroupBudgets() {
+    public Map<String, Budget> getGroupBudgets() {
         return groupBudgets;
     }
 
-    public ArrayList<String> getGroupBudgetStrings() {
-        ArrayList<String> arrayOfStrings = new ArrayList<>();
-        for (Budget budget : groupBudgets) {
-            arrayOfStrings.add(budget.getName());
-        }
-        return arrayOfStrings;
+    public Map<String, User> getGroupMembers() {
+        return groupMembers;
+    }
+
+    public ArrayList<String> groupBudgetStrings() {
+        return new ArrayList<String>(groupBudgets.keySet());
     }
 
     public void addGroupBudget(Budget budget) {
         // TODO: make sure budget with same name doesn't already exists
-        groupBudgets.add(budget);
+        groupBudgets.put(budget.getName(), budget);
     }
 }

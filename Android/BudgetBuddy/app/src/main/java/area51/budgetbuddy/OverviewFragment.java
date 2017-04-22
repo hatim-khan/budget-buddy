@@ -47,7 +47,7 @@ public class OverviewFragment extends Fragment {
         User currentUser = AppVariables.currentUser;
         String budgetsString = new String();
 
-        for (Budget budget : currentUser.getUserGroupBudgets()) {
+        for (Budget budget : currentUser.userGroupBudgets().values()) {
             String budgetName = budget.name;
             budgetsString += budgetName + " " +
                     budget.getAmountSpentInBudget() + " / "

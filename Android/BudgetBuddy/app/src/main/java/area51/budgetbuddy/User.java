@@ -7,8 +7,11 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * Created by paige on 4/16/17.
@@ -19,11 +22,13 @@ public class User {
     // keeping it simple with a username and password for now
     private String username;
     private String password;
+
+    // Not stored in firebase - do not add a getter method for group
     private Group group;
 
-    // List of all the user's budgets. To get the user's group budgets,
+    // Maps all the user's budgets to the budget name. To get the user's group budgets,
     // use the `getGroupBudgets` helper function
-    private ArrayList<Budget> personalBudgets;
+    public static Map<String, Budget> personalBudgets = new HashMap<String,Budget>();
 
 
     // Initializer for a user class
@@ -32,45 +37,39 @@ public class User {
         this.username = username;
         this.password = password;
         this.group = group;
-        personalBudgets = new ArrayList<Budget>();
+        personalBudgets = new HashMap<String, Budget>();
     }
 
     // Returns a list of group budgets for the current user
-    public ArrayList<Budget> getUserGroupBudgets() {
+    public Map<String, Budget> userGroupBudgets() {
         // TODO: search database for the user's group, and get the corresponding budgets
         return group.getGroupBudgets();
     }
 
     // Returns a list of group budgets names the current user
-    public ArrayList<String> getUserGroupBudgetStrings() {
+    public ArrayList<String> userGroupBudgetStrings() {
         // TODO: search database for the user's group, and get the corresponding budgets
-        return group.getGroupBudgetStrings();
+        return group.groupBudgetStrings();
     }
 
     // Returns a list of personal budgets names for the current user
-    public ArrayList<String> getUserPersonalBudgetStrings() {
-        ArrayList<String> arrayOfStrings = new ArrayList<>();
-        for (Budget budget : personalBudgets) {
-            arrayOfStrings.add(budget.getName());
-        }
-        return arrayOfStrings;
+    public ArrayList<String> userPersonalBudgetStrings() {
+        return new ArrayList(personalBudgets.keySet());
     }
 
     public Budget getUserBudgetFromName(String name, boolean isGroupBudget) {
         // If its a group budget, iterate through this user's group's budgets
-
         if (isGroupBudget) {
-            for (Budget budget : this.getUserGroupBudgets()) {
+            for (Budget budget : this.userGroupBudgets().values()) {
                 String budgetName = budget.name;
                 if (budgetName.equals(name)) {
-
                     return budget;
                 }
             }
         }
         // else, the budget is in the user's personal budget list
         else {
-            for (Budget budget : this.personalBudgets) {
+            for (Budget budget : this.personalBudgets.values()) {
                 String budgetName = budget.name;
                 if (budgetName.equals(name)) {
                     return budget;
@@ -91,37 +90,21 @@ public class User {
             this.group.addGroupBudget(budget);
         }
         else {
-            this.personalBudgets.add(budget);
+            this.personalBudgets.put(budget.getName(), budget);
         }
     }
 
-    // TODO: make this helper function return a list of all payments
-    // (both group and personal) ordered by date to be used in the
-    // 'Payments' screen.
-    public ArrayList<Payment> getAllPaymentsSorted() {
-        // TODO: replace
-        ArrayList<Payment> allPayments = new ArrayList<>();
 
-        // adds all the group budget payments to the array
-        for (Budget budget : this.getUserGroupBudgets()) {
-            allPayments.addAll(budget.getPayments());
-        }
-
-        // add all the personal budget payments to the array
-        for (Budget budget : this.personalBudgets) {
-            allPayments.addAll(budget.getPayments());
-        }
-
-        Collections.sort(allPayments, new Comparator<Payment>() {
-            public int compare(Payment m1, Payment m2) {
-                return m1.getPurchaseDate().compareTo(m2.getPurchaseDate());
-            }
-        });
-
-        return allPayments;
-    }
 
     public String getUsername() {
         return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public Map<String, Budget> getPersonalBudgets() {
+        return personalBudgets;
     }
 }

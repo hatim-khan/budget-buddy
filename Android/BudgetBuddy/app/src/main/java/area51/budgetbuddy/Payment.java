@@ -14,32 +14,23 @@ import java.util.logging.Logger;
  * Created by paige on 4/17/17.
  */
 
-// TODO: will want to add more to this class
 public class Payment {
-
-    // The user that made the payment
-    private User user;
 
     // The amount of money spent by the user
     private double amountSpent;
 
     // The day, month, and year of the purchase
     // TODO: may want to support time of day at some point
-    private Date purchaseDate;
+     private String purchaseDate;
 
     // (Optional) Any notes included about the payment
     private String notes;
 
-    // The budget the payment was made under
-    private Budget budget;
-
     // Initializer for a Payment class
-    public Payment(User user, Budget budget, double amountSpent, String purchaseDateString, String notes) {
+    public Payment(double amountSpent, String purchaseDateString, String notes) {
         this.amountSpent = amountSpent;
         this.notes = notes;
-        this.purchaseDate = convertStringToDate(purchaseDateString);
-        this.user = user;
-        this.budget = budget;
+        this.purchaseDate = purchaseDateString;
     }
 
     // Helper method for converting a string to a date
@@ -61,15 +52,11 @@ public class Payment {
         return amountSpent;
     }
 
-    public Date getPurchaseDate() {
+    public Date paymentPurchaseDate() {
+        return new Date();
+    }
+
+    public String getPurchaseDate() {
         return purchaseDate;
-    }
-
-    public User getPaymentUser() {
-        return user;
-    }
-
-    public Budget getBudget() {
-        return budget;
     }
 }
