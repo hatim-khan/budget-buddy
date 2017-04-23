@@ -111,4 +111,8 @@ public class User {
     public Map<String, Budget> getPersonalBudgets() {
         return personalBudgets;
     }
+
+    public Group getGroup() {
+        return group;
+    }
 }

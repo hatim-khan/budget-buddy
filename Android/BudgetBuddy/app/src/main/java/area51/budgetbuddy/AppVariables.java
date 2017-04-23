@@ -28,8 +28,6 @@ import static android.content.ContentValues.TAG;
 public class AppVariables extends Application {
     private static AppVariables singleton;
 
-    public static DatabaseReference mDatabase;
-
     // The user currently logged in
     // use this variable to access group and personal budgets
     public static User currentUser;
