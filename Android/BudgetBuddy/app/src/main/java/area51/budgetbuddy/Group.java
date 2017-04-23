@@ -13,12 +13,12 @@ import java.util.Set;
 public class Group {
 
     // maps username to User object for each member of the group
-    public static Map<String, User> groupMembers = new HashMap<String,User>();
+    private static Map<String, User> groupMembers = new HashMap<String,User>();
 
     // The name of the group
     private String name;
 
-    public static Map<String, Budget> groupBudgets = new HashMap<String,Budget>();
+    private static Map<String, Budget> groupBudgets = new HashMap<String,Budget>();
 
     // temporary initializer for a group
     // we'll need to do some database stuff here in the future
@@ -36,11 +36,8 @@ public class Group {
         groupMembers.put(newUser.getUsername(), newUser);
     }
 
-    // Add all the users from the given Hashmap (easy format for the database pull)
-    public void addUsersToGroup(Map<String, User> usersDict) {
-        for (User user : usersDict.values()) {
-            addUserToGroup(user);
-        }
+    public void setGroupMembers(Map<String, User> groupMembersDictionary) {
+        this.groupMembers = groupMembersDictionary;
     }
 
     public Map<String, Budget> getGroupBudgets() {

@@ -30,7 +30,6 @@ public class AddActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-
         // Setting values for the budgetSpinner
 
         Spinner budgetSpinner = (Spinner) findViewById(R.id.budget_name);
@@ -41,8 +40,6 @@ public class AddActivity extends AppCompatActivity {
 
         // Set a listener so list of budgets changes when group/personal is toggled
         RadioGroup personalOrGroup = (RadioGroup) findViewById(R.id.radio_group);
-
-
 
         personalOrGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
