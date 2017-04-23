@@ -60,7 +60,8 @@ public class SignInActivity extends AppCompatActivity {
 
                 // Get the group users and their payments from the db
                 Map<String, Object> groupMembersDict = (Map<String, Object>) newGroupDict.get("groupMembers");
-                group.addUsersToGroup(parseUsers(groupMembersDict, group));
+                Map<String, User> groupMembersParsed = parseUsers(groupMembersDict, group);
+                group.setGroupMembers(groupMembersParsed);
                 AppVariables.addGroupToAllGroupsDictionary(group);
             }
             @Override
@@ -81,13 +82,13 @@ public class SignInActivity extends AppCompatActivity {
             Double amountSpentInBudget = new Double(budget.get("amountSpentInBudget").toString());
 
             ArrayList<Payment> payments = new ArrayList<Payment>();
-            Map<String, Object> paymentsDict = (Map<String, Object>) budgetDictionary.get("payments");
+            ArrayList<Object> paymentsArray = (ArrayList<Object>) budget.get("payments");
             // There may be no payments made, so need to check if it isn't null
-            if (paymentsDict != null) {
-                for (Object paymentObject : paymentsDict.values()) {
+            if (paymentsArray != null) {
+                for (Object paymentObject : paymentsArray) {
                     Map<String, Object> paymentDict = (Map<String, Object>) paymentObject;
-                    int amountSpent = new Integer(paymentDict.get("amountSpent").toString());
-                    String purchaseDateString = paymentDict.get("purchaseDateString").toString();
+                    Double amountSpent = new Double(paymentDict.get("amountSpent").toString());
+                    String purchaseDateString = paymentDict.get("purchaseDate").toString();
                     String notes = paymentDict.get("notes").toString();
                     Payment newPayment = new Payment(amountSpent, purchaseDateString, notes);
                     payments.add(newPayment);
@@ -107,7 +108,7 @@ public class SignInActivity extends AppCompatActivity {
             Map<String, Object> personalBudgets = (Map<String, Object>) user.get("personalBudgets");
             Map<String, Budget> parsedPersonalBudgets = parseBudgets(personalBudgets);
             User newUser = new User(username, password, parsedPersonalBudgets, group);
-
+            parsedUsers.put(username, newUser);
         }
         return parsedUsers;
     }
@@ -173,7 +174,7 @@ public class SignInActivity extends AppCompatActivity {
         else {
             // if all the edit texts have values, create a new user with the given username and password
             // TODO: right now this just supports signing in, not logging in
-            if (AppVariables.signInUser(username, password, group)) {
+            if (signInUser(username, password, group)) {
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
             }
@@ -190,24 +191,24 @@ public class SignInActivity extends AppCompatActivity {
         }
     }
 
-    public void populateModelsFromDatabase() {
-        ValueEventListener postListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // Get Post object and use the values to update the UI
-                User user = dataSnapshot.getValue(User.class);
-                // ...
+    // If the user has an account, returns the User object for the user
+    private static boolean signInUser(String username, String password, Group group) {
+        if (AppVariables.allGroups.containsKey(group.getName())) {
+            // TODO: will want to check based off email or something
+            boolean groupContainsUser = group.getGroupMembers().containsKey(username);
+            if (groupContainsUser) {
+                User userInGroup = group.getGroupMembers().get(username);
+
+                    // If the username and password are valid, sign the user in by setting
+                    // the current user equal to the user found in the group
+                AppVariables.currentUser = userInGroup;
+                return true;
+
             }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-                // ...
-            }
-        };
-
-
-        AppVariables.mDatabase = FirebaseDatabase.getInstance().getReference();
+        }
+        return false;
     }
+
+
+
 }
