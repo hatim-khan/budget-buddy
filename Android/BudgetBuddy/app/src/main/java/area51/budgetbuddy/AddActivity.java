@@ -16,9 +16,21 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AddActivity extends AppCompatActivity {
+
+    Group group;
+    DatabaseReference dataBaseRef = FirebaseDatabase.getInstance().getReference();
+    User currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +41,8 @@ public class AddActivity extends AppCompatActivity {
         // adds the "back button", which goes back to the MainActivity (where you can see Overview / Payments / Trends
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+        currentUser = AppVariables.currentUser;
+        if (currentUser == null) throw new AssertionError("Current User cannot be null");
 
         // Setting values for the budgetSpinner
 
@@ -70,6 +84,8 @@ public class AddActivity extends AppCompatActivity {
         return true;
     }
 
+    // MARK: Database methods
+
     private void createNewPaymentFromFields() {
 
         EditText amountSpentEditText = (EditText) findViewById(R.id.amount_spent);
@@ -93,6 +109,26 @@ public class AddActivity extends AppCompatActivity {
 
         // Add the payment to the selected budget
         budget.addUserPayment(newPayment);
+        storePaymentToDataBase(newPayment, budget, isGroup);
+
+    }
+
+    private void storePaymentToDataBase(Payment payment, Budget budget,  boolean isGroupPayment) {
+        Group usergroup = AppVariables.currentUser.getGroup();
+        DatabaseReference groupRef = dataBaseRef.child("Group").child(usergroup.getName());
+        if (!budget.getPayments().contains(payment)) throw new AssertionError("Payment is not in budget array");
+        String indexString = Integer.toString(budget.getPayments().indexOf(payment));
+        if (isGroupPayment) {
+            groupRef.child("groupBudgets").child(budget.getName()).child("payments").child(indexString).setValue(payment);
+        }
+        else {
+            groupRef.child("groupMembers").
+                    child(currentUser.getUsername()).
+                    child("personalBudgets").
+                    child(budget.getName()).
+                    child("payments").
+                    child(indexString).setValue(payment);
+        }
     }
 
     @Override

@@ -59,4 +59,8 @@ public class Payment {
     public String getPurchaseDate() {
         return purchaseDate;
     }
+
+    public String getNotes() {
+        return notes;
+    }
 }

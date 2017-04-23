@@ -25,51 +25,44 @@ import static android.content.ContentValues.TAG;
 public class SignInActivity extends AppCompatActivity {
 
     Group group;
+    DatabaseReference dataBaseRef = FirebaseDatabase.getInstance().getReference();
+    DatabaseReference groupRef = dataBaseRef.child("Group").child("Area 51");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
-        AppVariables.mDatabase = FirebaseDatabase.getInstance().getReference();
-
-        // TODO: adding in some test users now. Replace this in final project with database
-        // setupTestUsers();
-        pullFromDatabase();
-
     }
 
-    private void pullFromDatabase() {
 
-        DatabaseReference groupRef = FirebaseDatabase.getInstance().getReference().child("Group").child("Area 51");
+    // Attach a listener to read the data at our posts reference. Probably shouldn't do this here
+    // since this means this view will have to stay in memory, but its the easiest place to put
+    // this for now
+    ValueEventListener valueEventListener = groupRef.addValueEventListener(new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            Map<String, Object> newGroupDict = (Map<String, Object>) dataSnapshot.getValue();
+            Log.d("Group", newGroupDict.toString());
 
-        // Attach a listener to read the data at our posts reference. Probably shouldn't do this here
-        // since this means this view will have to stay in memory, but its the easiest place to put
-        // this for now
-        ValueEventListener valueEventListener = groupRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Map<String, Object> newGroupDict = (Map<String, Object>) dataSnapshot.getValue();
-                Log.d("Group", newGroupDict.toString());
+            // Create the new group
+            group = new Group(newGroupDict.get("name").toString());
+            if (group == null) throw new AssertionError("GroupRef cannot be null");
 
-                // Create the new group
-                group = new Group(newGroupDict.get("name").toString());
+            // Get the group budgets from the database
+            Map<String, Object> groupBudgetDict = (Map<String, Object>) newGroupDict.get("groupBudgets");
+            group.addGroupBudgets(parseBudgets(groupBudgetDict));
 
-                // Get the group budgets from the database
-                Map<String, Object> groupBudgetDict = (Map<String, Object>) newGroupDict.get("groupBudgets");
-                group.addGroupBudgets(parseBudgets(groupBudgetDict));
-
-                // Get the group users and their payments from the db
-                Map<String, Object> groupMembersDict = (Map<String, Object>) newGroupDict.get("groupMembers");
-                Map<String, User> groupMembersParsed = parseUsers(groupMembersDict, group);
-                group.setGroupMembers(groupMembersParsed);
-                AppVariables.addGroupToAllGroupsDictionary(group);
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.d("ERROR", "The read failed");
-            }
-        });
-    }
+            // Get the group users and their payments from the db
+            Map<String, Object> groupMembersDict = (Map<String, Object>) newGroupDict.get("groupMembers");
+            Map<String, User> groupMembersParsed = parseUsers(groupMembersDict, group);
+            group.setGroupMembers(groupMembersParsed);
+            AppVariables.addGroupToAllGroupsDictionary(group);
+        }
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+            Log.d("ERROR", "The read failed");
+        }
+    });
 
 
     private Map<String, Budget> parseBudgets(Map<String, Object> budgetDictionary) {
@@ -114,39 +107,7 @@ public class SignInActivity extends AppCompatActivity {
     }
 
 
-    // Creates some test users, budgets, and payments and then adds them to the firebase db.
-    // Call this function to clean up the database if it gets to janked up
-    private void setupTestUsers() {
-        Group testGroup = new Group("Area 51");
 
-        Budget testGroupBudget = new Budget("Cleaning Supplies", new ArrayList<Payment>(), true, 50.0, 10.0);
-        Budget testGroupBudget2 = new Budget("Gas and Car Maintenance", new ArrayList<Payment>(), true, 50.0, 10.0);
-
-        Budget testGroupBudget3 = new Budget("Shared Groceries", new ArrayList<Payment>(), true, 50.0, 10.0);
-        testGroup.addGroupBudget(testGroupBudget);
-        testGroup.addGroupBudget(testGroupBudget2);
-        testGroup.addGroupBudget(testGroupBudget3);
-
-        Payment testPayment0 = new Payment(3.0, "03/32/2016", "tea at brewed");
-
-        User testUser1 = new User("Drake", "password", new HashMap<String, Budget>(), testGroup);
-        User testUser2 = new User("Rupaul Charles", "password", new HashMap<String, Budget>(), testGroup);
-        User testUser3 = new User("Joe Biden", "password", new HashMap<String, Budget>(), testGroup);
-        testUser3.addPaymentToBudget(testPayment0, testGroupBudget);
-
-        testGroup.addUserToGroup(testUser1);
-        testGroup.addUserToGroup(testUser2);
-        testGroup.addUserToGroup(testUser3);
-
-        Budget testPersonalBudget = new Budget("Coffe and Tea", new ArrayList<Payment>(), true, 50.0, 10.0);
-        Payment testPayment = new Payment(2.0, "03/32/2016", "tea at brewed");
-
-        testPersonalBudget.addUserPayment(testPayment);
-        testUser1.addBudgetToUserBudgetList(testPersonalBudget);
-
-        AppVariables.addGroupToAllGroupsDictionary(testGroup);
-        AppVariables.mDatabase.child("Group").child("Area 51").setValue(testGroup);
-    }
 
     // This method is called every time the user taps down on the sign in button
     // Listener is attached in the activity_sign_in.xml file
@@ -192,7 +153,7 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     // If the user has an account, returns the User object for the user
-    private static boolean signInUser(String username, String password, Group group) {
+    private boolean signInUser(String username, String password, Group group) {
         if (AppVariables.allGroups.containsKey(group.getName())) {
             // TODO: will want to check based off email or something
             boolean groupContainsUser = group.getGroupMembers().containsKey(username);
