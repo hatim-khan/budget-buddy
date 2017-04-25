@@ -26,11 +26,15 @@ public class Payment {
     // (Optional) Any notes included about the payment
     private String notes;
 
+    // The username of the user who made the payment
+    private String username;
+
     // Initializer for a Payment class
-    public Payment(double amountSpent, String purchaseDateString, String notes) {
+    public Payment(double amountSpent, String purchaseDateString, String notes, String username) {
         this.amountSpent = amountSpent;
         this.notes = notes;
         this.purchaseDate = purchaseDateString;
+        this.username = username;
     }
 
     // Helper method for converting a string to a date
@@ -62,5 +66,9 @@ public class Payment {
 
     public String getNotes() {
         return notes;
+    }
+
+    public String getUsername() {
+        return username;
     }
 }
