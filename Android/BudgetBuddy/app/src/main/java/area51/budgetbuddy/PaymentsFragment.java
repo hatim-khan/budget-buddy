@@ -49,11 +49,8 @@ public class PaymentsFragment extends Fragment {
 
         // I use the method `getAllPaymentsSorted` and think it works
         // but you may want to test that it actually sorts by date correctly
-        for (Payment payment : currentUser.getAllPaymentsSorted()) {
-            String username = payment.getPaymentUser().getUsername();
-            String paymentAmount = String.valueOf(payment.getAmountSpent());
-            paymentsString +=  username + " spent $" + paymentAmount +
-                    " on " + payment.getBudget().getName() + "\n";
+        for (Payment payment : AppVariables.getAllPaymentsSorted(AppVariables.currentUser)) {
+            paymentsString += "Payment made for: $" + payment.getAmountSpent() + "\n";
         }
         textView.setText("Payments: " + paymentsString);
 

@@ -18,14 +18,12 @@ public class Budget {
 
     // temporary initializer for a group
     // we'll need to do some database stuff here in the future
-    public Budget(String name, Double budgetLimit, boolean isGroupBudget) {
+    public Budget(String name, ArrayList<Payment> payments, boolean isGroupBudget, Double budgetLimit, Double amountSpentInBudget) {
         this.name = name;
-        this.budgetLimit = budgetLimit;
+        this.payments = payments;
         this.isGroupBudget = isGroupBudget;
-        // since we are initializing the budget, nothing has been spent yet
-        // we'll need to replace this later when we use a database
-        this.amountSpentInBudget = 0.0;
-        this.payments = new ArrayList<Payment>();
+        this.budgetLimit = budgetLimit;
+        this.amountSpentInBudget = amountSpentInBudget;
     }
 
     public String getName() {

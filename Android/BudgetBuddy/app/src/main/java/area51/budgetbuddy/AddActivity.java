@@ -16,9 +16,21 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AddActivity extends AppCompatActivity {
+
+    Group group;
+    DatabaseReference dataBaseRef = FirebaseDatabase.getInstance().getReference();
+    User currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,20 +41,20 @@ public class AddActivity extends AppCompatActivity {
         // adds the "back button", which goes back to the MainActivity (where you can see Overview / Payments / Trends
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-
+        getSupportActionBar().setTitle("Add a new Payment");
+        currentUser = AppVariables.currentUser;
+        if (currentUser == null) throw new AssertionError("Current User cannot be null");
 
         // Setting values for the budgetSpinner
 
         Spinner budgetSpinner = (Spinner) findViewById(R.id.budget_name);
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, AppVariables.currentUser.getUserGroupBudgetStrings());
+                android.R.layout.simple_spinner_item, AppVariables.currentUser.userGroupBudgetStrings());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         budgetSpinner.setAdapter(adapter);
 
         // Set a listener so list of budgets changes when group/personal is toggled
         RadioGroup personalOrGroup = (RadioGroup) findViewById(R.id.radio_group);
-
-
 
         personalOrGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -51,12 +63,12 @@ public class AddActivity extends AppCompatActivity {
 
                 ArrayList<String> dataSourceList = new ArrayList<String>();
                 if (checkedId == R.id.group_radio_button) {
-                    dataSourceList = AppVariables.currentUser.getUserGroupBudgetStrings();
+                    dataSourceList = AppVariables.currentUser.userGroupBudgetStrings();
 
                 }
                 else  if (checkedId == R.id.personal_radio_button) {
                     //do work when radioButton2 is active
-                    dataSourceList = AppVariables.currentUser.getUserPersonalBudgetStrings();
+                    dataSourceList = AppVariables.currentUser.userPersonalBudgetStrings();
                 }
                 adapter.clear();
                 adapter.addAll(dataSourceList);
@@ -72,6 +84,8 @@ public class AddActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.add_menu, menu);
         return true;
     }
+
+    // MARK: Database methods
 
     private void createNewPaymentFromFields() {
 
@@ -92,10 +106,30 @@ public class AddActivity extends AppCompatActivity {
         Budget budget = AppVariables.currentUser.getUserBudgetFromName(budgetName, isGroup);
         String date = dateEditText.getText().toString();
         // Create the new payment
-        Payment newPayment = new Payment(AppVariables.currentUser, budget, amountSpent, date, notes);
+        Payment newPayment = new Payment(amountSpent, date, notes);
 
         // Add the payment to the selected budget
         budget.addUserPayment(newPayment);
+        storePaymentToDataBase(newPayment, budget, isGroup);
+
+    }
+
+    private void storePaymentToDataBase(Payment payment, Budget budget,  boolean isGroupPayment) {
+        Group usergroup = AppVariables.currentUser.getGroup();
+        DatabaseReference groupRef = dataBaseRef.child("Group").child(usergroup.getName());
+        if (!budget.getPayments().contains(payment)) throw new AssertionError("Payment is not in budget array");
+        String indexString = Integer.toString(budget.getPayments().indexOf(payment));
+        if (isGroupPayment) {
+            groupRef.child("groupBudgets").child(budget.getName()).child("payments").child(indexString).setValue(payment);
+        }
+        else {
+            groupRef.child("groupMembers").
+                    child(currentUser.getUsername()).
+                    child("personalBudgets").
+                    child(budget.getName()).
+                    child("payments").
+                    child(indexString).setValue(payment);
+        }
     }
 
     @Override
