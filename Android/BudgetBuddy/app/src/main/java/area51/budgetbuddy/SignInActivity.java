@@ -93,25 +93,6 @@ public class SignInActivity extends AppCompatActivity {
         return parsedBudgets;
     }
 
-
-    private void setupTestUsers() {
-        Group testGroup = new Group("Area 51");
-        Budget testGroupBudget = new Budget("Cleaning Supplies", 50.0, true);
-        Budget testGroupBudget2 = new Budget("Gas and Car Maintenance", 200.0, true);
-        Budget testGroupBudget3 = new Budget("Shared Groceries", 100.0, true);
-        testGroup.addGroupBudget(testGroupBudget);
-        testGroup.addGroupBudget(testGroupBudget2);
-        testGroup.addGroupBudget(testGroupBudget3);
-
-        User testUser1 = new User("Drake", "password", testGroup);
-        User testUser2 = new User("Rupaul Charles", "password", testGroup);
-        User testUser3 = new User("Joe Biden", "password", testGroup);
-
-
-        // TODO: make sure just adding the group persists all of the users, budgets, etc. during app lifetime
-        AppVariables.addGroupToDatabase(testGroup);
-    }
-
     private Map<String, User> parseUsers(Map<String, Object> userDictionary, Group group) {
         Map<String, User> parsedUsers = new HashMap<>();
         for (String username : userDictionary.keySet()) {
