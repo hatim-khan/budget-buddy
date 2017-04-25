@@ -36,6 +36,7 @@ public class SignInActivity extends AppCompatActivity {
         User testUser2 = new User("Rupaul Charles", "password", testGroup);
         User testUser3 = new User("Joe Biden", "password", testGroup);
 
+
         // TODO: make sure just adding the group persists all of the users, budgets, etc. during app lifetime
         AppVariables.addGroupToDatabase(testGroup);
     }

@@ -8,15 +8,25 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
+
 public class OverviewFragment extends Fragment {
     private int mPage;
+    ArrayList<Budget> budgets;
+    RecyclerView rvBudgets;
+    LinearLayoutManager rvLinearLayoutManager;
 
     public static final String ARG_PAGE = "ARG_PAGE";
 
@@ -32,7 +42,6 @@ public class OverviewFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPage = getArguments().getInt(ARG_PAGE);
-
     }
 
     @Override
@@ -43,17 +52,26 @@ public class OverviewFragment extends Fragment {
         // TODO Natalie: Customize the UI for the Overview Screen here
 
         // TODO Natalie : replace - this is just here for an example on how to get budget data
-        TextView textView = (TextView) view.findViewById(R.id.textview);
         User currentUser = AppVariables.currentUser;
-        String budgetsString = new String();
 
-        for (Budget budget : currentUser.getUserGroupBudgets()) {
-            String budgetName = budget.name;
-            budgetsString += budgetName + " " +
-                    budget.getAmountSpentInBudget() + " / "
-                    + budget.getBudgetLimit() + "\n";
-        }
-        textView.setText("Budgets: " + budgetsString);
+        rvBudgets = (RecyclerView) view.findViewById(R.id.recycler_view);
+        budgets = currentUser.getUserGroupBudgets();
+        BudgetAdapter adapter = new BudgetAdapter(this.getContext(), budgets);
+        rvBudgets.setAdapter(adapter);
+        rvLinearLayoutManager = new LinearLayoutManager(this.getContext());
+        rvBudgets.setLayoutManager(rvLinearLayoutManager);
+
+        //TextView textView = (TextView) view.findViewById(R.id.textview);
+
+        //String budgetsString = new String();
+
+        //for (Budget budget : currentUser.getUserGroupBudgets()) {
+            //String budgetName = budget.name;
+            //budgetsString += budgetName + " " +
+                    //budget.getAmountSpentInBudget() + " / "
+                    //+ budget.getBudgetLimit() + "\n";
+        //}
+        //textView.setText("Budgets: " + budgetsString);
 
         return view;
     }

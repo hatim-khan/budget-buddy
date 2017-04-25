@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    >
+
+    <TextView
+        android:id="@+id/budget_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="27sp"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="15dp"
+        android:text="NAME"/>
+
+    <TextView
+        android:id="@+id/budget_remaining"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:layout_above="@+id/progress_bar"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="15dp"
+        android:text="REMAINING"/>
+
+    <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/budget_name"
+        app:rcProgress="50"
+        app:rcMax="100"
+        app:rcRadius="5dp"
+        app:rcBackgroundPadding="0dp"
+        app:rcReverse="false"
+        app:rcProgressColor="#6FCF97"
+        app:rcBackgroundColor="#E0E0E0" />
+
+    <TextView
+        android:id="@+id/budget_spent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:text="SPENT/TOTAL"
+        android:textColor="#FFFFFF"
+        android:layout_marginTop="13dp"
+        android:layout_alignTop="@id/progress_bar"
+        android:layout_marginStart="25dp"/>
+
+
+
+</RelativeLayout>
