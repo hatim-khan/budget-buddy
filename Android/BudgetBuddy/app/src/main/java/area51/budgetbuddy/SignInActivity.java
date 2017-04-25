@@ -80,11 +80,17 @@ public class SignInActivity extends AppCompatActivity {
             if (paymentsArray != null) {
                 for (Object paymentObject : paymentsArray) {
                     Map<String, Object> paymentDict = (Map<String, Object>) paymentObject;
-                    Double amountSpent = new Double(paymentDict.get("amountSpent").toString());
-                    String purchaseDateString = paymentDict.get("purchaseDate").toString();
-                    String notes = paymentDict.get("notes").toString();
-                    Payment newPayment = new Payment(amountSpent, purchaseDateString, notes);
-                    payments.add(newPayment);
+                    if (paymentDict.keySet().size() == 4) {
+                        Double amountSpent = new Double(paymentDict.get("amountSpent").toString());
+                        String purchaseDateString = paymentDict.get("purchaseDate").toString();
+                        String notes = paymentDict.get("notes").toString();
+                        String username = paymentDict.get("username").toString();
+                        Payment newPayment = new Payment(amountSpent, purchaseDateString, notes, username);
+                        payments.add(newPayment);
+                    }
+                    else {
+                        Log.d("ERROR", "Database error with payment for " + budgetName);
+                    }
                 }
             }
             Budget newBudget = new Budget(budgetName, payments, isGroupBudget, budgetLimit, amountSpentInBudget);
