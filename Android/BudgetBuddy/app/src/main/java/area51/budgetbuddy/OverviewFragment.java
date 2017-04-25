@@ -73,6 +73,15 @@ public class OverviewFragment extends Fragment {
         //}
         //textView.setText("Budgets: " + budgetsString);
 
+        for (Budget budget : currentUser.userGroupBudgets().values()) {
+            String budgetName = budget.name;
+            budgetsString += budgetName + " " +
+                    budget.getAmountSpentInBudget() + " / "
+                    + budget.getBudgetLimit() + "\n";
+        }
+        textView.setText("Budgets: " + budgetsString);
+
+
         return view;
     }
 }
