@@ -20,11 +20,16 @@ import org.w3c.dom.Text;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class OverviewFragment extends Fragment {
     private int mPage;
-    ArrayList<Budget> budgets;
+    Collection<Budget> groupBudgetsCollection;
+    Collection<Budget> personalBudgetsCollection;
+    ArrayList<Budget> budgetArr = new ArrayList<>();
     RecyclerView rvBudgets;
     LinearLayoutManager rvLinearLayoutManager;
 
@@ -54,18 +59,22 @@ public class OverviewFragment extends Fragment {
         // TODO Natalie : replace - this is just here for an example on how to get budget data
         User currentUser = AppVariables.currentUser;
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 650894ec9bfb44f2ca7205cc7a1334ef9b7a7a81
         rvBudgets = (RecyclerView) view.findViewById(R.id.recycler_view);
-        budgets = currentUser.getUserGroupBudgets();
-        BudgetAdapter adapter = new BudgetAdapter(this.getContext(), budgets);
+        groupBudgetsCollection = currentUser.userGroupBudgets().values();
+        budgetArr.addAll(groupBudgetsCollection);
+        personalBudgetsCollection = currentUser.getPersonalBudgets().values();
+        budgetArr.addAll(personalBudgetsCollection);
+        BudgetAdapter adapter = new BudgetAdapter(this.getContext(), budgetArr);
         rvBudgets.setAdapter(adapter);
         rvLinearLayoutManager = new LinearLayoutManager(this.getContext());
         rvBudgets.setLayoutManager(rvLinearLayoutManager);
 
-        //TextView textView = (TextView) view.findViewById(R.id.textview);
 
-        //String budgetsString = new String();
-
+<<<<<<< HEAD
         //for (Budget budget : currentUser.getUserGroupBudgets()) {
             //String budgetName = budget.name;
             //budgetsString += budgetName + " " +
@@ -75,13 +84,19 @@ public class OverviewFragment extends Fragment {
         //textView.setText("Budgets: " + budgetsString);
       
       /**  for (Budget budget : currentUser.userGroupBudgets().values()) {
+=======
+        /**for (Budget budget : currentUser.userGroupBudgets().values()) {
+>>>>>>> 650894ec9bfb44f2ca7205cc7a1334ef9b7a7a81
             String budgetName = budget.name;
             budgetsString += budgetName + " " +
                     budget.getAmountSpentInBudget() + " / "
                     + budget.getBudgetLimit() + "\n";
         }
         textView.setText("Budgets: " + budgetsString);*/
+<<<<<<< HEAD
 
+=======
+>>>>>>> 650894ec9bfb44f2ca7205cc7a1334ef9b7a7a81
 
         return view;
     }
