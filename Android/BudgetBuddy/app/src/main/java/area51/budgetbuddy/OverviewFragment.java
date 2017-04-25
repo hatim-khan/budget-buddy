@@ -59,10 +59,7 @@ public class OverviewFragment extends Fragment {
         // TODO Natalie : replace - this is just here for an example on how to get budget data
         User currentUser = AppVariables.currentUser;
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 650894ec9bfb44f2ca7205cc7a1334ef9b7a7a81
         rvBudgets = (RecyclerView) view.findViewById(R.id.recycler_view);
         groupBudgetsCollection = currentUser.userGroupBudgets().values();
         budgetArr.addAll(groupBudgetsCollection);
@@ -74,7 +71,6 @@ public class OverviewFragment extends Fragment {
         rvBudgets.setLayoutManager(rvLinearLayoutManager);
 
 
-<<<<<<< HEAD
         //for (Budget budget : currentUser.getUserGroupBudgets()) {
             //String budgetName = budget.name;
             //budgetsString += budgetName + " " +
@@ -84,20 +80,15 @@ public class OverviewFragment extends Fragment {
         //textView.setText("Budgets: " + budgetsString);
       
       /**  for (Budget budget : currentUser.userGroupBudgets().values()) {
-=======
+
         /**for (Budget budget : currentUser.userGroupBudgets().values()) {
->>>>>>> 650894ec9bfb44f2ca7205cc7a1334ef9b7a7a81
+
             String budgetName = budget.name;
             budgetsString += budgetName + " " +
                     budget.getAmountSpentInBudget() + " / "
                     + budget.getBudgetLimit() + "\n";
         }
         textView.setText("Budgets: " + budgetsString);*/
-<<<<<<< HEAD
-
-=======
->>>>>>> 650894ec9bfb44f2ca7205cc7a1334ef9b7a7a81
-
         return view;
     }
 }
