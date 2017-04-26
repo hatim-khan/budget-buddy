@@ -10,13 +10,20 @@ import android.icu.util.Calendar;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 public class PaymentsFragment extends Fragment {
     private int mPage;
+    RecyclerView rvPayments;
+    LinearLayoutManager layoutManager;
+    ArrayList<Payment> paymentArr;
 
     public static final String ARG_PAGE = "ARG_PAGE";
 
@@ -42,17 +49,24 @@ public class PaymentsFragment extends Fragment {
 
         // TODO : Customize the UI for the Payments Screen here
         // TODO Erick : replace - this is just here for an example on how to get payment data
-
-        TextView textView = (TextView) view.findViewById(R.id.textview);
+        paymentArr = new ArrayList<>();
+        rvPayments = (RecyclerView) view.findViewById(R.id.payment_recycler_view);
         User currentUser = AppVariables.currentUser;
-        String paymentsString = new String();
+        paymentArr = AppVariables.getAllPaymentsSorted(AppVariables.currentUser);
+        //paymentArr = Group.groupPayments();
+        PaymentAdapter adapter = new PaymentAdapter(this.getContext(), paymentArr);
+        rvPayments.setAdapter(adapter);
+        layoutManager = new LinearLayoutManager(this.getContext());
+        rvPayments.setLayoutManager(layoutManager);
 
-        // I use the method `getAllPaymentsSorted` and think it works
-        // but you may want to test that it actually sorts by date correctly
-        for (Payment payment : AppVariables.getAllPaymentsSorted(AppVariables.currentUser)) {
-            paymentsString += "Payment made for: $" + payment.getAmountSpent() + "\n";
-        }
-        textView.setText("Payments: " + paymentsString);
+//        String paymentsString = new String();
+//
+//        // I use the method `getAllPaymentsSorted` and think it works
+//        // but you may want to test that it actually sorts by date correctly
+//        for (Payment payment : AppVariables.getAllPaymentsSorted(AppVariables.currentUser)) {
+//            paymentsString += "Payment made for: $" + payment.getAmountSpent() + "\n";
+//        }
+//        textView.setText("Payments: " + paymentsString);
 
         return view;
     }
