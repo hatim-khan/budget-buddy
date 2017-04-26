@@ -76,20 +76,22 @@ public class SignInActivity extends AppCompatActivity {
                 Double amountSpentInBudget = new Double(budget.get("amountSpentInBudget").toString());
 
                 ArrayList<Payment> payments = new ArrayList<Payment>();
-                ArrayList<Object> paymentsArray = (ArrayList<Object>) budget.get("payments");
-                // There may be no payments made, so need to check if it isn't null
-                if (paymentsArray != null) {
-                    for (Object paymentObject : paymentsArray) {
-                        Map<String, Object> paymentDict = (Map<String, Object>) paymentObject;
-                        if (paymentDict.keySet().size() == 4) {
-                            Double amountSpent = new Double(paymentDict.get("amountSpent").toString());
-                            String purchaseDateString = paymentDict.get("purchaseDate").toString();
-                            String notes = paymentDict.get("notes").toString();
-                            String username = paymentDict.get("username").toString();
-                            Payment newPayment = new Payment(amountSpent, purchaseDateString, notes, username);
-                            payments.add(newPayment);
-                        } else {
-                            Log.d("ERROR", "Database error with payment for " + budgetName);
+                if (budget.get(payments) != null) {
+                    ArrayList<Object> paymentsArray = (ArrayList<Object>) budget.get("payments");
+                    // There may be no payments made, so need to check if it isn't null
+                    if (paymentsArray != null) {
+                        for (Object paymentObject : paymentsArray) {
+                            Map<String, Object> paymentDict = (Map<String, Object>) paymentObject;
+                            if (paymentDict.keySet().size() == 4) {
+                                Double amountSpent = new Double(paymentDict.get("amountSpent").toString());
+                                String purchaseDateString = paymentDict.get("purchaseDate").toString();
+                                String notes = paymentDict.get("notes").toString();
+                                String username = paymentDict.get("username").toString();
+                                Payment newPayment = new Payment(amountSpent, purchaseDateString, notes, username);
+                                payments.add(newPayment);
+                            } else {
+                                Log.d("ERROR", "Database error with payment for " + budgetName);
+                            }
                         }
                     }
                 }
