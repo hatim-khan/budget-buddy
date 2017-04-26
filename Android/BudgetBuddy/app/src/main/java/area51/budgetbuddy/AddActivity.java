@@ -123,6 +123,7 @@ public class AddActivity extends AppCompatActivity {
 
         if (isGroupPayment) {
             groupRef.child("groupBudgets").child(budget.getName()).child("payments").child(indexString).setValue(payment);
+            groupRef.child("groupBudgets").child(budget.getName()).child("amountSpentInBudget").setValue(budget.getAmountSpentInBudget());
         }
         else {
             groupRef.child("groupMembers").
@@ -131,6 +132,12 @@ public class AddActivity extends AppCompatActivity {
                     child(budget.getName()).
                     child("payments").
                     child(indexString).setValue(payment);
+            groupRef.child("groupMembers").
+                    child(currentUser.getUsername()).
+                    child("personalBudgets").
+                    child(budget.getName()).
+                    child("amountSpentInBudget").setValue(budget.getAmountSpentInBudget());
+
         }
     }
 
