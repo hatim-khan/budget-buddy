@@ -28,6 +28,9 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+
+    compile 'com.github.PhilJay:MPAndroidChart:v2.0.9'
+
     // Added for firebase support
 
     // Added for Design Support Library (needed for the toolbar tabs)
@@ -52,6 +55,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
 
 }
+
 
 
 apply plugin: 'com.google.gms.google-services'

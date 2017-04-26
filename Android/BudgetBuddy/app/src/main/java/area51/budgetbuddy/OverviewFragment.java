@@ -58,7 +58,9 @@ public class OverviewFragment extends Fragment {
 
         // TODO Natalie : replace - this is just here for an example on how to get budget data
         User currentUser = AppVariables.currentUser;
+
         budgetArr = new ArrayList<>();
+
         rvBudgets = (RecyclerView) view.findViewById(R.id.recycler_view);
         groupBudgetsCollection = currentUser.userGroupBudgets().values();
         budgetArr.addAll(groupBudgetsCollection);

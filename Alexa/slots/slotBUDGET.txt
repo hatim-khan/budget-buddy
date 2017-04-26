@@ -1,0 +1,7 @@
+BUDGET
+groceries
+household items
+cleaning supplies
+food
+house
+utilities

@@ -1,0 +1,25 @@
+TrackPayment I want to track a payment
+TrackPayment I want to add a payment
+TrackPayment I want to track a purchase
+TrackPayment I bought something
+TrackPayment I bought {item} for {amount}
+TrackPayment I bought {item}
+TrackPayment I bought a {item}
+TrackPayment I want to track a payment of {amount}
+TrackPayment I want to track a payment of {amount} for {item}
+TrackPayment I want to track a payment of {amount} for {item} under {budget}
+
+BudgetAdding I want to add a budget
+BudgetAdding I want to add a budget for {budget}
+BudgetAdding I want to add a budget of {amount}
+
+BudgetSummary Can I have a budget summary
+BudgetSummary I want a summary
+BudgetSummary I want a budget summary
+BudgetSummary I want a quick recap of my budget
+BudgetSummary I want a quick recap of my budgets
+BudgetSummary I want a recap of my budget
+BudgetSummary I want a recap of my budgets
+BudgetSummary I want a summary of my budget
+BudgetSummary I want a summary of my budgets
+BudgetSummary Give me some details about my budgets

@@ -105,8 +105,9 @@ public class AddActivity extends AppCompatActivity {
         Double amountSpent = Double.valueOf(amountSpentEditText.getText().toString());
         Budget budget = AppVariables.currentUser.getUserBudgetFromName(budgetName, isGroup);
         String date = dateEditText.getText().toString();
+        String username = currentUser.getUsername();
         // Create the new payment
-        Payment newPayment = new Payment(amountSpent, date, notes);
+        Payment newPayment = new Payment(amountSpent, date, notes, username);
 
         // Add the payment to the selected budget
         budget.addUserPayment(newPayment);
@@ -119,6 +120,7 @@ public class AddActivity extends AppCompatActivity {
         DatabaseReference groupRef = dataBaseRef.child("Group").child(usergroup.getName());
         if (!budget.getPayments().contains(payment)) throw new AssertionError("Payment is not in budget array");
         String indexString = Integer.toString(budget.getPayments().indexOf(payment));
+
         if (isGroupPayment) {
             groupRef.child("groupBudgets").child(budget.getName()).child("payments").child(indexString).setValue(payment);
         }
