@@ -89,6 +89,22 @@ public class AppVariables extends Application {
         return allPayments;
     }
 
+    //gets the budget that a payment goes to
+    public static String getBudgetForPayment(Payment payment) {
+        for (Budget budget: currentUser.getPersonalBudgets().values()) {
+            if (budget.getPayments().contains(payment)) {
+                return budget.getName();
+            }
+        }
+        for (Budget budget: currentUser.getGroup().getGroupBudgets().values()) {
+            if (budget.getPayments().contains(payment)) {
+                return budget.getName();
+            }
+        }
+        throw new AssertionError("Payment made by" + payment.getUsername() +
+                " does not have a corresponding budget");
+    }
+
 
 
 }

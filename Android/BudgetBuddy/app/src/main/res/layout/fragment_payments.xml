@@ -5,11 +5,17 @@
     tools:context="area51.budgetbuddy.PaymentsFragment">
 
     <!--TODO: Add some pretty UI for the payments screen -->
-    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/textview"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center" />
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/payment_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical" />
+
+    </RelativeLayout>
 
 </FrameLayout>
 

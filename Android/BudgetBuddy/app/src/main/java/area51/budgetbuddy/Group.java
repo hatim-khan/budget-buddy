@@ -63,4 +63,13 @@ public class Group {
             addGroupBudget(budget);
         }
     }
+
+    //get all payments in a group
+    public static ArrayList<Payment> groupPayments() {
+        ArrayList<Payment> allPayments = new ArrayList<>();
+        for (Budget budget: groupBudgets.values()) {
+            allPayments.addAll(budget.getPayments());
+        }
+        return allPayments;
+    }
 }
