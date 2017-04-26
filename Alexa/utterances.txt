@@ -1,25 +1,45 @@
-TrackPayment I want to track a payment
-TrackPayment I want to add a payment
-TrackPayment I want to track a purchase
-TrackPayment I bought something
-TrackPayment I bought {item} for {amount}
-TrackPayment I bought {item}
-TrackPayment I bought a {item}
-TrackPayment I want to track a payment of {amount}
-TrackPayment I want to track a payment of {amount} for {item}
-TrackPayment I want to track a payment of {amount} for {item} under {budget}
+TrackPaymentIntent I want to track a payment
+TrackPaymentIntent I want to add a payment
+TrackPaymentIntent I want to track a purchase
+TrackPaymentIntent I bought something
+TrackPaymentIntent I bought {item} for {amount}
+TrackPaymentIntent I bought {item}
+TrackPaymentIntent I bought a {item}
+TrackPaymentIntent I want to track a payment of {amount}
+TrackPaymentIntent I want to track a payment of {amount} for {item}
+TrackPaymentIntent I want to track a payment of {amount} for {item} under {budget}
 
-BudgetAdding I want to add a budget
-BudgetAdding I want to add a budget for {budget}
-BudgetAdding I want to add a budget of {amount}
+PaymentInformationIntent it was by {person}
+PaymentInformationIntent it was {amount} dollars
+PaymentInformationIntent it was a {item}
+PaymentInformationIntent it was for {budget}
+PaymentInformationIntent it was a {type} budget
 
-BudgetSummary Can I have a budget summary
-BudgetSummary I want a summary
-BudgetSummary I want a budget summary
-BudgetSummary I want a quick recap of my budget
-BudgetSummary I want a quick recap of my budgets
-BudgetSummary I want a recap of my budget
-BudgetSummary I want a recap of my budgets
-BudgetSummary I want a summary of my budget
-BudgetSummary I want a summary of my budgets
-BudgetSummary Give me some details about my budgets
+BudgetAddingIntent I want to add a budget
+BudgetAddingIntent I want to add a budget for {budget}
+BudgetAddingIntent I want to add a budget of {amount}
+
+BudgetInformationIntent it is a {type} budget
+BudgetInformationIntent {amount} per month
+BudgetInformationIntent it is for {budget}
+
+WhatCanISayIntent What can I say
+WhatCanISayIntent help
+WhatCanISayIntent What options can I say
+WhatCanISayIntent What do I say now
+WhatCanISayIntent What things can I say
+WhatCanISayIntent What are my options
+WhatCanISayIntent What options do I have
+WhatCanISayIntent What do I say now
+WhatCanISayIntent what
+
+BudgetSummaryIntent Can I have a budget summary
+BudgetSummaryIntent I want a summary
+BudgetSummaryIntent I want a budget summary
+BudgetSummaryIntent I want a quick recap of my budget
+BudgetSummaryIntent I want a quick recap of my budgets
+BudgetSummaryIntent I want a recap of my budget
+BudgetSummaryIntent I want a recap of my budgets
+BudgetSummaryIntent I want a summary of my budget
+BudgetSummaryIntent I want a summary of my budgets
+BudgetSummaryIntent Give me some details about my budgets
