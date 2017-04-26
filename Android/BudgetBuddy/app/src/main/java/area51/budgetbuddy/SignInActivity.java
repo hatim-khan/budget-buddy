@@ -73,7 +73,7 @@ public class SignInActivity extends AppCompatActivity {
                 // public Budget(String name, ArrayList<Payment> payments, boolean isGroupBudget, Double budgetLimit, Double amountSpentInBudget) {
                 Boolean isGroupBudget = (Boolean) budget.get("groupBudget");
                 Double budgetLimit = new Double(budget.get("budgetLimit").toString());
-                Double amountSpentInBudget = new Double(budget.get("amountSpent").toString());
+                Double amountSpentInBudget = new Double(budget.get("amountSpentInBudget").toString());
 
                 ArrayList<Payment> payments = new ArrayList<Payment>();
                 if (budget.get(payments) != null) {
