@@ -60,7 +60,6 @@ public class AddActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
 
-
                 ArrayList<String> dataSourceList = new ArrayList<String>();
                 if (checkedId == R.id.group_radio_button) {
                     dataSourceList = AppVariables.currentUser.userGroupBudgetStrings();
