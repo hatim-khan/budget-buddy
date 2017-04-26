@@ -69,32 +69,33 @@ public class SignInActivity extends AppCompatActivity {
         Map<String, Budget> parsedBudgets = new HashMap<>();
         for (String budgetName : budgetDictionary.keySet()) {
             Map<String, Object> budget =  (Map<String, Object>) budgetDictionary.get(budgetName);
-            // public Budget(String name, ArrayList<Payment> payments, boolean isGroupBudget, Double budgetLimit, Double amountSpentInBudget) {
-            Boolean isGroupBudget = (Boolean) budget.get("groupBudget");
-            Double budgetLimit = new Double(budget.get("budgetLimit").toString());
-            Double amountSpentInBudget = new Double(budget.get("amountSpentInBudget").toString());
+            if (true) {
+                // public Budget(String name, ArrayList<Payment> payments, boolean isGroupBudget, Double budgetLimit, Double amountSpentInBudget) {
+                Boolean isGroupBudget = (Boolean) budget.get("groupBudget");
+                Double budgetLimit = new Double(budget.get("budgetLimit").toString());
+                Double amountSpentInBudget = new Double(budget.get("amountSpentInBudget").toString());
 
-            ArrayList<Payment> payments = new ArrayList<Payment>();
-            ArrayList<Object> paymentsArray = (ArrayList<Object>) budget.get("payments");
-            // There may be no payments made, so need to check if it isn't null
-            if (paymentsArray != null) {
-                for (Object paymentObject : paymentsArray) {
-                    Map<String, Object> paymentDict = (Map<String, Object>) paymentObject;
-                    if (paymentDict.keySet().size() == 4) {
-                        Double amountSpent = new Double(paymentDict.get("amountSpent").toString());
-                        String purchaseDateString = paymentDict.get("purchaseDate").toString();
-                        String notes = paymentDict.get("notes").toString();
-                        String username = paymentDict.get("username").toString();
-                        Payment newPayment = new Payment(amountSpent, purchaseDateString, notes, username);
-                        payments.add(newPayment);
-                    }
-                    else {
-                        Log.d("ERROR", "Database error with payment for " + budgetName);
+                ArrayList<Payment> payments = new ArrayList<Payment>();
+                ArrayList<Object> paymentsArray = (ArrayList<Object>) budget.get("payments");
+                // There may be no payments made, so need to check if it isn't null
+                if (paymentsArray != null) {
+                    for (Object paymentObject : paymentsArray) {
+                        Map<String, Object> paymentDict = (Map<String, Object>) paymentObject;
+                        if (paymentDict.keySet().size() == 4) {
+                            Double amountSpent = new Double(paymentDict.get("amountSpent").toString());
+                            String purchaseDateString = paymentDict.get("purchaseDate").toString();
+                            String notes = paymentDict.get("notes").toString();
+                            String username = paymentDict.get("username").toString();
+                            Payment newPayment = new Payment(amountSpent, purchaseDateString, notes, username);
+                            payments.add(newPayment);
+                        } else {
+                            Log.d("ERROR", "Database error with payment for " + budgetName);
+                        }
                     }
                 }
+                Budget newBudget = new Budget(budgetName, payments, isGroupBudget, budgetLimit, amountSpentInBudget);
+                parsedBudgets.put(newBudget.getName(), newBudget);
             }
-            Budget newBudget = new Budget(budgetName, payments, isGroupBudget, budgetLimit, amountSpentInBudget);
-            parsedBudgets.put(newBudget.getName(), newBudget);
         }
         return parsedBudgets;
     }
@@ -111,8 +112,6 @@ public class SignInActivity extends AppCompatActivity {
         }
         return parsedUsers;
     }
-
-
 
 
     // This method is called every time the user taps down on the sign in button
@@ -139,21 +138,28 @@ public class SignInActivity extends AppCompatActivity {
         }
 
         else {
-            // if all the edit texts have values, create a new user with the given username and password
-            // TODO: right now this just supports signing in, not logging in
-            if (signInUser(username, password, group)) {
-                Intent intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
-            }
-            else {
-                AlertDialog.Builder builder = new AlertDialog.Builder(SignInActivity.this);
-                // TODO: update this - not sure how we want to format the login screen so not putting much time into it now
-                builder.setTitle("The group '" + groupName + "' does not exist").setMessage("Please check that the group name provided is valid");
+            AlertDialog.Builder builder = new AlertDialog.Builder(SignInActivity.this);
+            if (!AppVariables.allGroups.containsKey(group.getName())) {
+                builder.setTitle("The group '" + group.getName() + "' does not exist.").setMessage("Please check that you correctly entered your group's name (Hint: try signing in with group name 'Area 51')");
                 builder.setNegativeButton("Okay", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         return;
                     }
                 }).show();
+            }
+            else if (!signInUser(username, password, group)) {
+                // TODO: update this - not sure how we want to format the login screen so not putting much time into it now
+                builder.setTitle("Invalid username and password combindation").setMessage("Please check that the group name provided is valid (Hint: try signing in with username 'Drake' and password 'password')");
+                builder.setNegativeButton("Okay", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        return;
+                    }
+                }).show();
+            }
+            else {
+                // group name exists and password / username valid
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
             }
         }
     }
@@ -165,12 +171,12 @@ public class SignInActivity extends AppCompatActivity {
             boolean groupContainsUser = group.getGroupMembers().containsKey(username);
             if (groupContainsUser) {
                 User userInGroup = group.getGroupMembers().get(username);
-
+                if (userInGroup.getPassword().equals(password)) {
                     // If the username and password are valid, sign the user in by setting
                     // the current user equal to the user found in the group
-                AppVariables.currentUser = userInGroup;
-                return true;
-
+                    AppVariables.currentUser = userInGroup;
+                    return true;
+                }
             }
         }
         return false;
