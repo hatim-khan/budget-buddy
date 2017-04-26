@@ -69,38 +69,49 @@ public class SignInActivity extends AppCompatActivity {
         Map<String, Budget> parsedBudgets = new HashMap<>();
         for (String budgetName : budgetDictionary.keySet()) {
             Map<String, Object> budget =  (Map<String, Object>) budgetDictionary.get(budgetName);
-            if (true) {
-                // public Budget(String name, ArrayList<Payment> payments, boolean isGroupBudget, Double budgetLimit, Double amountSpentInBudget) {
+
                 Boolean isGroupBudget = (Boolean) budget.get("groupBudget");
                 Double budgetLimit = new Double(budget.get("budgetLimit").toString());
                 Double amountSpentInBudget = new Double(budget.get("amountSpentInBudget").toString());
-
-                ArrayList<Payment> payments = new ArrayList<Payment>();
-                if (budget.get(payments) != null) {
-                    ArrayList<Object> paymentsArray = (ArrayList<Object>) budget.get("payments");
-                    // There may be no payments made, so need to check if it isn't null
-                    if (paymentsArray != null) {
-                        for (Object paymentObject : paymentsArray) {
-                            Map<String, Object> paymentDict = (Map<String, Object>) paymentObject;
-                            if (paymentDict.keySet().size() == 4) {
-                                Double amountSpent = new Double(paymentDict.get("amountSpent").toString());
-                                String purchaseDateString = paymentDict.get("purchaseDate").toString();
-                                String notes = paymentDict.get("notes").toString();
-                                String username = paymentDict.get("username").toString();
-                                Payment newPayment = new Payment(amountSpent, purchaseDateString, notes, username);
-                                payments.add(newPayment);
-                            } else {
-                                Log.d("ERROR", "Database error with payment for " + budgetName);
-                            }
-                        }
-                    }
-                }
+                ArrayList<Payment> payments = parsePaymentsFromBudget(budget, budgetName);
                 Budget newBudget = new Budget(budgetName, payments, isGroupBudget, budgetLimit, amountSpentInBudget);
                 parsedBudgets.put(newBudget.getName(), newBudget);
-            }
+
         }
         return parsedBudgets;
     }
+
+
+    private ArrayList<Payment> parsePaymentsFromBudget(Map<String, Object> budgetDict, String budgetName) {
+        ArrayList<Payment> payments = new ArrayList<Payment>();
+        if (budgetDict.get(payments) != null) {
+            // Make sure we don't error if a dictionary is pushed instead of an ArrayList
+            if ((budgetDict.get("payments") != null) && !(budgetDict.get("payments") instanceof ArrayList)) {
+                Log.d("ERROR", "Payments should be of type Arraylist ");
+                return payments;
+            }
+            ArrayList<Object> paymentsArray = (ArrayList<Object>) budgetDict.get("payments");
+
+            // There may be no payments made, so need to check if it isn't null
+            if (paymentsArray != null) {
+                for (Object paymentObject : paymentsArray) {
+                    Map<String, Object> paymentDict = (Map<String, Object>) paymentObject;
+                    if (paymentDict.keySet().size() == 4) {
+                        Double amountSpent = new Double(paymentDict.get("amountSpent").toString());
+                        String purchaseDateString = paymentDict.get("purchaseDate").toString();
+                        String notes = paymentDict.get("notes").toString();
+                        String username = paymentDict.get("username").toString();
+                        Payment newPayment = new Payment(amountSpent, purchaseDateString, notes, username);
+                        payments.add(newPayment);
+                    } else {
+                        Log.d("ERROR", "Database error with payment for budget " + budgetName);
+                    }
+                }
+            }
+        }
+        return payments;
+    }
+
 
     private Map<String, User> parseUsers(Map<String, Object> userDictionary, Group group) {
         Map<String, User> parsedUsers = new HashMap<>();
