@@ -9,6 +9,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.mikepenz.materialdrawer.Drawer;
+import com.mikepenz.materialdrawer.DrawerBuilder;
+
 // Holds the tabs for Overview, Payments, and Trends Screen
 // Shouldn't be doing much work in this class, just kinda holds the
 // navigation bar and tabs (should mainly be editing the fragments instead)
@@ -29,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
         // Associates the tabLayout with the viewpager created above
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tablayout);
         tabLayout.setupWithViewPager(viewPager);
+
+        final Drawer result = new DrawerBuilder().withActivity(this).withToolbar(myToolbar).build();
     }
 
     @Override
