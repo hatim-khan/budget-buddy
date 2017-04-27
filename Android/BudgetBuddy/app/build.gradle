@@ -52,6 +52,10 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:25.+'
     compile 'io.github.luizgrp.sectionedrecyclerviewadapter:sectionedrecyclerviewadapter:1.0.5'
 
+    compile('com.mikepenz:materialdrawer:5.9.0@aar') {
+        transitive = true
+    }
+
     testCompile 'junit:junit:4.12'
 
 }
