@@ -33,7 +33,8 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tablayout);
         tabLayout.setupWithViewPager(viewPager);
 
-        final Drawer result = new DrawerBuilder().withActivity(this).withToolbar(myToolbar).build();
+        final Drawer drawer = new DrawerBuilder().withActivity(this).withToolbar(myToolbar).build();
+        
     }
 
     @Override

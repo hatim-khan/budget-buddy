@@ -13,8 +13,10 @@
         android:titleTextColor="@color/colorPrimary"
         app:titleTextColor="@color/colorPrimary"
         android:elevation="4dp"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        android:subtitleTextColor="@color/colorPrimary"
+        app:subtitleTextColor="@color/colorPrimary"
+        app:theme="@style/ToolBarStyle">
 
     </android.support.v7.widget.Toolbar>
 
