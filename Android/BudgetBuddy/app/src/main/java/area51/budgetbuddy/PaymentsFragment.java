@@ -52,7 +52,7 @@ public class PaymentsFragment extends Fragment {
         paymentArr = new ArrayList<>();
         rvPayments = (RecyclerView) view.findViewById(R.id.payment_recycler_view);
         User currentUser = AppVariables.currentUser;
-        paymentArr = AppVariables.getAllPaymentsSorted(AppVariables.currentUser);
+        paymentArr = AppVariables.getAllPaymentsSorted(currentUser);
         //paymentArr = Group.groupPayments();
         PaymentAdapter adapter = new PaymentAdapter(this.getContext(), paymentArr);
         rvPayments.setAdapter(adapter);

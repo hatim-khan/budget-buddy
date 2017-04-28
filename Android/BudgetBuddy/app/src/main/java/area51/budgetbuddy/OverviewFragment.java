@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.ImageView;
 
 import org.w3c.dom.Text;
 
@@ -32,6 +33,11 @@ public class OverviewFragment extends Fragment {
     ArrayList<Budget> budgetArr;
     RecyclerView rvBudgets;
     LinearLayoutManager rvLinearLayoutManager;
+    ImageView mImageView1;
+    ImageView mImageView2;
+    BudgetAdapter adapter;
+    TextView alert1;
+    TextView alert2;
 
     public static final String ARG_PAGE = "ARG_PAGE";
 
@@ -66,11 +72,29 @@ public class OverviewFragment extends Fragment {
         budgetArr.addAll(groupBudgetsCollection);
         personalBudgetsCollection = currentUser.getPersonalBudgets().values();
         budgetArr.addAll(personalBudgetsCollection);
-        BudgetAdapter adapter = new BudgetAdapter(this.getContext(), budgetArr);
+        adapter = new BudgetAdapter(this.getContext(), budgetArr);
         rvBudgets.setAdapter(adapter);
         rvLinearLayoutManager = new LinearLayoutManager(this.getContext());
         rvBudgets.setLayoutManager(rvLinearLayoutManager);
 
+        alert1 = (TextView) view.findViewById(R.id.alert_content1);
+        ArrayList<Payment> allPayments = AppVariables.getAllPaymentsSorted(currentUser);
+        Payment currPayment = allPayments.get(0);
+
+        alert1.setText(currPayment.getUsername() + " spent $" + currPayment.getAmountSpent()
+                + " in " + AppVariables.getBudgetForPayment(currPayment));
+        mImageView1 = (ImageView) view.findViewById(R.id.alert1_image);
+        mImageView1.setImageResource(R.drawable.attention);
+
+        alert2 = (TextView) view.findViewById(R.id.alert_content2);
+        Payment secondPayment = allPayments.get(1);
+        alert2.setText(secondPayment.getUsername() + " spent $" + secondPayment.getAmountSpent()
+                + " in " + AppVariables.getBudgetForPayment(secondPayment));
+        mImageView2 = (ImageView) view.findViewById(R.id.alert2_image);
+        mImageView2.setImageResource(R.drawable.attention);
+
         return view;
+
     }
+
 }

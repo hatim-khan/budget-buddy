@@ -130,6 +130,10 @@ public class BudgetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         return BUDGET;
     }
 
+    public void swapItems(ArrayList<Budget> allBudgets) {
+
+    }
+
     //holds group budget viewholders
     public static class BudgetViewHolder extends RecyclerView.ViewHolder {
         TextView budgetNameView;

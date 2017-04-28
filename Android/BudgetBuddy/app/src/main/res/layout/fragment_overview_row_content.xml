@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp"
+    android:paddingTop="7dp"
+    android:paddingBottom="7dp"
     >
 
     <TextView
@@ -13,27 +13,29 @@
         android:layout_height="wrap_content"
         android:textSize="20sp"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="15dp"
+        android:layout_marginStart="23dp"
         android:text="NAME"/>
 
     <TextView
         android:id="@+id/budget_remaining"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
+        android:textSize="16sp"
         android:layout_above="@+id/progress_bar"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="20dp"
+        android:layout_marginEnd="23dp"
         android:text="REMAINING"/>
 
     <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
         android:id="@+id/progress_bar"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:layout_height="45dp"
         android:layout_below="@id/budget_name"
         app:rcProgress="50"
         app:rcMax="100"
-        app:rcRadius="5dp"
+        app:rcRadius="20dp"
         app:rcBackgroundPadding="0dp"
         app:rcReverse="false"
         app:rcProgressColor="#6FCF97"
@@ -43,12 +45,12 @@
         android:id="@+id/budget_spent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
+        android:textSize="16sp"
         android:text="SPENT/TOTAL"
         android:textColor="#FFFFFF"
-        android:layout_marginTop="17dp"
+        android:layout_marginTop="12dp"
         android:layout_alignTop="@id/progress_bar"
-        android:layout_marginStart="25dp"/>
+        android:layout_marginStart="27dp"/>
 
 
 
