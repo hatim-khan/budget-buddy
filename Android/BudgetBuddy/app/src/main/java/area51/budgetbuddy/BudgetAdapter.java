@@ -77,7 +77,7 @@ public class BudgetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             String budgetName = budget.getName();
             textView2.setText(budgetName);
             TextView textView3 = budgetHolder.budgetRemainingView;
-            textView3.setText("$" + budget.getAmountLeftInBudget() + " remaining");
+            textView3.setText("$" + budget.amountLeftInBudget() + " remaining");
             budgetHolder.progressBar.setMax(budget.getBudgetLimit().floatValue());
             budgetHolder.progressBar.setProgress(budget.getAmountSpentInBudget().floatValue());
             if(budget.getAmountSpentInBudget() >= budget.getBudgetLimit()) {
@@ -98,7 +98,7 @@ public class BudgetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             String budgetName = budget.getName();
             textView2.setText(budgetName);
             TextView textView3 = budgetHolder.pBudgetRemainingView;
-            textView3.setText("$" + budget.getAmountLeftInBudget() + " remaining");
+            textView3.setText("$" + budget.amountLeftInBudget() + " remaining");
             budgetHolder.pProgressBar.setMax(budget.getBudgetLimit().floatValue());
             budgetHolder.pProgressBar.setProgress(budget.getAmountSpentInBudget().floatValue());
             if(budget.getAmountSpentInBudget() >= budget.getBudgetLimit()) {

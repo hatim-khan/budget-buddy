@@ -47,7 +47,7 @@ public class Budget {
     }
 
     // returns the amount left in the budget. This should be used in the Overview Screen
-    public Double getAmountLeftInBudget() {
+    public Double amountLeftInBudget() {
         return budgetLimit - amountSpentInBudget;
     }
 

@@ -28,7 +28,7 @@ public class User {
 
     // Maps all the user's budgets to the budget name. To get the user's group budgets,
     // use the `getGroupBudgets` helper function
-    public static Map<String, Budget> personalBudgets = new HashMap<String,Budget>();
+    public Map<String, Budget> personalBudgets = new HashMap<String,Budget>();
 
 
     // Initializer for a user class
