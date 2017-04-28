@@ -136,7 +136,6 @@ public class AddActivity extends AppCompatActivity {
                     child("personalBudgets").
                     child(budget.getName()).
                     child("amountSpentInBudget").setValue(budget.getAmountSpentInBudget());
-
         }
     }
 

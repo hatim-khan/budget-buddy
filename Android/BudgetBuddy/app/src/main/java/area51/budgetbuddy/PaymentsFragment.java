@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,14 +60,15 @@ public class PaymentsFragment extends Fragment {
         layoutManager = new LinearLayoutManager(this.getContext());
         rvPayments.setLayoutManager(layoutManager);
 
-//        String paymentsString = new String();
-//
-//        // I use the method `getAllPaymentsSorted` and think it works
-//        // but you may want to test that it actually sorts by date correctly
-//        for (Payment payment : AppVariables.getAllPaymentsSorted(AppVariables.currentUser)) {
-//            paymentsString += "Payment made for: $" + payment.getAmountSpent() + "\n";
-//        }
-//        textView.setText("Payments: " + paymentsString);
+        String paymentsString = new String();
+
+        // I use the method `getAllPaymentsSorted` and think it works
+        // but you may want to test that it actually sorts by date correctly
+        for (Payment payment : AppVariables.getAllPaymentsSorted(AppVariables.currentUser)) {
+            paymentsString += "Payment made for: $" + payment.getAmountSpent() + "\n";
+            Log.d("Payment = ", paymentsString);
+        }
+
 
         return view;
     }

@@ -32,8 +32,6 @@ public class SignInActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
-
-
         // TODO: delete this before submitting - just here so we can type less
         EditText passwordEditText = (EditText) findViewById(R.id.password_edit_text);
         EditText usernameEditText = (EditText) findViewById(R.id.username_edit_text);
@@ -79,14 +77,12 @@ public class SignInActivity extends AppCompatActivity {
         Map<String, Budget> parsedBudgets = new HashMap<>();
         for (String budgetName : budgetDictionary.keySet()) {
             Map<String, Object> budget =  (Map<String, Object>) budgetDictionary.get(budgetName);
-
                 Boolean isGroupBudget = (Boolean) budget.get("groupBudget");
                 Double budgetLimit = new Double(budget.get("budgetLimit").toString());
                 Double amountSpentInBudget = new Double(budget.get("amountSpentInBudget").toString());
                 ArrayList<Payment> payments = parsePaymentsFromBudget(budget, budgetName);
                 Budget newBudget = new Budget(budgetName, payments, isGroupBudget, budgetLimit, amountSpentInBudget);
                 parsedBudgets.put(newBudget.getName(), newBudget);
-
         }
         return parsedBudgets;
     }
@@ -149,8 +145,10 @@ public class SignInActivity extends AppCompatActivity {
         String password = passwordEditText.getText().toString();
         String groupName = groupNameEditText.getText().toString();
 
+
         if (username.isEmpty()||password.isEmpty()||groupName.isEmpty()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(SignInActivity.this);
+
             // TODO: update this - not sure how we want to format the login screen so not putting much time into it now
             builder.setTitle("Username, Password, or Group Name not specified").setMessage("Please provide a username (i.e. your name), password, and group name ");
             builder.setNegativeButton("Okay", new DialogInterface.OnClickListener() {
@@ -158,17 +156,20 @@ public class SignInActivity extends AppCompatActivity {
                     return;
                 }
             }).show();
+
         }
 
         else {
             AlertDialog.Builder builder = new AlertDialog.Builder(SignInActivity.this);
-            if (!AppVariables.allGroups.containsKey(group.getName())) {
-                builder.setTitle("The group '" + group.getName() + "' does not exist.").setMessage("Please check that you correctly entered your group's name (Hint: try signing in with group name 'Area 51')");
+            if (group == null || !AppVariables.allGroups.containsKey(group.getName())) {
+                dataBaseRef.child("Test").setValue("Test");
+                builder.setTitle("The group '" + groupName + "' does not exist.").setMessage("Please check that you correctly entered your group's name (Hint: try signing in with group name 'Area 51')");
                 builder.setNegativeButton("Okay", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         return;
                     }
                 }).show();
+
             }
             else if (!signInUser(username, password, group)) {
                 // TODO: update this - not sure how we want to format the login screen so not putting much time into it now
