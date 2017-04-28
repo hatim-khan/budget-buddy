@@ -13,12 +13,12 @@ import java.util.Set;
 public class Group {
 
     // maps username to User object for each member of the group
-    private static Map<String, User> groupMembers = new HashMap<String,User>();
+    private Map<String, User> groupMembers = new HashMap<String,User>();
 
     // The name of the group
     private String name;
 
-    private static Map<String, Budget> groupBudgets = new HashMap<String,Budget>();
+    private Map<String, Budget> groupBudgets = new HashMap<String,Budget>();
 
     // temporary initializer for a group
     // we'll need to do some database stuff here in the future
@@ -65,7 +65,7 @@ public class Group {
     }
 
     //get all payments in a group
-    public static ArrayList<Payment> groupPayments() {
+    public ArrayList<Payment> groupPayments() {
         ArrayList<Payment> allPayments = new ArrayList<>();
         for (Budget budget: groupBudgets.values()) {
             allPayments.addAll(budget.getPayments());

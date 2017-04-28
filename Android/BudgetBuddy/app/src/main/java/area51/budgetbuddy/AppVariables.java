@@ -105,6 +105,4 @@ public class AppVariables extends Application {
                 " does not have a corresponding budget");
     }
 
-
-
 }

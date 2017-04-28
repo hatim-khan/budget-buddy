@@ -32,7 +32,6 @@ public class User {
 
 
     // Initializer for a user class
-    // This class is just used for now to create some static testing users
     public User(String username, String password, Map<String, Budget> personalBudgets, Group group) {
         this.username = username;
         this.password = password;
