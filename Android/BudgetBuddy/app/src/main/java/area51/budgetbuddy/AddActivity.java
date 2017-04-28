@@ -118,7 +118,7 @@ public class AddActivity extends AppCompatActivity {
         Group usergroup = AppVariables.currentUser.getGroup();
         DatabaseReference groupRef = dataBaseRef.child("Group").child(usergroup.getName());
         if (!budget.getPayments().contains(payment)) throw new AssertionError("Payment is not in budget array");
-        String indexString = Integer.toString(budget.getPayments().indexOf(payment));
+        String indexString = Integer.toString(budget.getPayments().size());
 
         if (isGroupPayment) {
             groupRef.child("groupBudgets").child(budget.getName()).child("payments").child(indexString).setValue(payment);
@@ -136,7 +136,6 @@ public class AddActivity extends AppCompatActivity {
                     child("personalBudgets").
                     child(budget.getName()).
                     child("amountSpentInBudget").setValue(budget.getAmountSpentInBudget());
-
         }
     }
 
