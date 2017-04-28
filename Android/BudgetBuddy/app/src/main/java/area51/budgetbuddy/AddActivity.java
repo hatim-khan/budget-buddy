@@ -41,7 +41,6 @@ public class AddActivity extends AppCompatActivity {
         // adds the "back button", which goes back to the MainActivity (where you can see Overview / Payments / Trends
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Add a new Payment");
         currentUser = AppVariables.currentUser;
         if (currentUser == null) throw new AssertionError("Current User cannot be null");
 
@@ -142,7 +141,6 @@ public class AddActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         switch (item.getItemId()) {
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
