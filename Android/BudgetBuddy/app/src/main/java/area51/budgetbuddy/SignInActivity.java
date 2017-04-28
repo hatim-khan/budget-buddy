@@ -90,7 +90,7 @@ public class SignInActivity extends AppCompatActivity {
 
     private ArrayList<Payment> parsePaymentsFromBudget(Map<String, Object> budgetDict, String budgetName) {
         ArrayList<Payment> payments = new ArrayList<Payment>();
-        if (budgetDict.get(payments) != null) {
+        if (budgetDict.get("payments") != null) {
             // Make sure we don't error if a dictionary is pushed instead of an ArrayList
             if ((budgetDict.get("payments") != null) && !(budgetDict.get("payments") instanceof ArrayList)) {
                 Log.d("ERROR", "Payments should be of type Arraylist ");
