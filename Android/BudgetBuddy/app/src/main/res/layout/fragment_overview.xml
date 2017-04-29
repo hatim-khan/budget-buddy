@@ -1,119 +1,103 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:background="@color/md_grey_100"
+    android:padding="@dimen/activity_horizontal_margin"
     android:layout_height="match_parent"
-    tools:context="area51.budgetbuddy.OverviewFragment">
+    android:orientation="vertical">
 
+    <!--Alerts Layout-->
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:background="@color/white"
+        android:elevation="2dp"
+        app:cardCornerRadius="10dp">
 
-    <!--TODO: delete me and replace with pretty UI -->
-    <!--<RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"> -->
-
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <android.support.v7.widget.CardView
-                android:id="@+id/card_view_alerts"
-                cardview.cardBackgroundColor="#ffffff"
-                cardview.cardCornerRadius="4dp"
-                cardview.contentPadding="5dp"
-                cardview.elevation="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/alert_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="13dp"
-                        android:paddingTop="10dp"
-                        android:paddingBottom="7dp"
-                        android:textColor="@color/colorPrimary"
-                        android:text="Alerts"
-                        android:textSize="24sp" />
-
-                    <ImageView
-                        android:id="@+id/alert1_image"
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:paddingTop="10dp"
-                        android:paddingBottom="10dp"
-                        android:layout_below="@id/alert_title"
-                        android:layout_marginStart="30dp"/>
-
-                    <TextView
-                        android:id="@+id/alert_content1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="20dp"
-                        android:paddingBottom="20dp"
-                        android:textSize="16sp"
-                        android:text="Joe made a payment to group budgets"
-                        android:layout_below="@+id/alert_title"
-                        android:layout_toEndOf="@+id/alert1_image" />
-
-                    <ImageView
-                        android:id="@+id/alert2_image"
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:paddingTop="10dp"
-                        android:paddingBottom="10dp"
-                        android:layout_marginStart="30dp"
-                        android:layout_below="@id/alert1_image"/>
-
-                    <TextView
-                        android:id="@+id/alert_content2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_toRightOf="@id/alert2_image"
-                        android:layout_below="@id/alert_content1"
-                        android:paddingLeft="20dp"
-                        android:paddingBottom="20dp"
-                        android:textSize="16sp"
-                        android:text="You are nearing your Coffee Budget Limit"/>
-
-
-
-                </RelativeLayout>
-
-
-
-            </android.support.v7.widget.CardView>
-
-            <!--<android.support.v7.widget.CardView
-                android:id="@+id/card_view_recycler"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/alert_title"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                cardview.cardBackgroudColor="#ffffff"
-                cardview.cardCornerRadius="4dp"
-                cardview.contentPadding="5dp"
-                cardview.elevation="10dp"> -->
+                android:layout_marginStart="13dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="7dp"
+                android:textColor="@color/colorPrimary"
+                android:text="Alerts"
+                android:textSize="24sp" />
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recycler_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:scrollbars="vertical" />
+            <ImageView
+                android:id="@+id/alert1_image"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:layout_below="@id/alert_title"
+                android:layout_marginStart="30dp"/>
 
-           <!-- </android.support.v7.widget.CardView> -->
+            <TextView
+                android:id="@+id/alert_content1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:paddingBottom="20dp"
+                android:textSize="16sp"
+                android:text="Joe made a payment to group budgets"
+                android:layout_below="@+id/alert_title"
+                android:layout_toEndOf="@+id/alert1_image" />
 
+            <ImageView
+                android:id="@+id/alert2_image"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:layout_marginStart="30dp"
+                android:layout_below="@id/alert1_image"/>
 
+            <TextView
+                android:id="@+id/alert_content2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/alert2_image"
+                android:layout_below="@id/alert_content1"
+                android:paddingLeft="20dp"
+                android:paddingBottom="20dp"
+                android:textSize="16sp"
+                android:text="You are nearing your Coffee Budget Limit"/>
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
 
+    <!--Recycler View Layout -->
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:background="@color/white"
+        android:elevation="2dp"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        app:cardCornerRadius="10dp">
 
-        </LinearLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="vertical"
+            android:paddingBottom="@dimen/activity_vertical_margin" />
+    </android.support.v7.widget.CardView>
 
-
-
-    <!--</RelativeLayout>-->
-
-
-</FrameLayout>
+</LinearLayout>
