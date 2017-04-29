@@ -80,7 +80,7 @@ public class TrendsFragment extends Fragment {
         dataset.setColors(ColorTemplate.COLORFUL_COLORS); //
         pieChart.setData(pdata);
 
-        pieChart.animateY(5000);
+        pieChart.animateY(2000);
 /*
         // TODO: Customize the UI for the Payments Screen here
         // TODO Susan : replace - this is just here for an example on how to get budget data
