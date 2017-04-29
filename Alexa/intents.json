@@ -102,6 +102,12 @@
     },
     {
       "intent": "ThanksIntent"
+    },
+    {
+      "intent": "AMAZON.YesIntent"
+    },
+    {
+      "intent": "AMAZON.NoIntent"
     }
   ]
 }
