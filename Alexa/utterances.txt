@@ -61,3 +61,14 @@ ThanksIntent Thank you
 ThanksIntent u the bomb
 ThanksIntent Thanks for the help
 ThanksIntent Cool thanks
+
+AMAZON.YesIntent yea
+AMAZON.YesIntent okay
+AMAZON.YesIntent yeah
+AMAZON.YesIntent yep
+AMAZON.YesIntent please do
+
+AMAZON.NoIntent nope
+AMAZON.NoIntent no thank you
+AMAZON.NoIntent nah
+
