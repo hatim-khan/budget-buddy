@@ -54,7 +54,6 @@ public class TrendsFragment extends Fragment {
         BarData data = new BarData(getXAxisValues(), getDataSet());
         chart.setData(data);
         chart.animateXY(2000, 2000);
-        chart.setDescription("MONTH TO MONTH TRENDS");
         chart.invalidate();
 
 
@@ -79,7 +78,6 @@ public class TrendsFragment extends Fragment {
 
         PieData pdata = new PieData(labels, dataset);
         dataset.setColors(ColorTemplate.COLORFUL_COLORS); //
-        pieChart.setDescription("THIS MONTH'S SPENDINGS");
         pieChart.setData(pdata);
 
         pieChart.animateY(5000);
