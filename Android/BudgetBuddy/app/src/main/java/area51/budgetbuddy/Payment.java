@@ -37,21 +37,6 @@ public class Payment {
         this.username = username;
     }
 
-    // Helper method for converting a string to a date
-    private static Date convertStringToDate(String dateString) {
-        Date date = new Date();
-        String[] formatStrings = {"M/y", "M/d/y", "M-d-y"};
-        for (String formatString : formatStrings) {
-            try {
-                return new SimpleDateFormat(formatString).parse(dateString);
-            }
-            catch (ParseException e) {
-                Log.e("ERROR", "could not parse date string: " + dateString);
-            }
-        }
-        return date;
-    }
-
     public double getAmountSpent() {
         return amountSpent;
     }

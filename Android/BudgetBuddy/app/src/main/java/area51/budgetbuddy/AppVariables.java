@@ -9,14 +9,20 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static android.content.ContentValues.TAG;
+import static area51.budgetbuddy.R.id.payment;
 
 /**
  * Created by paige on 4/16/17.
@@ -103,6 +109,42 @@ public class AppVariables extends Application {
         }
         throw new AssertionError("Payment made by" + payment.getUsername() +
                 " does not have a corresponding budget");
+    }
+
+    // Helper method for converting a string to a date
+    private static Date convertStringToDate(String dateString) {
+        Date date = new Date();
+        String[] formatStrings = {"M/y", "M/d/y", "M-d-y"};
+        for (String formatString : formatStrings) {
+            try {
+                return new SimpleDateFormat(formatString).parse(dateString);
+            }
+            catch (ParseException e) {
+                Log.e("ERROR", "could not parse date string: " + dateString);
+            }
+        }
+        return date;
+    }
+
+
+
+    public static ArrayList<String> getUniquePaymentDates(User user) {
+        HashSet<Date> datesSet = new HashSet<>();
+
+        ArrayList<Payment> allPayments = AppVariables.getAllPaymentsSorted(user);
+
+        for (Payment payment: allPayments) {
+            Date paymentDate = convertStringToDate(payment.getPurchaseDate());
+            datesSet.add(paymentDate);
+        }
+
+        ArrayList<String> toReturn = new ArrayList<String>();
+        for (Date date : datesSet) {
+            String dateString = date.toString();
+            toReturn.add(dateString);
+        }
+
+        return toReturn;
     }
 
 }
