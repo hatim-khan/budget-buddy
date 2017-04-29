@@ -43,6 +43,34 @@ public class SignInActivity extends AppCompatActivity {
     }
 
 
+    // Creates a test group in case the database fails
+    private Group createTestGroup() {
+        Group testGroup = new Group("Test Group");
+        User testUser = new User("Test User", "password", new HashMap<String, Budget>(), testGroup);
+        // Create test budgets
+        Budget testPersonalBudget1 = new Budget("Test Personal Budget 1", new ArrayList<Payment>(), false, 0.0, 50.0);
+        Budget testPersonalBudget2 = new Budget("Test Personal Budget 2", new ArrayList<Payment>(), false, 0.0, 100.0);
+        Budget testGroupBudget1 = new Budget("Test Group Budget 1", new ArrayList<Payment>(), true, 50.0, 0.0);
+        Budget testGroupBudget2 = new Budget("Test Group Budget 2", new ArrayList<Payment>(), true, 100.0, 0.0);
+        // Add budgets to user's saved budgets
+        testUser.addBudgetToUserBudgetList(testGroupBudget1);
+        testUser.addBudgetToUserBudgetList(testGroupBudget2);
+        testUser.addBudgetToUserBudgetList(testPersonalBudget1);
+        testUser.addBudgetToUserBudgetList(testPersonalBudget2);
+        // Create some test payments
+        Payment testPayment0 = new Payment(12.00, "05/12/2017", "A test group purchase", "Test User");
+        Payment testPayment1 = new Payment(19.00, "12/12/2016", "Another test group purchase", "Test User");
+        Payment testPayment2 = new Payment(20.00, "20/20/2016", "Yet another test group purchase", "Test User");
+        // Add the payments to the group's first budget
+        testGroupBudget1.addUserPayment(testPayment0);
+        testGroupBudget1.addUserPayment(testPayment1);
+        testGroupBudget1.addUserPayment(testPayment2);
+        AppVariables.currentUser = testUser;
+
+        return testGroup;
+    }
+
+
     // Attach a listener to read the data at our posts reference. Probably shouldn't do this here
     // since this means this view will have to stay in memory, but its the easiest place to put
     // this for now
@@ -145,7 +173,7 @@ public class SignInActivity extends AppCompatActivity {
         String password = passwordEditText.getText().toString();
         String groupName = groupNameEditText.getText().toString();
 
-
+        group = null;
         if (username.isEmpty()||password.isEmpty()||groupName.isEmpty()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(SignInActivity.this);
 
@@ -160,8 +188,18 @@ public class SignInActivity extends AppCompatActivity {
         }
 
         else {
+            // If group is null, that means onDataChange was never called, which is not good
+            // For now, if this happens, we create a test group so we can still test out UI stuff
+            if (group == null) {
+                Log.d("FIREBASE ERROR", "Did not fetch group from database");
+                group = createTestGroup();
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                return;
+            }
+
             AlertDialog.Builder builder = new AlertDialog.Builder(SignInActivity.this);
-            if (group == null || !AppVariables.allGroups.containsKey(group.getName())) {
+            if (!AppVariables.allGroups.containsKey(group.getName())) {
                 dataBaseRef.child("Test").setValue("Test");
                 builder.setTitle("The group '" + groupName + "' does not exist.").setMessage("Please check that you correctly entered your group's name (Hint: try signing in with group name 'Area 51')");
                 builder.setNegativeButton("Okay", new DialogInterface.OnClickListener() {
@@ -169,6 +207,7 @@ public class SignInActivity extends AppCompatActivity {
                         return;
                     }
                 }).show();
+
 
             }
             else if (!signInUser(username, password, group)) {
