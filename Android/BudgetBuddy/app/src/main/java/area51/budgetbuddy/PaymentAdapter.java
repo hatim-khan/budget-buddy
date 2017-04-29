@@ -64,7 +64,7 @@ public class PaymentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public int getItemCount() {
         // TODO: need to add # of dates for enough cells
-        return payments.size() ;
+        return payments.size();
     }
 
     @Override
@@ -98,6 +98,5 @@ public class PaymentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             owedDueView = (TextView) itemView.findViewById(R.id.owed_due);
         }
     }
-
 
 }
