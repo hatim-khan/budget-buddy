@@ -172,8 +172,7 @@ public class SignInActivity extends AppCompatActivity {
         String username = usernameEditText.getText().toString();
         String password = passwordEditText.getText().toString();
         String groupName = groupNameEditText.getText().toString();
-
-        group = null;
+        
         if (username.isEmpty()||password.isEmpty()||groupName.isEmpty()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(SignInActivity.this);
 
