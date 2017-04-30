@@ -88,12 +88,12 @@ public class TrendsFragment extends Fragment {
 
         PieChart GroupPieChart = (PieChart) view.findViewById(R.id.gpchart);
         ArrayList<Entry> entriess = new ArrayList<>();
-        entries.add(new Entry(4f, 0));
-        entries.add(new Entry(8f, 1));
-        entries.add(new Entry(6f, 2));
-        entries.add(new Entry(12f, 3));
-        entries.add(new Entry(18f, 4));
-        entries.add(new Entry(9f, 5));
+        entriess.add(new Entry(4f, 0));
+        entriess.add(new Entry(8f, 1));
+        entriess.add(new Entry(6f, 2));
+        entriess.add(new Entry(12f, 3));
+        entriess.add(new Entry(18f, 4));
+        entriess.add(new Entry(9f, 5));
 
         PieDataSet gdataset = new PieDataSet(entriess, "# of Calls");
 
