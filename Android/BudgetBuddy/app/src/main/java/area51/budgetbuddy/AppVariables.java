@@ -117,6 +117,7 @@ public class AppVariables extends Application {
         String[] formatStrings = {"M/y", "M/d/y", "M-d-y"};
         for (String formatString : formatStrings) {
             try {
+                // looks like it is getting stuck here
                 return new SimpleDateFormat(formatString).parse(dateString);
             }
             catch (ParseException e) {
@@ -125,7 +126,7 @@ public class AppVariables extends Application {
         }
         return date;
     }
-
+    // difference between this and next method
     public static ArrayList<String> getUniquePaymentDateStrings(User user) {
         ArrayList<Date> datesSet = getUniquePaymentDates(user);
 
@@ -139,11 +140,13 @@ public class AppVariables extends Application {
 
     public static ArrayList<Date> getUniquePaymentDates(User user) {
         HashSet<Date> datesSet = new HashSet<>();
-        ArrayList<Payment> allPayments = AppVariables.getAllPaymentsSorted(user);
+        ArrayList<Payment> allPayments = AppVariables.getAllPaymentsSorted(user); // was able to return successfully i believe
         for (Payment payment: allPayments) {
-            Date paymentDate = convertStringToDate(payment.getPurchaseDate());
+            // why did it print twice???
+            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!GETING STUCK!!!!!!!!!!!!!!!!!!!");
+            Date paymentDate = convertStringToDate(payment.getPurchaseDate()); // here were we get stuck
             datesSet.add(paymentDate);
-        }
+        } // stuff up here looks good based on debugger
         // Sort the dates so they are in order
         ArrayList<Date> sortedDates = new ArrayList<Date>();
         for (Date date: datesSet) {

@@ -50,26 +50,24 @@ public class PaymentsFragment extends Fragment {
 
         // TODO : Customize the UI for the Payments Screen here
         // TODO Erick : replace - this is just here for an example on how to get payment data
-        paymentArr = new ArrayList<>();
+        //paymentArr = new ArrayList<>();
         rvPayments = (RecyclerView) view.findViewById(R.id.payment_recycler_view);
-        User currentUser = AppVariables.currentUser;
-        paymentArr = AppVariables.getAllPaymentsSorted(currentUser);
+        //User currentUser = AppVariables.currentUser; might uncomment this if necessary
+        //paymentArr = AppVariables.getAllPaymentsSorted(currentUser);
         //paymentArr = Group.groupPayments();
-        PaymentAdapter adapter = new PaymentAdapter(this.getContext(), paymentArr);
+        PaymentAdapter adapter = new PaymentAdapter(this.getContext()); // here is where we go to adapter
         rvPayments.setAdapter(adapter);
         layoutManager = new LinearLayoutManager(this.getContext());
         rvPayments.setLayoutManager(layoutManager);
 
-        String paymentsString = new String();
-
-        // I use the method `getAllPaymentsSorted` and think it works
-        // but you may want to test that it actually sorts by date correctly
-        for (Payment payment : AppVariables.getAllPaymentsSorted(AppVariables.currentUser)) {
-            paymentsString += "Payment made for: $" + payment.getAmountSpent() + "\n";
-            Log.d("Payment = ", paymentsString);
-        }
-
-
+//        String paymentsString = new String();
+//
+//        // I use the method `getAllPaymentsSorted` and think it works
+//        // but you may want to test that it actually sorts by date correctly
+//        for (Payment payment : AppVariables.getAllPaymentsSorted(AppVariables.currentUser)) {
+//            paymentsString += "Payment made for: $" + payment.getAmountSpent() + "\n";
+//            Log.d("Payment = ", paymentsString);
+//        }
         return view;
     }
 }
