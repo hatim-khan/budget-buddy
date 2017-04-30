@@ -43,3 +43,32 @@ BudgetSummaryIntent I want a recap of my budgets
 BudgetSummaryIntent I want a summary of my budget
 BudgetSummaryIntent I want a summary of my budgets
 BudgetSummaryIntent Give me some details about my budgets
+
+
+MainMenuIntent main menu
+MainMenuIntent go back to the main menu
+MainMenuIntent go back to the main menu
+MainMenuIntent I want to track a new payment
+MainMenuIntent I want to track a different payment
+MainMenuIntent I want to do something else
+MainMenuIntent I want to add a new budget
+MainMenuIntent I want to add a different budget
+MainMenuIntent I don't want to do this anymore
+
+ThanksIntent Thanks budget buddy
+ThanksIntent Thanks
+ThanksIntent Thank you
+ThanksIntent u the bomb
+ThanksIntent Thanks for the help
+ThanksIntent Cool thanks
+
+AMAZON.YesIntent yea
+AMAZON.YesIntent okay
+AMAZON.YesIntent yeah
+AMAZON.YesIntent yep
+AMAZON.YesIntent please do
+
+AMAZON.NoIntent nope
+AMAZON.NoIntent no thank you
+AMAZON.NoIntent nah
+

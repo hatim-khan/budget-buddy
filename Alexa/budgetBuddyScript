@@ -1,0 +1,33 @@
+User: Open Budget Buddy
+Alexa: Budget Buddy here, how can I help you budget?
+User: I want a budget summary
+Alexa: You have currently spent $100 out of $200 in your groceries budget. You are also nearing your cleaning supplies budget as well.
+User: Thanks!
+
+
+User: Open Budget Buddy
+Alexa: Budget Buddy here, how can I help you budget?
+User: I want to track a payment
+Alexa: Who purchased this?
+User: It was by Drake
+Alexa: How much was the purchase for?
+User: It was fifty dollars
+Alexa: What was the purchase?
+User: It was a lobster roll
+Alexa: Was it for a personal or group budget?
+User: It was a personal budget
+Alexa: What is the name of the budget?
+User: It was for food
+Alexa: Thanks for tracking a payment, you are now back at the main menu!
+
+
+User: Open Budget Buddy
+Alexa: Budget Buddy here, how can I help you budget?
+User: I want to add a budget
+Alexa: What is the name of the budget?
+User: Utilities
+Alexa: How much are you planning to spend per month?
+User: Two hundred per month
+Alexa: Thanks for adding a budget, you are now back at the main menu!
+
+

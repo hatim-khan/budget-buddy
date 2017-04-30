@@ -1,0 +1,113 @@
+{
+  "intents": [
+    {
+      "intent": "TrackPaymentIntent",
+      "slots": [
+        {
+          "name": "amount",
+          "type": "AMAZON.NUMBER"
+        },
+        {
+          "name": "purchaser",
+          "type": "PERSON"
+        },
+        {
+          "name": "purchaseType",
+          "type": "PURCHASE_TYPE"
+        },
+        {
+          "name": "budget",
+          "type": "BUDGET"
+        },
+        {
+          "name": "item",
+          "type": "ITEM"
+        }
+      ]
+    },
+    {
+      "intent": "PaymentInformationIntent",
+      "slots": [
+        {
+          "name": "person",
+          "type": "PERSON"
+        },
+        {
+          "name": "amount",
+          "type": "AMAZON.NUMBER"
+        },
+        {
+          "name": "type",
+          "type": "PURCHASE_TYPE"
+        },
+        {
+          "name": "item",
+          "type": "ITEM"
+        },
+        {
+          "name": "budget",
+          "type": "BUDGET"
+        }
+      ]
+    },
+    {
+      "intent": "BudgetAddingIntent",
+      "slots": [
+        {
+          "name": "budget",
+          "type": "BUDGET"
+        },
+        {
+          "name": "type",
+          "type": "PURCHASE_TYPE"
+        },
+        {
+          "name": "amount",
+          "type": "AMAZON.NUMBER"
+        }
+      ]
+    },
+    {
+      "intent": "BudgetInformationIntent",
+      "slots": [
+        {
+          "name": "budget",
+          "type": "BUDGET"
+        },
+        {
+          "name": "type",
+          "type": "PURCHASE_TYPE"
+        },
+        {
+          "name": "amount",
+          "type": "AMAZON.NUMBER"
+        }
+      ]
+    },
+    
+    {
+      "intent": "WhatCanISayIntent"
+    },
+    {
+      "intent": "BudgetSummaryIntent",
+      "slots": [
+        {
+          "name": "budget",
+          "type": "BUDGET"
+        }
+      ]
+    },
+    {
+      "intent": "MainMenuIntent"
+    },
+    {
+      "intent": "ThanksIntent"
+    },
+    {
+      "intent": "AMAZON.YesIntent"
+    },
+    {
+      "intent": "AMAZON.NoIntent"
+    }
+  ]
+}

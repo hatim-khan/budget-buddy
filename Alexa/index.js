@@ -4,8 +4,9 @@
 
 'use strict';
 const Alexa = require('alexa-sdk');
-const APP_ID = undefined;
+const APP_ID = 'amzn1.ask.skill.c47f2777-1b30-436f-a55a-7a56d2895dc7';
 var rp = require('request-promise');
+var request = require('request');
 
 var household = 'Area 51';
 var groupBudgets;
@@ -15,7 +16,7 @@ var states = {
     MAINMENU: '_MAINMENU', 
     TRACKPAYMENT: '_TRACKPAYMENT', 
     BUDGETADDING: '_BUDGETADDING',
-    BUDGETSUMMARY: '_BUDGETSUMMARY',
+    BUDGETSUMMARY: '_BUDGETSUMMARY'
 };
 
 exports.handler = (event, context, callback) => {
@@ -99,14 +100,14 @@ var trackPaymentHandlers = Alexa.CreateStateHandler(states.TRACKPAYMENT, {
                 break;
             case 'amount':
                 var amountSlot = this.event.request.intent.slots.amount.value;
-                this.attributes['payment'].amount = amountSlot;
+                this.attributes['payment'].amount = parseInt(amountSlot);
                 this.attributes['trackingPaymentState'] = 'item';
                 this.emit(':ask', 'What was the purchase?');
             case 'item':
                 var itemSlot = this.event.request.intent.slots.item.value;
                 this.attributes['payment'].item = itemSlot;
                 this.attributes['trackingPaymentState'] = 'type';
-                this.emit(':ask', 'Was it for a personal or group budget?');
+                this.emit(':ask', 'Was it for a personal or a group budget?');
                 break;
             case 'type':
                 var typeSlot = this.event.request.intent.slots.type.value;
@@ -117,33 +118,54 @@ var trackPaymentHandlers = Alexa.CreateStateHandler(states.TRACKPAYMENT, {
             case 'budget':
                 var budgetSlot = this.event.request.intent.slots.budget.value;
                 this.attributes['payment'].budget = budgetSlot;
+                this.handler.state = states.MAINMENU;
                 this.emit(':tell', 'Thanks for tracking a payment, you are now back at the main menu!');
 
-                // // currently only adding payments to Cleaning Supplies group budget
+                // var formData = {
+                //     amountSpent: this.attributes['payment'].amount,
+                //     notes: this.attributes['payment'].item,
+                //     purchaseDate: '4/25/2017',
+                //     username: this.attributes['payment'].person
+                // };
+
+                // request.put({url: 'https://budget-buddy-2.firebaseio.com/Group/Area%2051/payments/3.json',
+                //             formData: formData},
+                //             function callback(err, httpResponse, body) {
+                //                 this.handler.state = states.MAINMENU;
+                //                 this.emit(':tell', 'Thanks for tracking a payment, you are now back at the main menu!');
+                //             });
+
+
+                // currently only adding payments to Cleaning Supplies group budget
                 // var options = {
-                //     method: 'POST',
-                //     uri: 'https://budget-buddy-2.firebaseio.com/Group/Area%2051/groupBudgets/Cleaning%20Supplies/payments.json',
+                //     method: 'PUT',
+                //     uri: 'https://budget-buddy-2.firebaseio.com/Group/Area%2051/payments/3.json',
                 //     body: {
-                //         purchaseDate: '4/25/2017',
                 //         amountSpent: this.attributes['payment'].amount,
-                //         username: this.attributes['payment'].person,
                 //         notes: this.attributes['payment'].item,
+                //         purchaseDate: '4/25/2017',
+                //         username: this.attributes['payment'].person
                 //     },
                 //     json: true // Automatically stringifies the body to JSON 
                 // };
-                 
+
                 // rp(options)
                 //     .then(function (parsedBody) {
-                //         console.log('succesful push of payment')
+                //         console.log('succesful push of payment');
+                //         console.log(this);
+                //         // this.handler.state = states.MAINMENU;
+                //         // this.emit(':tell', 'Thanks for tracking a payment, you are now back at the main menu!');
+                //         // this.emit(':ask', strings.WELCOME_TEXT);
                 //     })
                 //     .catch(function (err) {
                 //         // POST failed... 
-                //         this.emit(':tell', 'Ah, that did not work correctly. Returning to the main menu now.');
+                //         // this.emit(':tell', 'Ah, that did not work correctly. Returning to the main menu now.');
                 //     })
                 //     .finally(function (body) {
-                //         this.handler.states = states.MAINMENU;
-                //         this.emit(':tell', 'Thanks for tracking a payment, you are now back at the main menu!');
+                //         // this.handler.state = states.MAINMENU;
+                //         // this.emit(':tell', 'Thanks for tracking a payment, you are now back at the main menu!');
                 //     });
+                // this.emit(':tell', 'Thanks for tracking a payment, you are now back at the main menu!');
         }
     },
 
@@ -197,30 +219,33 @@ var budgetAddingHandlers = Alexa.CreateStateHandler(states.BUDGETADDING, {
             case 'amount':
                 var amountSlot = this.event.request.intent.slots.amount.value;
                 this.attributes['budget'].amount = amountSlot;
-                var options = {
-                    method: 'POST',
-                    uri: 'https://budget-buddy-2.firebaseio.com/Group/Area%2051/groupBudgets.json',
-                    body: {
-                        groupBudget: this.attributes['budget'].type,
-                        name: this.attributes['budget'].name,
-                        amountLeftInBudget: this.attributes['budget'].amount,
-                        amountSpentInBudget: 0,
-                        budgetLimit: this.attributes['budget'].amount,
-                    },
-                    json: true // Automatically stringifies the body to JSON 
-                };
+                this.handler.state = states.MAINMENU;
+                this.emit(':tell', 'Thanks for adding a budget, you are now back at the main menu!');
+                // var options = {
+                //     method: 'PUT',
+                //     uri: 'https://budget-buddy-2.firebaseio.com/Group/Area%2051/groupBudgets/Food.json',
+                //     body: {
+                //         groupBudget: this.attributes['budget'].type,
+                //         name: this.attributes['budget'].name,
+                //         amountLeftInBudget: this.attributes['budget'].amount,
+                //         amountSpentInBudget: 0,
+                //         budgetLimit: this.attributes['budget'].amount,
+                //     },
+                //     json: true // Automatically stringifies the body to JSON 
+                // };
                  
-                rp(options)
-                    .then(function (parsedBody) {
-                        console.log('succesful push of budget')
-                    })
-                    .catch(function (err) {
-                        // POST failed... 
-                    })
-                    .finally(function (body) {
-                        this.handler.states = states.MAINMENU;
-                        this.emit(':tell', 'Thanks for adding a budget, you are now back at the main menu!');
-                    });
+                // rp(options)
+                //     .then(function (parsedBody) {
+                //         console.log('succesful push of budget');
+                //         this.emit(':tell', 'Thanks for adding a budget, you are now back at the main menu!');
+                //     })
+                //     .catch(function (err) {
+                //         // POST failed... 
+                //     })
+                //     .finally(function (body) {
+                //         this.handler.state = states.MAINMENU;
+                //         this.emit(':tell', 'Thanks for adding a budget, you are now back at the main menu!');
+                    // });
             }
     },
 

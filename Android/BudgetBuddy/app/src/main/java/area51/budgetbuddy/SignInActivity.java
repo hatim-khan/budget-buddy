@@ -174,6 +174,8 @@ public class SignInActivity extends AppCompatActivity {
         String username = usernameEditText.getText().toString();
         String password = passwordEditText.getText().toString();
         String groupName = groupNameEditText.getText().toString();
+
+
         
         if (username.isEmpty()||password.isEmpty()||groupName.isEmpty()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(SignInActivity.this);
@@ -222,6 +224,7 @@ public class SignInActivity extends AppCompatActivity {
             }
             else {
                 // group name exists and password / username valid
+                AppVariables.getUniquePaymentDates(AppVariables.currentUser);
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
             }
