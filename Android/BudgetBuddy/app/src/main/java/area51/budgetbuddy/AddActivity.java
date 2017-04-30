@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -46,7 +47,7 @@ public class AddActivity extends AppCompatActivity {
 
         // Setting values for the budgetSpinner
 
-        Spinner budgetSpinner = (Spinner) findViewById(R.id.budget_name);
+        Spinner budgetSpinner = (Spinner) findViewById(R.id.budget_name_spinner);
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, AppVariables.currentUser.userGroupBudgetStrings());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -54,7 +55,6 @@ public class AddActivity extends AppCompatActivity {
 
         // Set a listener so list of budgets changes when group/personal is toggled
         RadioGroup personalOrGroup = (RadioGroup) findViewById(R.id.radio_group);
-
         personalOrGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -65,7 +65,6 @@ public class AddActivity extends AppCompatActivity {
 
                 }
                 else  if (checkedId == R.id.personal_radio_button) {
-                    //do work when radioButton2 is active
                     dataSourceList = AppVariables.currentUser.userPersonalBudgetStrings();
                 }
                 adapter.clear();
@@ -74,6 +73,71 @@ public class AddActivity extends AppCompatActivity {
             }
         });
 
+        // Listener for when the user switches between adding a payment or adding a group
+        RadioGroup paymentOrBudgetRadioGroup = (RadioGroup) findViewById(R.id.payment_budget_radio_group);
+        paymentOrBudgetRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+                ArrayList<String> dataSourceList = new ArrayList<String>();
+                if (checkedId == R.id.payment_radio_button) {
+                    changeUIForAddingPayments();
+                }
+                else  if (checkedId == R.id.budget_radio_button) {
+                    changeUIForAddingABudget();
+
+                }
+            }
+        });
+    }
+
+    private void changeUIForAddingABudget() {
+        EditText amountSpentEditText = (EditText) findViewById(R.id.amount_spent);
+        TextView amountSpentOrBudgetName = (TextView) findViewById(R.id.amount_spent_or_budget_name);
+        amountSpentOrBudgetName.setText("Budget Name");
+        amountSpentEditText.setHint("Budget Name");
+
+        TextView budgetOrPaymentTitleTextView = (TextView) findViewById(R.id.details_textview);
+        budgetOrPaymentTitleTextView.setText("Budget Details");
+
+
+        TextView budgetNameOrMonthlyLimit = (TextView) findViewById(R.id.budget_name_or_monthly_limit);
+        budgetNameOrMonthlyLimit.setText("Monthly Budget Limit");
+
+        EditText budgetLimit = (EditText) findViewById(R.id.budget_limit);
+        budgetLimit.setVisibility(View.VISIBLE);
+
+        // Hide the budget spinner
+        ((Spinner) findViewById(R.id.budget_name_spinner)).setVisibility(View.GONE);
+
+        // Hide the Purchase Date edit text and textview
+        ((EditText) findViewById(R.id.purchase_date)).setVisibility(View.GONE);
+        ((TextView) findViewById(R.id.purchase_date_text_view)).setVisibility(View.GONE);
+
+        // Hide the notes edit text
+        ((TextView) findViewById(R.id.notes)).setVisibility(View.GONE);
+    }
+
+    private void changeUIForAddingPayments() {
+        EditText amountSpentEditText = (EditText) findViewById(R.id.amount_spent);
+        TextView amountSpentOrBudgetName = (TextView) findViewById(R.id.amount_spent_or_budget_name);
+        amountSpentOrBudgetName.setText("Amount Spent");
+        amountSpentEditText.setHint("$0.00");
+
+        TextView budgetNameOrMonthlyLimit = (TextView) findViewById(R.id.budget_name_or_monthly_limit);
+        budgetNameOrMonthlyLimit.setText("Budget Name");
+
+        TextView budgetOrPaymentTitleTextView = (TextView) findViewById(R.id.details_textview);
+        budgetOrPaymentTitleTextView.setText("Payment Details");
+
+        EditText budgetLimit = (EditText) findViewById(R.id.budget_limit);
+        budgetLimit.setVisibility(View.GONE);
+
+        // Unhide the things we hid for the budgets view
+        ((Spinner) findViewById(R.id.budget_name_spinner)).setVisibility(View.VISIBLE);
+        ((EditText) findViewById(R.id.purchase_date)).setVisibility(View.VISIBLE);
+        ((TextView) findViewById(R.id.purchase_date_text_view)).setVisibility(View.VISIBLE);
+        ((TextView) findViewById(R.id.notes)).setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -88,7 +152,7 @@ public class AddActivity extends AppCompatActivity {
     private void createNewPaymentFromFields() {
 
         EditText amountSpentEditText = (EditText) findViewById(R.id.amount_spent);
-        Spinner budgetSpinner = (Spinner) findViewById(R.id.budget_name);
+        Spinner budgetSpinner = (Spinner) findViewById(R.id.budget_name_spinner);
         EditText dateEditText = (EditText) findViewById(R.id.purchase_date);
         String notes = ((EditText) findViewById(R.id.notes)).getText().toString();
         String budgetName = budgetSpinner.getSelectedItem().toString();
