@@ -178,7 +178,7 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/amount_spent_or_budget_name"
+                        android:id="@+id/amount_spent_or_budget_name_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -187,7 +187,7 @@
                         android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
                     <EditText
-                        android:id="@+id/amount_spent"
+                        android:id="@+id/amount_spent_or_budget_name_edit_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"

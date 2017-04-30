@@ -92,8 +92,8 @@ public class AddActivity extends AppCompatActivity {
     }
 
     private void changeUIForAddingABudget() {
-        EditText amountSpentEditText = (EditText) findViewById(R.id.amount_spent);
-        TextView amountSpentOrBudgetName = (TextView) findViewById(R.id.amount_spent_or_budget_name);
+        EditText amountSpentEditText = (EditText) findViewById(R.id.amount_spent_or_budget_name_edit_text);
+        TextView amountSpentOrBudgetName = (TextView) findViewById(R.id.amount_spent_or_budget_name_text_view);
         amountSpentOrBudgetName.setText("Budget Name");
         amountSpentEditText.setHint("Budget Name");
 
@@ -111,16 +111,16 @@ public class AddActivity extends AppCompatActivity {
         ((Spinner) findViewById(R.id.budget_name_spinner)).setVisibility(View.GONE);
 
         // Hide the Purchase Date edit text and textview
-        ((EditText) findViewById(R.id.purchase_date)).setVisibility(View.GONE);
-        ((TextView) findViewById(R.id.purchase_date_text_view)).setVisibility(View.GONE);
+        ((EditText) findViewById(R.id.purchase_date)).setVisibility(View.INVISIBLE);
+        ((TextView) findViewById(R.id.purchase_date_text_view)).setVisibility(View.INVISIBLE);
 
         // Hide the notes edit text
-        ((TextView) findViewById(R.id.notes)).setVisibility(View.GONE);
+        ((TextView) findViewById(R.id.notes)).setVisibility(View.INVISIBLE);
     }
 
     private void changeUIForAddingPayments() {
-        EditText amountSpentEditText = (EditText) findViewById(R.id.amount_spent);
-        TextView amountSpentOrBudgetName = (TextView) findViewById(R.id.amount_spent_or_budget_name);
+        EditText amountSpentEditText = (EditText) findViewById(R.id.amount_spent_or_budget_name_edit_text);
+        TextView amountSpentOrBudgetName = (TextView) findViewById(R.id.amount_spent_or_budget_name_text_view);
         amountSpentOrBudgetName.setText("Amount Spent");
         amountSpentEditText.setHint("$0.00");
 
@@ -149,23 +149,16 @@ public class AddActivity extends AppCompatActivity {
 
     // MARK: Database methods
 
-    private void createNewPaymentFromFields() {
+    private void createNewPaymentFromFields(Boolean isGroupPayment) {
 
-        EditText amountSpentEditText = (EditText) findViewById(R.id.amount_spent);
+        EditText amountSpentEditText = (EditText) findViewById(R.id.amount_spent_or_budget_name_edit_text);
         Spinner budgetSpinner = (Spinner) findViewById(R.id.budget_name_spinner);
         EditText dateEditText = (EditText) findViewById(R.id.purchase_date);
         String notes = ((EditText) findViewById(R.id.notes)).getText().toString();
         String budgetName = budgetSpinner.getSelectedItem().toString();
 
-        // Radio Group Parsing. Group is at index 0, personal is at index 1
-        RadioGroup personalOrGroup = (RadioGroup) findViewById(R.id.radio_group);
-        int radioButtonID = personalOrGroup.getCheckedRadioButtonId();
-        View radioButton = personalOrGroup.findViewById(radioButtonID);
-        int radioButtonIndex = personalOrGroup.indexOfChild(radioButton);
-        Boolean isGroup = radioButtonIndex == 0;
-
         Double amountSpent = Double.valueOf(amountSpentEditText.getText().toString());
-        Budget budget = AppVariables.currentUser.getUserBudgetFromName(budgetName, isGroup);
+        Budget budget = AppVariables.currentUser.getUserBudgetFromName(budgetName, isGroupPayment);
         String date = dateEditText.getText().toString();
         String username = currentUser.getUsername();
         // Create the new payment
@@ -173,8 +166,51 @@ public class AddActivity extends AppCompatActivity {
 
         // Add the payment to the selected budget
         budget.addUserPayment(newPayment);
-        storePaymentToDataBase(newPayment, budget, isGroup);
+        storePaymentToDataBase(newPayment, budget, isGroupPayment);
 
+    }
+
+    // Returns true on success, false if budget with name already exists
+    private boolean createNewBudgetFromFields(Boolean isGroupBudget) {
+
+        User currentUser = AppVariables.currentUser;
+        EditText budgetNameEditText = (EditText) findViewById(R.id.amount_spent_or_budget_name_edit_text);
+        EditText budgetLimitEditText = (EditText) findViewById(R.id.budget_limit);
+
+        Double budgetLimit = Double.valueOf(budgetLimitEditText.getText().toString());
+        String budgetName = budgetNameEditText.getText().toString();
+        String username = currentUser.getUsername();
+
+        // Check if the budget with the given name already exists
+        if (isGroupBudget && currentUser.userGroupBudgetStrings().contains(budgetName)) {
+            // Group budget with this name already exists
+            return false;
+        }
+
+        if (!isGroupBudget && currentUser.userPersonalBudgetStrings().contains(budgetName)) {
+            // Personal budget with this name already exists
+            return false;
+        }
+
+        Budget newBudget = new Budget(budgetName, new ArrayList<Payment>(), isGroupBudget, budgetLimit, 0.0);
+        AppVariables.currentUser.addBudgetToUserBudgetList(newBudget);
+
+        storeBudgetToDataBase(newBudget, isGroupBudget);
+        return true;
+    }
+
+    private boolean storeBudgetToDataBase(Budget budget, boolean isGroupBudget) {
+        Group usergroup = AppVariables.currentUser.getGroup();
+        DatabaseReference groupRef = dataBaseRef.child("Group").child(usergroup.getName());
+        if (isGroupBudget) {
+            groupRef.child("groupBudgets").setValue(budget);
+        }
+        else {
+            groupRef.child("groupMembers").
+                    child(currentUser.getUsername()).
+                    child("personalBudgets").setValue(budget);
+        }
+        return true;
     }
 
     private void storePaymentToDataBase(Payment payment, Budget budget,  boolean isGroupPayment) {
@@ -204,15 +240,37 @@ public class AddActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        // Figure out if we are storing a payment or a budget
+        RadioGroup paymentOrBudget = (RadioGroup) findViewById(R.id.payment_budget_radio_group);
+        int radioButtonID = paymentOrBudget.getCheckedRadioButtonId();
+        View radioButton = paymentOrBudget.findViewById(radioButtonID);
+        int radioButtonIndex = paymentOrBudget.indexOfChild(radioButton);
+        Boolean isNewPayment = radioButtonIndex == 0;
+
+        // Figure out if what we are storing is group or a personal
+        RadioGroup personalOrGroup = (RadioGroup) findViewById(R.id.radio_group);
+        View personalGroupRadioButton = personalOrGroup.findViewById(personalOrGroup.getCheckedRadioButtonId());
+        int personalOrGroupInt = personalOrGroup.indexOfChild(personalGroupRadioButton);
+        Boolean isGroup = personalOrGroupInt == 0;
+
         switch (item.getItemId()) {
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
             case R.id.action_add:
-                // TODO: add support for creating a new budget
-                createNewPaymentFromFields();
-                NavUtils.navigateUpFromSameTask(this);
-                return true;
+                if (isNewPayment) {
+                    // TODO: Add error checking
+                    createNewPaymentFromFields(isGroup);
+                    NavUtils.navigateUpFromSameTask(this);
+                    return true;
+                }
+                else {
+                    if (createNewBudgetFromFields(isGroup)) {
+                        NavUtils.navigateUpFromSameTask(this);
+                        return true;
+                    }
+                }
+
             default:
                 return super.onOptionsItemSelected(item);
         }
