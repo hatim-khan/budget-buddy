@@ -53,11 +53,12 @@ public class TrendsFragment extends Fragment {
 
         BarData data = new BarData(getXAxisValues(), getDataSet());
         chart.setData(data);
+        chart.setDescription("");
         chart.animateXY(2000, 2000);
         chart.invalidate();
 
-
-        PieChart pieChart = (PieChart) view.findViewById(R.id.pchart);
+        // PERSONAL PIE CHART
+        PieChart PersonalPieChart = (PieChart) view.findViewById(R.id.ppchart);
         ArrayList<Entry> entries = new ArrayList<>();
         entries.add(new Entry(4f, 0));
         entries.add(new Entry(8f, 1));
@@ -66,22 +67,52 @@ public class TrendsFragment extends Fragment {
         entries.add(new Entry(18f, 4));
         entries.add(new Entry(9f, 5));
 
-        PieDataSet dataset = new PieDataSet(entries, "# of Calls");
+        PieDataSet pdataset = new PieDataSet(entries, "# of Calls");
 
-        ArrayList<String> labels = new ArrayList<String>();
-        labels.add("Groceries");
-        labels.add("Entertainment");
-        labels.add("Clothes");
-        labels.add("Take Out");
-        labels.add("Bills");
-        labels.add("Other");
+        ArrayList<String> plabels = new ArrayList<String>();
+        plabels.add("Groceries");
+        plabels.add("Entertainment");
+        plabels.add("Clothes");
+        plabels.add("Take Out");
+        plabels.add("Bills");
+        plabels.add("Other");
 
-        PieData pdata = new PieData(labels, dataset);
-        dataset.setColors(ColorTemplate.COLORFUL_COLORS); //
-        pieChart.setData(pdata);
+        PieData pdata = new PieData(plabels, pdataset);
+        PersonalPieChart.setDescription("");
+        pdataset.setColors(ColorTemplate.COLORFUL_COLORS); //
+        PersonalPieChart.setData(pdata);
 
-        pieChart.animateY(2000);
-/*
+        PersonalPieChart.animateY(2000);
+
+        //GROUP PIE CHART
+
+        PieChart GroupPieChart = (PieChart) view.findViewById(R.id.gpchart);
+        ArrayList<Entry> entriess = new ArrayList<>();
+        entries.add(new Entry(4f, 0));
+        entries.add(new Entry(8f, 1));
+        entries.add(new Entry(6f, 2));
+        entries.add(new Entry(12f, 3));
+        entries.add(new Entry(18f, 4));
+        entries.add(new Entry(9f, 5));
+
+        PieDataSet gdataset = new PieDataSet(entriess, "# of Calls");
+
+        ArrayList<String> glabels = new ArrayList<String>();
+        glabels.add("Groceries");
+        glabels.add("Entertainment");
+        glabels.add("Clothes");
+        glabels.add("Take Out");
+        glabels.add("Bills");
+        glabels.add("Other");
+
+        PieData gdata = new PieData(glabels, gdataset);
+        GroupPieChart.setDescription("");
+        gdataset.setColors(ColorTemplate.COLORFUL_COLORS); //
+        GroupPieChart.setData(gdata);
+
+        GroupPieChart.animateY(2000);
+
+        /*
         // TODO: Customize the UI for the Payments Screen here
         // TODO Susan : replace - this is just here for an example on how to get budget data
         TextView textView = (TextView) view.findViewById(R.id.textview);
@@ -101,45 +132,75 @@ public class TrendsFragment extends Fragment {
     private ArrayList<BarDataSet> getDataSet() {
         ArrayList<BarDataSet> dataSets = null;
 
-        ArrayList<BarEntry> valueSet1 = new ArrayList<>();
+        /*
+        * For all budgets in Budget
+        *   if Payment made in January
+        *       Add it in new float = (float) JanuaryEntry
+        * */
+
+
+        ArrayList<BarEntry> personalBar = new ArrayList<>();
         BarEntry v1e1 = new BarEntry(110.000f, 0); // Jan
-        valueSet1.add(v1e1);
+        personalBar.add(v1e1);
         BarEntry v1e2 = new BarEntry(40.000f, 1); // Feb
-        valueSet1.add(v1e2);
+        personalBar.add(v1e2);
         BarEntry v1e3 = new BarEntry(60.000f, 2); // Mar
-        valueSet1.add(v1e3);
+        personalBar.add(v1e3);
         BarEntry v1e4 = new BarEntry(30.000f, 3); // Apr
-        valueSet1.add(v1e4);
+        personalBar.add(v1e4);
         BarEntry v1e5 = new BarEntry(90.000f, 4); // May
-        valueSet1.add(v1e5);
+        personalBar.add(v1e5);
         BarEntry v1e6 = new BarEntry(100.000f, 5); // Jun
-        valueSet1.add(v1e6);
+        personalBar.add(v1e6);
+        BarEntry v1e7 = new BarEntry(110.000f, 6); // Jan
+        personalBar.add(v1e7);
+        BarEntry v1e8 = new BarEntry(40.000f, 7); // Feb
+        personalBar.add(v1e8);
+        BarEntry v1e9 = new BarEntry(60.000f, 8); // Mar
+        personalBar.add(v1e9);
+        BarEntry v1e10 = new BarEntry(30.000f, 9); // Apr
+        personalBar.add(v1e10);
+        BarEntry v1e11 = new BarEntry(90.000f, 10); // May
+        personalBar.add(v1e11);
+        BarEntry v1e12 = new BarEntry(100.000f, 11); // Jun
+        personalBar.add(v1e12);
 
-        ArrayList<BarEntry> valueSet2 = new ArrayList<>();
+        ArrayList<BarEntry> groupBar = new ArrayList<>();
         BarEntry v2e1 = new BarEntry(150.000f, 0); // Jan
-        valueSet2.add(v2e1);
+        groupBar.add(v2e1);
         BarEntry v2e2 = new BarEntry(90.000f, 1); // Feb
-        valueSet2.add(v2e2);
+        groupBar.add(v2e2);
         BarEntry v2e3 = new BarEntry(120.000f, 2); // Mar
-        valueSet2.add(v2e3);
+        groupBar.add(v2e3);
         BarEntry v2e4 = new BarEntry(60.000f, 3); // Apr
-        valueSet2.add(v2e4);
+        groupBar.add(v2e4);
         BarEntry v2e5 = new BarEntry(20.000f, 4); // May
-        valueSet2.add(v2e5);
+        groupBar.add(v2e5);
         BarEntry v2e6 = new BarEntry(80.000f, 5); // Jun
-        valueSet2.add(v2e6);
+        groupBar.add(v2e6);
+        BarEntry v2e7 = new BarEntry(150.000f, 6); // Jan
+        groupBar.add(v2e7);
+        BarEntry v2e8 = new BarEntry(90.000f, 7); // Feb
+        groupBar.add(v2e8);
+        BarEntry v2e9 = new BarEntry(120.000f, 8); // Mar
+        groupBar.add(v2e9);
+        BarEntry v2e10 = new BarEntry(60.000f, 9); // Apr
+        groupBar.add(v2e10);
+        BarEntry v2e11 = new BarEntry(20.000f, 10); // May
+        groupBar.add(v2e11);
+        BarEntry v2e12 = new BarEntry(80.000f, 11); // Jun
+        groupBar.add(v2e12);
 
-        BarDataSet barDataSet1 = new BarDataSet(valueSet1, "Brand 1");
-        barDataSet1.setColor(Color.rgb(0, 155, 0));
-        BarDataSet barDataSet2 = new BarDataSet(valueSet2, "Brand 2");
-        barDataSet2.setColors(ColorTemplate.COLORFUL_COLORS);
+        BarDataSet barDataSet1 = new BarDataSet(personalBar, "Personal Budget");
+        barDataSet1.setColor(Color.rgb(250, 0, 0));
+        BarDataSet barDataSet2 = new BarDataSet(groupBar, "Group Budget");
+        barDataSet1.setColor(Color.rgb(65, 105, 225));
 
         dataSets = new ArrayList<>();
         dataSets.add(barDataSet1);
         dataSets.add(barDataSet2);
         return dataSets;
     }
-
 
     private ArrayList<String> getXAxisValues() {
         ArrayList<String> xAxis = new ArrayList<>();
