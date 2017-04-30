@@ -40,6 +40,8 @@ public class SignInActivity extends AppCompatActivity {
         usernameEditText.setText("Rupaul Charles");
         passwordEditText.setText("password");
         groupNameEditText.setText("Area 51");
+
+        FirebaseDatabase.getInstance().goOnline();
     }
 
 
