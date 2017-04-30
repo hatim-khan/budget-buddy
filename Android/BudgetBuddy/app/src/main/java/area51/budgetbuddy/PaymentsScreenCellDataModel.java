@@ -39,9 +39,9 @@ public class PaymentsScreenCellDataModel {
         if (date != null) {
             // TODO: Erick make this use dateformatter done
             Format formatter = new SimpleDateFormat("EEEE, MMMM dd");
-            // right now showing Thurday, September, 01 (need )
+            // right now showing in format Thurday, September, 01
             String dateString = formatter.format(date);
-            return dateString; //date.toString();
+            return dateString;
         }
         return "ERROR";
     }
