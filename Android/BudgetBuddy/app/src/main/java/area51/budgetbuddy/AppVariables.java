@@ -112,7 +112,7 @@ public class AppVariables extends Application {
     }
 
     // Helper method for converting a string to a date
-    private static Date convertStringToDate(String dateString) {
+    public static Date convertStringToDate(String dateString) {
         Date date = new Date();
         String[] formatStrings = {"M/y", "M/d/y", "M-d-y"};
         for (String formatString : formatStrings) {
@@ -126,25 +126,32 @@ public class AppVariables extends Application {
         return date;
     }
 
-
-
-    public static ArrayList<String> getUniquePaymentDates(User user) {
-        HashSet<Date> datesSet = new HashSet<>();
-
-        ArrayList<Payment> allPayments = AppVariables.getAllPaymentsSorted(user);
-
-        for (Payment payment: allPayments) {
-            Date paymentDate = convertStringToDate(payment.getPurchaseDate());
-            datesSet.add(paymentDate);
-        }
+    public static ArrayList<String> getUniquePaymentDateStrings(User user) {
+        ArrayList<Date> datesSet = getUniquePaymentDates(user);
 
         ArrayList<String> toReturn = new ArrayList<String>();
         for (Date date : datesSet) {
             String dateString = date.toString();
             toReturn.add(dateString);
         }
-
         return toReturn;
+    }
+
+    public static ArrayList<Date> getUniquePaymentDates(User user) {
+        HashSet<Date> datesSet = new HashSet<>();
+        ArrayList<Payment> allPayments = AppVariables.getAllPaymentsSorted(user);
+        for (Payment payment: allPayments) {
+            Date paymentDate = convertStringToDate(payment.getPurchaseDate());
+            datesSet.add(paymentDate);
+        }
+        // Sort the dates so they are in order
+        ArrayList<Date> sortedDates = new ArrayList<Date>();
+        for (Date date: datesSet) {
+            Date newestDate = Collections.min(datesSet);
+            sortedDates.add(newestDate);
+            datesSet.remove(newestDate);
+        }
+        return sortedDates;
     }
 
 }
