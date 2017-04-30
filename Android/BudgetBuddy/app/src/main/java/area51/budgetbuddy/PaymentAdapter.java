@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
 
 /**
  * Created by natalieshum on 4/25/17.
@@ -15,14 +17,27 @@ import java.util.ArrayList;
 
 public class PaymentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
-    private ArrayList<Payment> payments = new ArrayList<>();
     private static final int DATE = 0;
     private static final int PAYMENT = 1;
 
-    public PaymentAdapter(Context context, ArrayList<Payment> payments) {
-        this.payments = payments;
+    private ArrayList<PaymentsScreenCellDataModel> cells = new ArrayList<>();
+
+    public PaymentAdapter(Context context) {
+        cells = populateCellsArray();
         this.context = context;
     }
+
+
+    private ArrayList<PaymentsScreenCellDataModel> populateCellsArray() {
+        ArrayList<PaymentsScreenCellDataModel> cells = new ArrayList<PaymentsScreenCellDataModel>();
+        ArrayList<Date> uniqueDates = AppVariables.getUniquePaymentDates(AppVariables.currentUser);
+
+
+        // TODO : make this return an arraylist of each date header with payments sorted within
+
+        return cells;
+    }
+
 
     private Context getContext() {
         return context;
@@ -47,9 +62,10 @@ public class PaymentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         if (viewHolder instanceof PaymentHeaderVH) {
             PaymentHeaderVH headerHolder = (PaymentHeaderVH) viewHolder;
             TextView textView1 = headerHolder.dateView;
-            textView1.setText(payments.get(position).getPurchaseDate());
+            textView1.setText(cells.get(position).getDateStringForCell());
         } else if (viewHolder instanceof PaymentRowVH) {
-            Payment payment = payments.get(position - 1);
+            // TODO: check that this doesn't crash
+            Payment payment = cells.get(position).getPayment();
             PaymentRowVH paymentHolder = (PaymentRowVH) viewHolder;
             TextView textView1 = paymentHolder.paymentView;
             textView1.setText(payment.getUsername() + " spent $" + payment.getAmountSpent() + " on "
@@ -63,8 +79,8 @@ public class PaymentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public int getItemCount() {
-        // TODO: need to add # of dates for enough cells
-        return payments.size();
+        // Number of cells = number of payments plus number of unique dates (for the label headers)
+        return cells.size();
     }
 
     @Override

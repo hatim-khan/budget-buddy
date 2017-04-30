@@ -56,4 +56,8 @@ public class Payment {
     public String getUsername() {
         return username;
     }
+
+    public Date dateForPayment() {
+        return AppVariables.convertStringToDate(purchaseDate);
+    }
 }
