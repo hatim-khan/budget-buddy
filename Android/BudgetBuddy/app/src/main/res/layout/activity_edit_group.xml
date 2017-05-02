@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/white"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        android:titleTextColor="@color/colorPrimary"
+        app:titleTextColor="@color/colorPrimary"
+        app:subtitleTextColor="@color/colorPrimary"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        android:subtitleTextColor="@color/colorPrimary"
+        app:theme="@style/ToolBarStyle">
+    </android.support.v7.widget.Toolbar>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:weightSum="1">
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/card_view1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@color/white"
+            android:elevation="2dp"
+            app:cardCornerRadius="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:text="Group Name:"
+
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+                <EditText
+                    android:id="@+id/group_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:hint="Home"
+                    android:textColor="@color/colorPrimary" />
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/card_view2"
+            android:layout_width="fill_parent"
+            android:layout_height="415dp"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"
+            android:layout_weight="0.00"
+            android:background="@color/white"
+            android:elevation="2dp"
+            app:cardCornerRadius="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:orientation="vertical"
+                android:weightSum="1">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
+                    android:paddingBottom="0dp"
+                    android:text="Group Members"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                    android:textColor="@color/colorPrimary"></TextView>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_view_group_members"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/activity_vertical_margin"
+                    android:scrollbars="vertical" />
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/floatingActionButton"
+            android:layout_width="65dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="490dp"
+            android:layout_marginEnd="24dp"
+            android:layout_weight="0.13"
+            android:clickable="true"
+            app:fabSize="mini"
+            app:srcCompat="@android:drawable/ic_input_add" />
+
+    </LinearLayout>
+
+
+</LinearLayout>
