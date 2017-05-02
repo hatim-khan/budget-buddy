@@ -57,6 +57,8 @@ dependencies {
         transitive = true
     }
 
+    // compile 'com.mikepenz:google-material-typeface:x.y.z@aar'
+
     testCompile 'junit:junit:4.12'
 
 }

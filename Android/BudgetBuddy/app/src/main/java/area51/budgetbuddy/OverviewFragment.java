@@ -77,8 +77,12 @@ public class OverviewFragment extends Fragment {
         rvLinearLayoutManager = new LinearLayoutManager(this.getContext());
         rvBudgets.setLayoutManager(rvLinearLayoutManager);
 
-        alert1 = (TextView) view.findViewById(R.id.alert_content1);
         ArrayList<Payment> allPayments = AppVariables.getAllPaymentsSorted(currentUser);
+        if (allPayments.size() > 0) {
+
+        }
+        alert1 = (TextView) view.findViewById(R.id.alert_content1);
+
         Payment currPayment = allPayments.get(0);
 
         alert1.setText(currPayment.getUsername() + " spent $" + currPayment.getAmountSpent()
@@ -93,6 +97,7 @@ public class OverviewFragment extends Fragment {
         mImageView2 = (ImageView) view.findViewById(R.id.alert2_image);
         mImageView2.setImageResource(R.drawable.attention);
 
+        adapter.notifyDataSetChanged();
         return view;
 
     }
