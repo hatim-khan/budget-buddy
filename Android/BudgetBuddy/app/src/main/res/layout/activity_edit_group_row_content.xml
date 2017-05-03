@@ -8,16 +8,23 @@
 
     <TextView
         android:id="@+id/username"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:gravity="left"
+        android:layout_marginStart="35dp"
+        android:layout_gravity="center"
         android:text="Joe Biden"
         android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
     <ImageButton
         android:id="@+id/x_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:src="@drawable/clear"/>
+        android:gravity="right"
+        android:src="@drawable/clear"
+        android:layout_gravity="right"
+        android:layout_marginEnd="35dp"/>
+
 
 </LinearLayout>
