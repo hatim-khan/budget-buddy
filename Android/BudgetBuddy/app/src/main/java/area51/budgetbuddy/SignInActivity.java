@@ -222,9 +222,10 @@ public class SignInActivity extends AppCompatActivity {
                     }
                 }).show();
             }
+            // this wasnt here before
             else {
                 // group name exists and password / username valid
-                AppVariables.getUniquePaymentDates(AppVariables.currentUser);
+                //AppVariables.getUniquePaymentDates(AppVariables.currentUser); not here
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
             }

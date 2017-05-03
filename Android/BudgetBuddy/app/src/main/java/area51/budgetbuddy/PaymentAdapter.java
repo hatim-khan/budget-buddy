@@ -2,12 +2,17 @@ package area51.budgetbuddy;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+
+import static area51.budgetbuddy.R.id.payment;
 
 /**
  * Created by natalieshum on 4/25/17.
@@ -15,13 +20,81 @@ import java.util.ArrayList;
 
 public class PaymentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
-    private ArrayList<Payment> payments = new ArrayList<>();
     private static final int DATE = 0;
     private static final int PAYMENT = 1;
 
-    public PaymentAdapter(Context context, ArrayList<Payment> payments) {
-        this.payments = payments;
+    private ArrayList<PaymentsScreenCellDataModel> cells = new ArrayList<>();
+
+    public PaymentAdapter(Context context) {
+        cells = populateCellsArray();
         this.context = context;
+    }
+
+
+    private ArrayList<PaymentsScreenCellDataModel> populateCellsArray() {
+        ArrayList<PaymentsScreenCellDataModel> cells = new ArrayList<PaymentsScreenCellDataModel>();
+        ArrayList<Date> uniqueDates = AppVariables.getUniquePaymentDates(AppVariables.currentUser); // array of uniqueDates
+        ArrayList<String> datesString = AppVariables.getUniquePaymentDateStrings(AppVariables.currentUser); // datesString
+        ArrayList<Payment> sortedPayments = AppVariables.getAllPaymentsSorted(AppVariables.currentUser); // sortedPayments
+        ArrayList<PaymentsScreenCellDataModel> dateModel = new ArrayList<PaymentsScreenCellDataModel>(); // for dates
+        ArrayList<PaymentsScreenCellDataModel> payModel = new ArrayList<PaymentsScreenCellDataModel>(); // for payments
+
+        // completing dateModel array
+        for (Date date : uniqueDates) {
+            PaymentsScreenCellDataModel payCellDate = new PaymentsScreenCellDataModel(date);
+            dateModel.add(payCellDate);
+        }
+
+        // completing payModel array
+        for (Payment payment : sortedPayments) {
+            PaymentsScreenCellDataModel payCellPayment = new PaymentsScreenCellDataModel(payment);
+            payModel.add(payCellPayment);
+        }
+        int i = 0; // starting index that is for keeping track of #dateStrings which is smaller or equal to sortedPayments total
+        outerLoop:
+        while (i < datesString.size()) {
+            boolean firstTime = true;
+            int counter = 0; // keeping track of total number of dates we have added to cells
+            int done = datesString.size();
+            for (int j = 0; j < sortedPayments.size()+1; j++) {
+                if (counter == done) {
+                    break outerLoop;
+                }
+                if (sortedPayments.get(j).getPurchaseDate().equals(datesString.get(i))) { // so if we find new dateModel with its first payment
+                    if (firstTime) {
+                        PaymentsScreenCellDataModel firstDate = dateModel.get(i);
+                        cells.add(firstDate);
+                        cells.add(payModel.get(j));
+                        firstTime = false;
+                        counter += 1;
+
+                    } else { // looking at a payment that is not the first
+                        cells.add(payModel.get(j));
+                        // counter += 1;  // not sure if this should be here
+                        // to test
+                    }
+
+                } else { // we don't have matching dates so encountered new date
+                    firstTime = true; // make immediately true
+                    if (firstTime) {
+                        PaymentsScreenCellDataModel nextDate = dateModel.get(i+1);
+                        counter += 1;
+                        cells.add(nextDate);
+                        cells.add(payModel.get(j));
+                        firstTime = false;
+                        i += 1; // only update when date added
+
+                    } else {
+                        cells.add(payModel.get(j));
+                        //counter += 1; // not sure if this should be here
+                        // to test still
+                    }
+
+                }
+            }
+
+        }
+        return cells;
     }
 
     private Context getContext() {
@@ -43,13 +116,15 @@ public class PaymentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) { // should be good
+        // might change if statement
         if (viewHolder instanceof PaymentHeaderVH) {
             PaymentHeaderVH headerHolder = (PaymentHeaderVH) viewHolder;
             TextView textView1 = headerHolder.dateView;
-            textView1.setText(payments.get(position).getPurchaseDate());
+            textView1.setText(cells.get(position).getDateStringForCell());
         } else if (viewHolder instanceof PaymentRowVH) {
-            Payment payment = payments.get(position - 1);
+            // TODO: check that this doesn't crash (not crashing at the moment)
+            Payment payment = cells.get(position).getPayment();
             PaymentRowVH paymentHolder = (PaymentRowVH) viewHolder;
             TextView textView1 = paymentHolder.paymentView;
             textView1.setText(payment.getUsername() + " spent $" + payment.getAmountSpent() + " on "
@@ -63,17 +138,15 @@ public class PaymentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public int getItemCount() {
-        // TODO: need to add # of dates for enough cells
-        return payments.size();
+        // Number of cells = number of payments plus number of unique dates (for the label headers)
+        return cells.size();
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (position == 0) {
-            return DATE;
-        }
-        return PAYMENT;
+        return cells.get(position).getViewType();
     }
+
 
     public static class PaymentHeaderVH extends RecyclerView.ViewHolder {
         TextView dateView;
@@ -93,7 +166,7 @@ public class PaymentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         public PaymentRowVH(View itemView) {
             super(itemView);
 
-            paymentView = (TextView) itemView.findViewById(R.id.payment);
+            paymentView = (TextView) itemView.findViewById(payment);
             paymentNoteView = (TextView) itemView.findViewById(R.id.payment_note);
             owedDueView = (TextView) itemView.findViewById(R.id.owed_due);
         }

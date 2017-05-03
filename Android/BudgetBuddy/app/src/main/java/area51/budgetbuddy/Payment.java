@@ -21,7 +21,7 @@ public class Payment {
 
     // The day, month, and year of the purchase
     // TODO: may want to support time of day at some point
-     private String purchaseDate;
+    private String purchaseDate;
 
     // (Optional) Any notes included about the payment
     private String notes;
@@ -33,7 +33,7 @@ public class Payment {
     public Payment(double amountSpent, String purchaseDateString, String notes, String username) {
         this.amountSpent = amountSpent;
         this.notes = notes;
-        this.purchaseDate = purchaseDateString;
+        this.purchaseDate = purchaseDateString; // look for how this is defined 10/30/2017
         this.username = username;
     }
 
@@ -55,5 +55,9 @@ public class Payment {
 
     public String getUsername() {
         return username;
+    }
+
+    public Date dateForPayment() {
+        return AppVariables.convertStringToDate(purchaseDate);
     }
 }

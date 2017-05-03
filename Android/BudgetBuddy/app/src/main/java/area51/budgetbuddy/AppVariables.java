@@ -9,6 +9,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -112,39 +113,78 @@ public class AppVariables extends Application {
     }
 
     // Helper method for converting a string to a date
-    private static Date convertStringToDate(String dateString) {
+    public static Date convertStringToDate(String dateString) { // here we are messing up
+        // will handle other cases if timee
+        // here I am
+        // fixed i believe
+        // comes in as 7/21/1212
         Date date = new Date();
-        String[] formatStrings = {"M/y", "M/d/y", "M-d-y"};
-        for (String formatString : formatStrings) {
-            try {
-                return new SimpleDateFormat(formatString).parse(dateString);
-            }
-            catch (ParseException e) {
-                Log.e("ERROR", "could not parse date string: " + dateString);
-            }
+        //String[] formatStrings = {"MM/dd/yyyy", "M/dd/yyyy", "MM/y", "MM-d-y"};//, "MM/y", "MM-d-y"};
+        //for (String formatString : formatStrings) {
+        try {
+            //if (dateString.matches() { // very first case
+                //SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+                //String patternToUse = sdf.toPattern();
+
+                //return new SimpleDateFormat("M/dd/yyyy").parse(dateString);
+            //} else {
+            return new SimpleDateFormat("MM/dd/yyyy").parse(dateString); // default case
+            //}
+                // looks like it is getting stuck here
+            //return new SimpleDateFormat("MM/dd/yyyy").parse(dateString); // instead of dateString
         }
+        catch (ParseException e) {
+            Log.e("ERROR", "could not parse date string: " + dateString);
+        }
+        //}
         return date;
     }
-
-
-
-    public static ArrayList<String> getUniquePaymentDates(User user) {
-        HashSet<Date> datesSet = new HashSet<>();
-
-        ArrayList<Payment> allPayments = AppVariables.getAllPaymentsSorted(user);
-
-        for (Payment payment: allPayments) {
-            Date paymentDate = convertStringToDate(payment.getPurchaseDate());
-            datesSet.add(paymentDate);
-        }
+    // difference between this and next method
+    public static ArrayList<String> getUniquePaymentDateStrings(User user) { // this one need to change
+        ArrayList<Date> datesSet = getUniquePaymentDates(user);
 
         ArrayList<String> toReturn = new ArrayList<String>();
         for (Date date : datesSet) {
-            String dateString = date.toString();
+            Format formatter = new SimpleDateFormat("MM/dd/yyyy");
+            String dateString = formatter.format(date);
+            //String dateString = date.toString();
             toReturn.add(dateString);
         }
-
         return toReturn;
+    }
+    // to modify
+//    Format formatter = new SimpleDateFormat("EEEE, MMMM dd");
+//    // right now showing Thurday, September, 01 (need )
+//    String dateString = formatter.format(date);
+//    return dateString; //date.toString();
+
+    public static ArrayList<Date> getUniquePaymentDates(User user) {
+        HashSet<Date> datesSet = new HashSet<>();
+        ArrayList<Payment> allPayments = AppVariables.getAllPaymentsSorted(user); // was able to return successfully i believe
+        //HashSet<Date> was going to try and copy
+        for (Payment payment: allPayments) {
+            // why did it print twice???
+            //System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!GETING STUCK!!!!!!!!!!!!!!!!!!!");
+            Date paymentDate = convertStringToDate(payment.getPurchaseDate()); // here were we get stuck
+            datesSet.add(paymentDate);
+        } // stuff up here looks good based on debugger
+        // Sort the dates so they are in order
+        //ArrayList<Date> sortedDates = new ArrayList<Date>();
+        // trying this
+        ArrayList<Date> sortedList = new ArrayList(datesSet); // convert hashset to list
+        Collections.sort(sortedList);
+//        for (Date date: datesSet) {
+//            Date newestDate = Collections.min(datesSet); // got weird when it got to one case???
+//            //System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!GETING STUCK!!!!!!!!!!!!!!!!!!!");
+//            sortedDates.add(newestDate);
+//            datesSet.remove(newestDate);
+//        }
+//        Set yourHashSet = new HashSet();
+//        List sortedList = new ArrayList(yourHashSet);
+//        Collections.sort(sortedList);
+        //System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        //System.out.println(sortedList);
+        return sortedList;  //sortedDates; // now returning sortedList
     }
 
 }
