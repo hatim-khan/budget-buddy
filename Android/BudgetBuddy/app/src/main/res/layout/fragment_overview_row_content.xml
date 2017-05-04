@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:textSize="20sp"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="23dp"
+        android:layout_marginStart="25dp"
         android:text="NAME"/>
 
     <TextView
@@ -23,7 +23,7 @@
         android:textSize="16sp"
         android:layout_above="@+id/progress_bar"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="23dp"
+        android:layout_marginEnd="25dp"
         android:text="REMAINING"/>
 
     <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
@@ -51,7 +51,5 @@
         android:layout_marginTop="12dp"
         android:layout_alignTop="@id/progress_bar"
         android:layout_marginStart="27dp"/>
-
-
-
+    
 </RelativeLayout>
