@@ -38,51 +38,54 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="13dp"
+                    android:paddingBottom="0dp"
                     android:paddingTop="10dp"
-                    android:paddingBottom="7dp"
-                    android:textColor="@color/colorPrimary"
                     android:text="Alerts"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="24sp" />
 
                 <ImageView
                     android:id="@+id/alert1_image"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
-                    android:paddingTop="10dp"
+                    android:layout_below="@+id/alert_title"
+                    android:layout_marginStart="30dp"
                     android:paddingBottom="10dp"
-                    android:layout_below="@id/alert_title"
-                    android:layout_marginStart="30dp"/>
+                    android:paddingTop="10dp"
+                    android:layout_alignEnd="@+id/alert_title" />
 
                 <TextView
                     android:id="@+id/alert_content1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="20dp"
-                    android:paddingBottom="20dp"
-                    android:textSize="16sp"
-                    android:text="Joe made a payment to group budgets"
                     android:layout_below="@+id/alert_title"
-                    android:layout_toEndOf="@+id/alert1_image" />
+                    android:layout_toEndOf="@+id/alert1_image"
+                    android:gravity="center_vertical"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="20dp"
+                    android:paddingLeft="20dp"
+                    android:text="Joe made a payment to group budgets"
+                    android:textSize="16sp" />
 
                 <ImageView
                     android:id="@+id/alert2_image"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
-                    android:paddingTop="10dp"
+                    android:layout_toStartOf="@+id/alert_content1"
                     android:paddingBottom="10dp"
-                    android:layout_marginStart="30dp"
-                    android:layout_below="@id/alert1_image"/>
+                    android:paddingTop="10dp"
+                    android:layout_below="@+id/alert1_image" />
 
                 <TextView
                     android:id="@+id/alert_content2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/alert2_image"
                     android:layout_below="@id/alert_content1"
-                    android:paddingLeft="20dp"
+                    android:layout_toRightOf="@id/alert2_image"
                     android:paddingBottom="20dp"
-                    android:textSize="16sp"
-                    android:text="You are nearing your Coffee Budget Limit"/>
+                    android:paddingLeft="20dp"
+                    android:text="You are nearing your Coffee Budget Limit"
+                    android:textSize="16sp" />
             </RelativeLayout>
         </android.support.v7.widget.CardView>
 
