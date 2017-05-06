@@ -57,16 +57,18 @@ public class PaymentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             int counter = 0; // keeping track of total number of dates we have added to cells
             int done = datesString.size();
             for (int j = 0; j < sortedPayments.size()+1; j++) {
-                if (counter == done) {
+                if ((counter == done)||(j == sortedPayments.size())) {
                     break outerLoop;
                 }
                 if (sortedPayments.get(j).getPurchaseDate().equals(datesString.get(i))) { // so if we find new dateModel with its first payment
                     if (firstTime) {
-                        PaymentsScreenCellDataModel firstDate = dateModel.get(i);
-                        cells.add(firstDate);
-                        cells.add(payModel.get(j));
-                        firstTime = false;
-                        counter += 1;
+                        if (i < dateModel.size()) {
+                            PaymentsScreenCellDataModel firstDate = dateModel.get(i);
+                            cells.add(firstDate);
+                            cells.add(payModel.get(j));
+                            firstTime = false;
+                            counter += 1;
+                        }
 
                     } else { // looking at a payment that is not the first
                         cells.add(payModel.get(j));
@@ -77,12 +79,14 @@ public class PaymentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 } else { // we don't have matching dates so encountered new date
                     firstTime = true; // make immediately true
                     if (firstTime) {
-                        PaymentsScreenCellDataModel nextDate = dateModel.get(i+1);
-                        counter += 1;
-                        cells.add(nextDate);
-                        cells.add(payModel.get(j));
-                        firstTime = false;
-                        i += 1; // only update when date added
+                        if (i < dateModel.size() - 1) {
+                            PaymentsScreenCellDataModel nextDate = dateModel.get(i + 1);
+                            counter += 1;
+                            cells.add(nextDate);
+                            cells.add(payModel.get(j));
+                            firstTime = false;
+                            i += 1; // only update when date added
+                        }
 
                     } else {
                         cells.add(payModel.get(j));
