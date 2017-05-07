@@ -127,18 +127,13 @@ public class TrendsFragment extends Fragment {
             presult.put(pkey, poldValue + pvalue);
         }
 
-        Float pjanValue = null;
-        Float pfebValue = null;
-        Float pdecValue = null;
-        Float pnovValue = null;
-        Float poctValue = null;
-        Float psepValue = null;
-        Float paugValue = null;
-        Float pjulValue = null;
-        Float pjunValue = null;
-        Float pmayValue = null;
-        Float paprValue = null;
-        Float pmarValue = null;
+        // TODO: I'm initializing them to 0 now to prevent crashes, but they shouldn't remain 0,
+        // TODO: so we should add checks for that
+        Float pjanValue = 0.0f, pfebValue = 0.0f, pdecValue = 0.0f, pnovValue = 0.0f, poctValue = 0.0f,
+                psepValue = 0.0f, paugValue = 0.0f, pjunValue = 0.0f, pjulValue = 0.0f, pmayValue = 0.0f,
+                pmarValue = 0.0f, paprValue = 0.0f;
+
+
         for (Map.Entry<String, Double> pentry : presult.entrySet()) {
             String pMonth = pentry.getKey();
             Double pmonthValue = pentry.getValue();
@@ -216,18 +211,12 @@ public class TrendsFragment extends Fragment {
             result.put(key, oldValue + value);
         }
 
-        Float gjanValue = null;
-        Float gfebValue = null;
-        Float gdecValue = null;
-        Float gnovValue = null;
-        Float goctValue = null;
-        Float gsepValue = null;
-        Float gaugValue = null;
-        Float gjulValue = null;
-        Float gjunValue = null;
-        Float gmayValue = null;
-        Float gaprValue = null;
-        Float gmarValue = null;
+        // TODO: I'm initializing them to 0 now to prevent crashes, but they shouldn't remain 0,
+        // TODO: so we should add checks for that
+        Float gjanValue = 0.0f, gfebValue = 0.0f, gdecValue = 0.0f, gnovValue = 0.0f, goctValue = 0.0f,
+                gsepValue = 0.0f, gaugValue = 0.0f, gjunValue = 0.0f, gjulValue = 0.0f, gmayValue = 0.0f,
+                gmarValue = 0.0f, gaprValue = 0.0f;
+
         for (Map.Entry<String, Double> entry : result.entrySet()) {
             String Month = entry.getKey();
             Double monthValue = entry.getValue();
