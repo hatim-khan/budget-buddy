@@ -2,6 +2,7 @@ package area51.budgetbuddy;
 
 import android.util.Log;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -60,4 +61,18 @@ public class Payment {
     public Date dateForPayment() {
         return AppVariables.convertStringToDate(purchaseDate);
     }
+
+    public Double amountDueForPayment() {
+        // Make sure we only get amount due from other group members (the
+        // current user shouldn't owe themself!
+        if (!username.equals(AppVariables.currentUser.getUsername())) {
+            DecimalFormat df = new DecimalFormat("#.##");
+            int numGroupMembers = AppVariables.currentUser.getGroup().getGroupMembers().size();
+            return Double.valueOf(df.format(amountSpent/numGroupMembers));
+        }
+        else {
+            return 0.0;
+        }
+    }
+
 }

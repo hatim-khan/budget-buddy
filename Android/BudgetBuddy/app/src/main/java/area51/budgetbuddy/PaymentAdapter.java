@@ -1,6 +1,7 @@
 package area51.budgetbuddy;
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import java.util.Date;
 import java.util.HashSet;
 
 import static area51.budgetbuddy.R.id.payment;
+import static area51.budgetbuddy.R.id.visible;
 
 /**
  * Created by natalieshum on 4/25/17.
@@ -29,7 +31,6 @@ public class PaymentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         cells = populateCellsArray();
         this.context = context;
     }
-
 
     private ArrayList<PaymentsScreenCellDataModel> populateCellsArray() {
         ArrayList<PaymentsScreenCellDataModel> cells = new ArrayList<PaymentsScreenCellDataModel>();
@@ -130,13 +131,22 @@ public class PaymentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             // TODO: check that this doesn't crash (not crashing at the moment)
             Payment payment = cells.get(position).getPayment();
             PaymentRowVH paymentHolder = (PaymentRowVH) viewHolder;
+            CardView alertCard = paymentHolder.alertCard;
             TextView textView1 = paymentHolder.paymentView;
             textView1.setText(payment.getUsername() + " spent $" + payment.getAmountSpent() + " on "
             + AppVariables.getBudgetForPayment(payment));
             TextView textView2 = paymentHolder.paymentNoteView;
             textView2.setText(payment.getNotes());
             TextView textView3 = paymentHolder.owedDueView;
-            textView3.setText("");
+            textView3.setVisibility(View.GONE);
+            alertCard.setVisibility(View.GONE);
+            if (payment.amountDueForPayment() != 0.0) {
+                textView3.setText("$" + payment.amountDueForPayment() + "\ndue");
+                textView3.setVisibility(View.VISIBLE);
+                alertCard.setVisibility(View.VISIBLE);
+            }
+
+
         }
     }
 
@@ -166,6 +176,7 @@ public class PaymentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         TextView paymentView;
         TextView paymentNoteView;
         TextView owedDueView;
+        CardView alertCard;
 
         public PaymentRowVH(View itemView) {
             super(itemView);
@@ -173,6 +184,7 @@ public class PaymentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             paymentView = (TextView) itemView.findViewById(payment);
             paymentNoteView = (TextView) itemView.findViewById(R.id.payment_note);
             owedDueView = (TextView) itemView.findViewById(R.id.owed_due);
+            alertCard = (CardView) itemView.findViewById(R.id.alert_card);
         }
     }
 
