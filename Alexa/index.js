@@ -12,11 +12,26 @@ var household = 'Area 51';
 var groupBudgets;
 var groupMembers;
 var groupMembersDict;
+
 var states = {
     MAINMENU: '_MAINMENU', 
     TRACKPAYMENT: '_TRACKPAYMENT', 
     BUDGETADDING: '_BUDGETADDING',
     BUDGETSUMMARY: '_BUDGETSUMMARY'
+};
+
+var paymentStates = {
+    item: "_item",
+    amount: "_amount",
+    name: "_name",
+    type: "_type",
+    budget: "_budget"
+};
+
+var budgetStates = {
+    type: "_type",
+    name: "_name",
+    amount: "_amount"
 };
 
 exports.handler = (event, context, callback) => {
@@ -118,54 +133,33 @@ var trackPaymentHandlers = Alexa.CreateStateHandler(states.TRACKPAYMENT, {
             case 'budget':
                 var budgetSlot = this.event.request.intent.slots.budget.value;
                 this.attributes['payment'].budget = budgetSlot;
-                this.handler.state = states.MAINMENU;
-                this.emit(':tell', 'Thanks for tracking a payment, you are now back at the main menu!');
-
-                // var formData = {
-                //     amountSpent: this.attributes['payment'].amount,
-                //     notes: this.attributes['payment'].item,
-                //     purchaseDate: '4/25/2017',
-                //     username: this.attributes['payment'].person
-                // };
-
-                // request.put({url: 'https://budget-buddy-2.firebaseio.com/Group/Area%2051/payments/3.json',
-                //             formData: formData},
-                //             function callback(err, httpResponse, body) {
-                //                 this.handler.state = states.MAINMENU;
-                //                 this.emit(':tell', 'Thanks for tracking a payment, you are now back at the main menu!');
-                //             });
-
 
                 // currently only adding payments to Cleaning Supplies group budget
-                // var options = {
-                //     method: 'PUT',
-                //     uri: 'https://budget-buddy-2.firebaseio.com/Group/Area%2051/payments/3.json',
-                //     body: {
-                //         amountSpent: this.attributes['payment'].amount,
-                //         notes: this.attributes['payment'].item,
-                //         purchaseDate: '4/25/2017',
-                //         username: this.attributes['payment'].person
-                //     },
-                //     json: true // Automatically stringifies the body to JSON 
-                // };
+                var options = {
+                    method: 'PUT',
+                    uri: 'https://budget-buddy-2.firebaseio.com/Group/Area%2051/payments/1.json',
+                    body: {
+                        amountSpent: this.attributes['payment'].amount,
+                        notes: this.attributes['payment'].item,
+                        purchaseDate: '4/25/2017',
+                        username: this.attributes['payment'].person
+                    },
+                    json: true // Automatically stringifies the body to JSON 
+                };
 
-                // rp(options)
-                //     .then(function (parsedBody) {
-                //         console.log('succesful push of payment');
-                //         console.log(this);
-                //         // this.handler.state = states.MAINMENU;
-                //         // this.emit(':tell', 'Thanks for tracking a payment, you are now back at the main menu!');
-                //         // this.emit(':ask', strings.WELCOME_TEXT);
-                //     })
-                //     .catch(function (err) {
-                //         // POST failed... 
-                //         // this.emit(':tell', 'Ah, that did not work correctly. Returning to the main menu now.');
-                //     })
-                //     .finally(function (body) {
-                //         // this.handler.state = states.MAINMENU;
-                //         // this.emit(':tell', 'Thanks for tracking a payment, you are now back at the main menu!');
-                //     });
-                // this.emit(':tell', 'Thanks for tracking a payment, you are now back at the main menu!');
+                var alexaThis = this;
+                rp(options)
+                    .then(function (parsedBody) {
+                        console.log('succesful push of payment');
+                    })
+                    .catch(function (err) {
+                        // POST failed... 
+                        // this.emit(':tell', 'Ah, that did not work correctly. Returning to the main menu now.');
+                    })
+                    .finally(function (body) {
+                        alexaThis.handler.state = states.MAINMENU;
+                        alexaThis.emit(':tell', 'Thanks for tracking a payment, you are now back at the main menu!');
+                    });
         }
     },
 
@@ -173,6 +167,21 @@ var trackPaymentHandlers = Alexa.CreateStateHandler(states.TRACKPAYMENT, {
     'MainMenuIntent': function () {
         this.attributes['requestedMainMenu'] = true;
         this.emit(':ask', strings.MAIN_MENU_CONFIRMATION);
+    },
+
+    'YesIntent': function () {
+        if (this.attributes['requestedMainMenu'] = true) {
+            this.attributes['requestedMainMenu'] = false;
+            this.handler.state = states.MAINMENU;
+            this.emit(':tell', 'You are now at the main menu, you say "What can I say?" to find out what to say.');
+        }
+        this.emitWithState('Unhandled');
+    },
+
+    'NoIntent': function() {
+        this.attributes['requestedMainMenu'] = false;
+
+
     },
 
     'WhatCanISayIntent': function() {
@@ -221,31 +230,31 @@ var budgetAddingHandlers = Alexa.CreateStateHandler(states.BUDGETADDING, {
                 this.attributes['budget'].amount = amountSlot;
                 this.handler.state = states.MAINMENU;
                 this.emit(':tell', 'Thanks for adding a budget, you are now back at the main menu!');
-                // var options = {
-                //     method: 'PUT',
-                //     uri: 'https://budget-buddy-2.firebaseio.com/Group/Area%2051/groupBudgets/Food.json',
-                //     body: {
-                //         groupBudget: this.attributes['budget'].type,
-                //         name: this.attributes['budget'].name,
-                //         amountLeftInBudget: this.attributes['budget'].amount,
-                //         amountSpentInBudget: 0,
-                //         budgetLimit: this.attributes['budget'].amount,
-                //     },
-                //     json: true // Automatically stringifies the body to JSON 
-                // };
+                var options = {
+                    method: 'PUT',
+                    uri: 'https://budget-buddy-2.firebaseio.com/Group/Area%2051/groupBudgets/Food.json',
+                    body: {
+                        groupBudget: this.attributes['budget'].type,
+                        name: this.attributes['budget'].name,
+                        amountLeftInBudget: this.attributes['budget'].amount,
+                        amountSpentInBudget: 0,
+                        budgetLimit: this.attributes['budget'].amount,
+                    },
+                    json: true // Automatically stringifies the body to JSON 
+                };
                  
-                // rp(options)
-                //     .then(function (parsedBody) {
-                //         console.log('succesful push of budget');
-                //         this.emit(':tell', 'Thanks for adding a budget, you are now back at the main menu!');
-                //     })
-                //     .catch(function (err) {
-                //         // POST failed... 
-                //     })
-                //     .finally(function (body) {
-                //         this.handler.state = states.MAINMENU;
-                //         this.emit(':tell', 'Thanks for adding a budget, you are now back at the main menu!');
-                    // });
+                var alexaThis = this;
+                rp(options)
+                    .then(function (parsedBody) {
+                        console.log('succesful push of budget');
+                    })
+                    .catch(function (err) {
+                        // POST failed... 
+                    })
+                    .finally(function (body) {
+                        alexaThis.handler.state = states.MAINMENU;
+                        alexaThis.emit(':tell', 'Thanks for adding a budget, you are now back at the main menu!');
+                    });
             }
     },
 
