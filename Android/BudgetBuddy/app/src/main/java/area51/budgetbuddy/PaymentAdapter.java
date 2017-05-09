@@ -92,13 +92,11 @@ public class PaymentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                             firstTime = false;
                             i += 1; // only update when date added
                         }
-
                     } else {
                         cells.add(payModel.get(j));
                         //counter += 1; // not sure if this should be here
                         // to test still
                     }
-
                 }
             }
 
@@ -137,17 +135,14 @@ public class PaymentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         owedView.setVisibility(View.GONE);
 
         if (payment.isGroupPayment()) {
-
             // In this case, we are owed dollas
             if (payment.getUsername().equals(AppVariables.currentUser.getUsername())) {
-
                 owedView.setVisibility(View.VISIBLE);
                 oweAlertCard.setVisibility(View.VISIBLE);
                 owedView.setText("$" + payment.amountDueForPayment() + "\nowed");
             }
             // Otherwise, some money is due
             else {
-
                 dueView.setVisibility(View.VISIBLE);
                 dueAlertCard.setVisibility(View.VISIBLE);
                 dueView.setText("$" + payment.amountDueForPayment() + "\ndue");
@@ -162,11 +157,10 @@ public class PaymentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             PaymentHeaderVH headerHolder = (PaymentHeaderVH) viewHolder;
             TextView textView1 = headerHolder.dateView;
             textView1.setText(cells.get(position).getDateStringForCell());
-        } else if (viewHolder instanceof PaymentRowVH) {
-            // TODO: check that this doesn't crash (not crashing at the moment)
+        }
+        else if (viewHolder instanceof PaymentRowVH) {
             Payment payment = cells.get(position).getPayment();
             PaymentRowVH paymentHolder = (PaymentRowVH) viewHolder;
-
 
             TextView textView1 = paymentHolder.paymentView;
             if (AppVariables.currentUser.getUsername().equals(payment.getUsername())) {
@@ -176,10 +170,8 @@ public class PaymentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 textView1.setText(payment.getUsername() + " spent $" + payment.getAmountSpent() + " on " + AppVariables.getBudgetForPayment(payment));
             }
 
-
             TextView textView2 = paymentHolder.paymentNoteView;
             textView2.setText(payment.getNotes());
-
             setUIforAlerts(payment, paymentHolder);
         }
     }
@@ -194,7 +186,6 @@ public class PaymentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public int getItemViewType(int position) {
         return cells.get(position).getViewType();
     }
-
 
     public static class PaymentHeaderVH extends RecyclerView.ViewHolder {
         TextView dateView;
@@ -224,5 +215,4 @@ public class PaymentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             oweAlertCard = (CardView) itemView.findViewById(R.id.owe_alert_card);
         }
     }
-
 }

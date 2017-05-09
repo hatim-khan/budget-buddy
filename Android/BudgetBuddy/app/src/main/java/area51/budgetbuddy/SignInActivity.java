@@ -178,8 +178,12 @@ public class SignInActivity extends AppCompatActivity {
 
         
         if (username.isEmpty()||password.isEmpty()||groupName.isEmpty()) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(SignInActivity.this);
-
+            AlertDialog.Builder builder = new AlertDialog.Builder(SignInActivity.this);builder.setTitle("Username, Password, or Group Name not specified").setMessage("Please provide a username (i.e. your name), password, and group name ");
+            builder.setNegativeButton("Okay", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    return;
+                }
+            }).show();
             // TODO: update this - not sure how we want to format the login screen so not putting much time into it now
             builder.setTitle("Username, Password, or Group Name not specified").setMessage("Please provide a username (i.e. your name), password, and group name ");
             builder.setNegativeButton("Okay", new DialogInterface.OnClickListener() {
