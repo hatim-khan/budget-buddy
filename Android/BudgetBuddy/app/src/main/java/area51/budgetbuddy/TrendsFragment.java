@@ -21,6 +21,9 @@ import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+
 
 import java.util.*;
 
@@ -55,6 +58,20 @@ public class TrendsFragment extends Fragment {
         chart.setDescription("");
         chart.animateXY(2000, 2000);
         chart.invalidate();
+        chart.getLegend().setFormSize(15);
+        chart.getLegend().setTextSize(15);
+        XAxis xAxis = chart.getXAxis();
+        YAxis yAxis = chart.getAxisLeft();
+        YAxis yrAxis = chart.getAxisRight();
+        chart.setVisibleXRange(24);
+        xAxis.setSpaceBetweenLabels(0);
+        xAxis.setEnabled(true);
+        xAxis.setTextSize(15);
+        yAxis.setTextSize(15);
+        yrAxis.setTextSize(15);
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        chart.setTouchEnabled(false);
+
 
         // PERSONAL PIE CHART
 
@@ -83,6 +100,8 @@ public class TrendsFragment extends Fragment {
         pdataset.setColors(ColorTemplate.COLORFUL_COLORS); //
         PersonalPieChart.setData(pdata);
         PersonalPieChart.animateY(2000);
+        PersonalPieChart.setTouchEnabled(false);
+
 
         //GROUP PIE CHART
         PieChart GroupPieChart = (PieChart) view.findViewById(R.id.gpchart);
@@ -108,6 +127,8 @@ public class TrendsFragment extends Fragment {
         gdataset.setColors(ColorTemplate.COLORFUL_COLORS); //
         GroupPieChart.setData(gdata);
         GroupPieChart.animateY(2000);
+        GroupPieChart.setTouchEnabled(false);
+
 
         return view;
     }
@@ -141,13 +162,13 @@ public class TrendsFragment extends Fragment {
         }
 
         BarDataSet barDataSet1 = new BarDataSet(personalBar, "Personal Budget");
-        barDataSet1.setColor(Color.rgb(250, 0, 0));
+        barDataSet1.setColor(Color.rgb(64, 64, 64));
         BarDataSet barDataSet2 = new BarDataSet(groupBar, "Group Budget");
-        barDataSet1.setColor(Color.rgb(65, 105, 225));
-
+        barDataSet1.setColor(Color.rgb(204, 0, 102));
         dataSets = new ArrayList<>();
         dataSets.add(barDataSet1);
         dataSets.add(barDataSet2);
+
         return dataSets;
     }
 
