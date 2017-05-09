@@ -126,7 +126,6 @@ public class AppVariables extends Application {
             //if (dateString.matches() { // very first case
                 //SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
                 //String patternToUse = sdf.toPattern();
-
                 //return new SimpleDateFormat("M/dd/yyyy").parse(dateString);
             //} else {
             return new SimpleDateFormat("MM/dd/yyyy").parse(dateString); // default case
