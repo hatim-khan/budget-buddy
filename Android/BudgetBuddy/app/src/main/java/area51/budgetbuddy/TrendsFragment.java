@@ -321,5 +321,6 @@ public class TrendsFragment extends Fragment {
         xAxis.add("NOV");
         xAxis.add("DEC");
         return xAxis;
+
     }
 }
