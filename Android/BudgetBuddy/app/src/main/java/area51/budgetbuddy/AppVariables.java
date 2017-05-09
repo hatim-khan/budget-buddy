@@ -13,6 +13,7 @@ import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -187,4 +188,38 @@ public class AppVariables extends Application {
         return sortedList;  //sortedDates; // now returning sortedList
     }
 
+
+
+    private static ArrayList<Payment> getAllPaymentsFromBudgetsForMonth(int monthNumber, Map<String, Budget> budgets) {
+        // add all the personal budget payments to the array
+        ArrayList<Payment> monthPayments = new ArrayList<>();
+        for (Budget budget : budgets.values()) {
+            ArrayList<Payment> userPayments = budget.getPayments();
+            for (Payment payment : budget.getPayments()) {
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(payment.dateForPayment());
+                int month = cal.get(Calendar.MONTH);
+                if (month == monthNumber) {
+                    monthPayments.add(payment);
+                }
+            }
+        }
+        return monthPayments;
+    }
+
+    public static Float getGroupSpendingForMonth(int monthNumber) {
+        Float amountSpentInMonth = 0.0f;
+        for (Payment payment: getAllPaymentsFromBudgetsForMonth(monthNumber, currentUser.getGroup().getGroupBudgets())) {
+            amountSpentInMonth += new Float(payment.getAmountSpent());
+        }
+        return amountSpentInMonth;
+    }
+
+    public static Float getPersonalSpendingForMonth(int monthNumber) {
+        Float amountSpentInMonth = 0.0f;
+        for (Payment payment: getAllPaymentsFromBudgetsForMonth(monthNumber, currentUser.getPersonalBudgets())) {
+            amountSpentInMonth += new Float(payment.getAmountSpent());
+        }
+        return amountSpentInMonth;
+    }
 }
