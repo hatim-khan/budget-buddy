@@ -30,12 +30,15 @@ public class Payment {
     // The username of the user who made the payment
     private String username;
 
+    private boolean isGroupPayment;
+
     // Initializer for a Payment class
-    public Payment(double amountSpent, String purchaseDateString, String notes, String username) {
+    public Payment(double amountSpent, String purchaseDateString, String notes, String username, boolean isGroupPayment) {
         this.amountSpent = amountSpent;
         this.notes = notes;
         this.purchaseDate = purchaseDateString; // look for how this is defined 10/30/2017
         this.username = username;
+        this.isGroupPayment = isGroupPayment;
     }
 
     public double getAmountSpent() {
@@ -62,17 +65,24 @@ public class Payment {
         return AppVariables.convertStringToDate(purchaseDate);
     }
 
+    public boolean isGroupPayment() {
+        return isGroupPayment;
+    }
+
+    // Used for the PaymentsFragment. Returns number that should be displayed in the alert cell
     public Double amountDueForPayment() {
-        // Make sure we only get amount due from other group members (the
-        // current user shouldn't owe themself!
-        if (!username.equals(AppVariables.currentUser.getUsername())) {
-            DecimalFormat df = new DecimalFormat("#.##");
-            int numGroupMembers = AppVariables.currentUser.getGroup().getGroupMembers().size();
-            return Double.valueOf(df.format(amountSpent/numGroupMembers));
+        DecimalFormat df = new DecimalFormat("#.##");
+        int numGroupMembers = AppVariables.currentUser.getGroup().getGroupMembers().size();
+
+        // if payment made by current user, should be amount owed
+        // which is the payment amount - (payment amount) / #groupmembers
+        if (username.equals(AppVariables.currentUser.getUsername())) {
+            return Double.valueOf(df.format(amountSpent- amountSpent/numGroupMembers));
         }
-        else {
-            return 0.0;
-        }
+
+        return Double.valueOf(df.format(amountSpent/numGroupMembers));
+
+
     }
 
 }

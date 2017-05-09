@@ -60,9 +60,9 @@ public class SignInActivity extends AppCompatActivity {
         testUser.addBudgetToUserBudgetList(testPersonalBudget1);
         testUser.addBudgetToUserBudgetList(testPersonalBudget2);
         // Create some test payments
-        Payment testPayment0 = new Payment(12.00, "05/12/2017", "A test group purchase", "Test User");
-        Payment testPayment1 = new Payment(19.00, "12/12/2016", "Another test group purchase", "Test User");
-        Payment testPayment2 = new Payment(20.00, "20/20/2016", "Yet another test group purchase", "Test User");
+        Payment testPayment0 = new Payment(12.00, "05/12/2017", "A test group purchase", "Test User", true);
+        Payment testPayment1 = new Payment(19.00, "12/12/2016", "Another test group purchase", "Test User", true);
+        Payment testPayment2 = new Payment(20.00, "20/20/2016", "Yet another test group purchase", "Test User", true);
         // Add the payments to the group's first budget
         testGroupBudget1.addUserPayment(testPayment0);
         testGroupBudget1.addUserPayment(testPayment1);
@@ -110,7 +110,7 @@ public class SignInActivity extends AppCompatActivity {
                 Boolean isGroupBudget = (Boolean) budget.get("groupBudget");
                 Double budgetLimit = new Double(budget.get("budgetLimit").toString());
                 Double amountSpentInBudget = new Double(budget.get("amountSpentInBudget").toString());
-                ArrayList<Payment> payments = parsePaymentsFromBudget(budget, budgetName);
+                ArrayList<Payment> payments = parsePaymentsFromBudget(budget, budgetName, isGroupBudget);
                 Budget newBudget = new Budget(budgetName, payments, isGroupBudget, budgetLimit, amountSpentInBudget);
                 parsedBudgets.put(newBudget.getName(), newBudget);
         }
@@ -118,7 +118,7 @@ public class SignInActivity extends AppCompatActivity {
     }
 
 
-    private ArrayList<Payment> parsePaymentsFromBudget(Map<String, Object> budgetDict, String budgetName) {
+    private ArrayList<Payment> parsePaymentsFromBudget(Map<String, Object> budgetDict, String budgetName, boolean isGroup) {
         ArrayList<Payment> payments = new ArrayList<Payment>();
         if (budgetDict.get("payments") != null) {
             // Make sure we don't error if a dictionary is pushed instead of an ArrayList
@@ -137,7 +137,7 @@ public class SignInActivity extends AppCompatActivity {
                         String purchaseDateString = paymentDict.get("purchaseDate").toString();
                         String notes = paymentDict.get("notes").toString();
                         String username = paymentDict.get("username").toString();
-                        Payment newPayment = new Payment(amountSpent, purchaseDateString, notes, username);
+                        Payment newPayment = new Payment(amountSpent, purchaseDateString, notes, username, isGroup);
                         payments.add(newPayment);
                     } else {
                         Log.d("ERROR", "Database error with payment for budget " + budgetName);

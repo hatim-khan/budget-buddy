@@ -13,19 +13,22 @@ public class PaymentsScreenCellDataModel {
     boolean isPayment;
     Payment payment;
     Date date;
+    boolean isGroupPayment;
 
     // Initializer for a header (just pass in the string for the date)
     public PaymentsScreenCellDataModel(Date date) { // see how this is defined
         this.isPayment = false;
         this.date = date;
         this.payment = null;
+        this.isGroupPayment = false;
     }
 
     // Initializer for a payment cell (just pass in the Payment object)
-    public PaymentsScreenCellDataModel(Payment payment) {
+    public PaymentsScreenCellDataModel(Payment payment, boolean isGroupPayment) {
         this.isPayment= true;
         this.payment = payment;
         this.date = null;
+        this.isGroupPayment = isGroupPayment;
     }
 
     public int getViewType() { //itemView?
