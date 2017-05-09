@@ -1,6 +1,11 @@
 package area51.budgetbuddy;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +18,7 @@ import java.util.Date;
 import java.util.HashSet;
 
 import static area51.budgetbuddy.R.id.payment;
+import static area51.budgetbuddy.R.id.visible;
 
 /**
  * Created by natalieshum on 4/25/17.
@@ -30,7 +36,6 @@ public class PaymentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         this.context = context;
     }
 
-
     private ArrayList<PaymentsScreenCellDataModel> populateCellsArray() {
         ArrayList<PaymentsScreenCellDataModel> cells = new ArrayList<PaymentsScreenCellDataModel>();
         ArrayList<Date> uniqueDates = AppVariables.getUniquePaymentDates(AppVariables.currentUser); // array of uniqueDates
@@ -47,7 +52,7 @@ public class PaymentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         // completing payModel array
         for (Payment payment : sortedPayments) {
-            PaymentsScreenCellDataModel payCellPayment = new PaymentsScreenCellDataModel(payment);
+            PaymentsScreenCellDataModel payCellPayment = new PaymentsScreenCellDataModel(payment, payment.isGroupPayment());
             payModel.add(payCellPayment);
         }
         int i = 0; // starting index that is for keeping track of #dateStrings which is smaller or equal to sortedPayments total
@@ -119,6 +124,37 @@ public class PaymentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         throw new RuntimeException("there is no type that matches " + viewType);
     }
 
+    private void setUIforAlerts(Payment payment, PaymentRowVH paymentHolder) {
+        // Alerts
+        CardView dueAlertCard = paymentHolder.dueAlertCard;
+        TextView dueView = paymentHolder.dueView;
+        CardView oweAlertCard = paymentHolder.oweAlertCard;
+        TextView owedView = paymentHolder.owedView;
+
+        dueAlertCard.setVisibility(View.GONE);
+        dueView.setVisibility(View.GONE);
+        oweAlertCard.setVisibility(View.GONE);
+        owedView.setVisibility(View.GONE);
+
+        if (payment.isGroupPayment()) {
+
+            // In this case, we are owed dollas
+            if (payment.getUsername().equals(AppVariables.currentUser.getUsername())) {
+
+                owedView.setVisibility(View.VISIBLE);
+                oweAlertCard.setVisibility(View.VISIBLE);
+                owedView.setText("$" + payment.amountDueForPayment() + "\nowed");
+            }
+            // Otherwise, some money is due
+            else {
+
+                dueView.setVisibility(View.VISIBLE);
+                dueAlertCard.setVisibility(View.VISIBLE);
+                dueView.setText("$" + payment.amountDueForPayment() + "\ndue");
+            }
+        }
+    }
+
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) { // should be good
         // might change if statement
@@ -130,13 +166,21 @@ public class PaymentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             // TODO: check that this doesn't crash (not crashing at the moment)
             Payment payment = cells.get(position).getPayment();
             PaymentRowVH paymentHolder = (PaymentRowVH) viewHolder;
+
+
             TextView textView1 = paymentHolder.paymentView;
-            textView1.setText(payment.getUsername() + " spent $" + payment.getAmountSpent() + " on "
-            + AppVariables.getBudgetForPayment(payment));
+            if (AppVariables.currentUser.getUsername().equals(payment.getUsername())) {
+                textView1.setText("You spent $" + payment.getAmountSpent() + " on " + AppVariables.getBudgetForPayment(payment));
+            }
+            else {
+                textView1.setText(payment.getUsername() + " spent $" + payment.getAmountSpent() + " on " + AppVariables.getBudgetForPayment(payment));
+            }
+
+
             TextView textView2 = paymentHolder.paymentNoteView;
             textView2.setText(payment.getNotes());
-            TextView textView3 = paymentHolder.owedDueView;
-            textView3.setText("");
+
+            setUIforAlerts(payment, paymentHolder);
         }
     }
 
@@ -165,14 +209,19 @@ public class PaymentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public static class PaymentRowVH extends RecyclerView.ViewHolder {
         TextView paymentView;
         TextView paymentNoteView;
-        TextView owedDueView;
+        TextView owedView;
+        TextView dueView;
+        CardView dueAlertCard;
+        CardView oweAlertCard;
 
         public PaymentRowVH(View itemView) {
             super(itemView);
-
             paymentView = (TextView) itemView.findViewById(payment);
             paymentNoteView = (TextView) itemView.findViewById(R.id.payment_note);
-            owedDueView = (TextView) itemView.findViewById(R.id.owed_due);
+            owedView = (TextView) itemView.findViewById(R.id.owe_view);
+            dueView = (TextView) itemView.findViewById(R.id.due_view);
+            dueAlertCard = (CardView) itemView.findViewById(R.id.due_alert_card);
+            oweAlertCard = (CardView) itemView.findViewById(R.id.owe_alert_card);
         }
     }
 
