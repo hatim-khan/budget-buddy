@@ -1,11 +1,15 @@
 package area51.budgetbuddy;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,7 +27,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -89,12 +96,19 @@ public class AddActivity extends AppCompatActivity {
                 }
             }
         });
+
+        // Set the default purchase date to today's date
+
+        Format formatter = new SimpleDateFormat("MM/dd/yyyy");
+
+        ((EditText) findViewById(R.id.purchase_date)).setHint(formatter.format(new Date()));
     }
 
     private void changeUIForAddingABudget() {
         EditText amountSpentEditText = (EditText) findViewById(R.id.amount_spent_or_budget_name_edit_text);
         TextView amountSpentOrBudgetName = (TextView) findViewById(R.id.amount_spent_or_budget_name_text_view);
         amountSpentOrBudgetName.setText("Budget Name");
+        amountSpentEditText.setInputType(InputType.TYPE_CLASS_TEXT);
         amountSpentEditText.setHint("Budget Name");
 
         TextView budgetOrPaymentTitleTextView = (TextView) findViewById(R.id.details_textview);
@@ -122,6 +136,7 @@ public class AddActivity extends AppCompatActivity {
         EditText amountSpentEditText = (EditText) findViewById(R.id.amount_spent_or_budget_name_edit_text);
         TextView amountSpentOrBudgetName = (TextView) findViewById(R.id.amount_spent_or_budget_name_text_view);
         amountSpentOrBudgetName.setText("Amount Spent");
+        amountSpentEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
         amountSpentEditText.setHint("$0.00");
 
         TextView budgetNameOrMonthlyLimit = (TextView) findViewById(R.id.budget_name_or_monthly_limit);
@@ -149,7 +164,7 @@ public class AddActivity extends AppCompatActivity {
 
     // MARK: Database methods
 
-    private void createNewPaymentFromFields(Boolean isGroupPayment) {
+    private boolean createNewPaymentFromFields(Boolean isGroupPayment) {
 
         EditText amountSpentEditText = (EditText) findViewById(R.id.amount_spent_or_budget_name_edit_text);
         Spinner budgetSpinner = (Spinner) findViewById(R.id.budget_name_spinner);
@@ -157,9 +172,36 @@ public class AddActivity extends AppCompatActivity {
         String notes = ((EditText) findViewById(R.id.notes)).getText().toString();
         String budgetName = budgetSpinner.getSelectedItem().toString();
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(AddActivity.this);
+
+        if (amountSpentEditText.getText().toString().equals("")) {
+            builder.setTitle("No Amount Spent Set").setMessage("Each payment requires a payment amount");
+            builder.setNegativeButton("Okay", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    return;
+                }
+            }).show();
+            return false;
+        }
+
+
+        if (amountSpentEditText.getText().toString().equals("")) {
+            builder.setTitle("No Amount Spent Set").setMessage("Each payment requires a payment amount");
+            builder.setNegativeButton("Okay", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    return;
+                }
+            }).show();
+            return false;
+        }
+
         Double amountSpent = Double.valueOf(amountSpentEditText.getText().toString());
         Budget budget = AppVariables.currentUser.getUserBudgetFromName(budgetName, isGroupPayment);
         String date = dateEditText.getText().toString();
+        if (dateEditText.getText().toString().equals("")) {
+            date = dateEditText.getHint().toString();
+        }
+
         String username = currentUser.getUsername();
         // Create the new payment
         Payment newPayment = new Payment(amountSpent, date, notes, username, isGroupPayment);
@@ -168,6 +210,7 @@ public class AddActivity extends AppCompatActivity {
         budget.addUserPayment(newPayment);
         storePaymentToDataBase(newPayment, budget, isGroupPayment);
 
+        return true;
     }
 
     // Returns true on success, false if budget with name already exists
@@ -177,18 +220,54 @@ public class AddActivity extends AppCompatActivity {
         EditText budgetNameEditText = (EditText) findViewById(R.id.amount_spent_or_budget_name_edit_text);
         EditText budgetLimitEditText = (EditText) findViewById(R.id.budget_limit);
 
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(AddActivity.this);
+
+        // No budget limit set
+        if (budgetLimitEditText.getText().toString().equals("")) {
+            builder.setTitle("No Budget Limit Set").setMessage("All budgets need a monthly budget limit, please add one!");
+            builder.setNegativeButton("Okay", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    return;
+                }
+            }).show();
+            return false;
+        }
+
         Double budgetLimit = Double.valueOf(budgetLimitEditText.getText().toString());
         String budgetName = budgetNameEditText.getText().toString();
         String username = currentUser.getUsername();
 
+        if (budgetName.toString().equals("")) {
+            builder.setTitle("No Budget Name Specified").setMessage("All budgets need a name, please add one!");
+            builder.setNegativeButton("Okay", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    return;
+                }
+            }).show();
+            return false;
+        }
+
         // Check if the budget with the given name already exists
         if (isGroupBudget && currentUser.userGroupBudgetStrings().contains(budgetName)) {
             // Group budget with this name already exists
+            builder.setTitle("A group budget with the name '" + budgetName + "' already  exists!").setMessage("Please pick a different budget name");
+            builder.setNegativeButton("Okay", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    return;
+                }
+            }).show();
             return false;
         }
 
         if (!isGroupBudget && currentUser.userPersonalBudgetStrings().contains(budgetName)) {
             // Personal budget with this name already exists
+            builder.setTitle("A personal budget with the name '" + budgetName + "' already  exists!").setMessage("Please pick a different budget name");
+            builder.setNegativeButton("Okay", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    return;
+                }
+            }).show();
             return false;
         }
 
@@ -260,8 +339,10 @@ public class AddActivity extends AppCompatActivity {
             case R.id.action_add:
                 if (isNewPayment) {
                     // TODO: Add error checking
-                    createNewPaymentFromFields(isGroup);
-                    NavUtils.navigateUpFromSameTask(this);
+                    if (createNewPaymentFromFields(isGroup)) {
+                        NavUtils.navigateUpFromSameTask(this);
+                    }
+
                     return true;
                 }
                 else {

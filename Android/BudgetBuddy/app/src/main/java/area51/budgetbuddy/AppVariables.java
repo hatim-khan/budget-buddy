@@ -116,14 +116,11 @@ public class AppVariables extends Application {
     // Helper method for converting a string to a date
     public static Date convertStringToDate(String dateString) { // here we are messing up
         Date date = new Date();
-        String[] formatStrings = {"M/y", "M/d/y", "M-d-y", "MM/dd/yyyy", "M/dd/yyyy"};
-        for (String formatString : formatStrings) {
-            try {
-                return new SimpleDateFormat(formatString).parse(dateString);
-            }
-            catch (ParseException e) {
-                Log.e("ERROR", "could not parse date string: " + dateString);
-            }
+        try {
+            return new SimpleDateFormat("MM/dd/yyyy").parse(dateString); // default case
+        }
+        catch (ParseException e) {
+            Log.e("ERROR", "could not parse date string: " + dateString);
         }
         return date;
     }
