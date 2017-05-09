@@ -13,6 +13,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,6 +26,7 @@ public class EditGroupActivity extends AppCompatActivity {
     Collection<User> groupMembers;
     LinearLayoutManager userLayoutManager;
     GroupMembersAdapter groupAdapter;
+    EditText editTextGroupName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,10 @@ public class EditGroupActivity extends AppCompatActivity {
         recyclerViewUser.setLayoutManager(userLayoutManager);
         groupAdapter = new GroupMembersAdapter(this, group);
         recyclerViewUser.setAdapter(groupAdapter);
+        editTextGroupName = (EditText) findViewById(R.id.group_name);
+        String groupName = currentUser.getGroup().getName();
+        editTextGroupName.setHint(groupName);
+
     }
 
 
