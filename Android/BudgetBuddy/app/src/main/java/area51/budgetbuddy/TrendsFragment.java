@@ -88,9 +88,25 @@ public class TrendsFragment extends Fragment {
         budgetSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView adapter, View v, int i, long lng) {
-                String selectedBudget =  adapter.getItemAtPosition(i).toString();
+                String selectedBudgetName =  adapter.getItemAtPosition(i).toString();
                 // update the graph for the new budget
 
+
+                Budget selectedBudget = AppVariables.currentUser.getGroup().getGroupBudgets().get(selectedBudgetName);
+
+                // clear out the old data
+                for (String username : userToAmountSpentInBudget.keySet()) {
+                    userToAmountSpentInBudget.put(username, 0.0f);
+                }
+
+                // Calculate how much everyone has spent in this budget, and update
+                // the userToAmountSpentInBudget map with these values
+                for (Payment payment: selectedBudget.getPayments()) {
+                    Float amountSpentSoFar = userToAmountSpentInBudget.get(payment.getUsername());
+                    userToAmountSpentInBudget.put(payment.getUsername(), amountSpentSoFar + new Float(payment.getAmountSpent()));
+                }
+
+                // TODO: set the groupbarchart's data set here!
 
                 groupBarChart.notifyDataSetChanged();
                 groupBarChart.invalidate();
