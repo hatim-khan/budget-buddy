@@ -95,6 +95,11 @@ public class OverviewFragment extends Fragment {
             mImageView2.setImageResource(R.drawable.attention);
 
             adapter.notifyDataSetChanged();
+        } else {
+            alert1 = (TextView) view.findViewById(R.id.alert_content1);
+            alert1.setText("No new alerts. Keep on budgeting!");
+            mImageView1 = (ImageView) view.findViewById(R.id.alert1_image);
+            mImageView1.setImageResource(R.drawable.info);
         }
 
         return view;
