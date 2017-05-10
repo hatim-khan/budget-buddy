@@ -148,7 +148,7 @@ var trackPaymentHandlers = Alexa.CreateStateHandler(states.TRACKPAYMENT, {
                     body: {
                         amountSpent: this.attributes['payment'].amount,
                         notes: this.attributes['payment'].item,
-                        purchaseDate: '4/25/2017',
+                        purchaseDate: '05/10/2017',
                         username: this.attributes['payment'].person,
                         groupPayment: groupPayment
                     },
@@ -273,12 +273,12 @@ var budgetAddingHandlers = Alexa.CreateStateHandler(states.BUDGETADDING, {
             case 'amount':
                 var amountSlot = this.event.request.intent.slots.amount.value;
                 this.attributes['budget'].amount = amountSlot;
-                this.handler.state = states.MAINMENU;
-                this.emit(':tell', 'Thanks for adding a budget, you are now back at the main menu!');
 
+                var alexaThis = this;
+                console.log('about to push new budget');
                 var options = {
                     method: 'PUT',
-                    uri: 'https://budget-buddy-2.firebaseio.com/Group/Area%2051/groupBudgets/Food.json',
+                    uri: generateBudgetAddingURI(alexaThis),
                     body: {
                         groupBudget: this.attributes['budget'].type,
                         name: this.attributes['budget'].name,
@@ -289,15 +289,16 @@ var budgetAddingHandlers = Alexa.CreateStateHandler(states.BUDGETADDING, {
                     json: true // Automatically stringifies the body to JSON 
                 };
                  
-                var alexaThis = this;
                 rp(options)
                     .then(function (parsedBody) {
-                        console.log('succesful push of budget');
+                        console.log('successful push of budget');
+                        console.log(parsedBody);
                     })
                     .catch(function (err) {
                         // POST failed... 
                     })
                     .finally(function (body) {
+                        console.log('ending push of budget');
                         alexaThis.handler.state = states.MAINMENU;
                         alexaThis.emit(':tell', 'Thanks for adding a budget, you are now back at the main menu!');
                     });
@@ -374,6 +375,19 @@ function generateBudgetUpdatingURI(alexaThis) {
     else if (alexaThis.attributes['payment'].type == 'group') {
         uriString = 'https://budget-buddy-2.firebaseio.com/Group/Area 51/' + 'groupBudgets' + '/'
             + alexaThis.attributes['payment'].budget + '.json';
+    }
+    return uriString;
+}
+
+function generateBudgetAddingURI(alexaThis) {
+    var uriString;
+    if (alexaThis.attributes['budgetAddingState'].type == 'personal') {
+        uriString = 'https://budget-buddy-2.firebaseio.com/Group/Area 51/' + 'groupMembers' + '/' + alexaThis.attributes['budgetAddingState'].person + '/personalBudgets/'
+            + alexaThis.attributes['budgetAddingState'].budget + '.json';
+    }
+    else if (alexaThis.attributes['budgetAddingState'].type == 'group') {
+        uriString = 'https://budget-buddy-2.firebaseio.com/Group/Area 51/' + 'groupBudgets' + '/'
+            + alexaThis.attributes['budgetAddingState'].budget + '.json';
     }
     return uriString;
 }
