@@ -88,8 +88,9 @@ public class SignInActivity extends AppCompatActivity {
 
             // Get the group budgets from the database
             Map<String, Object> groupBudgetDict = (Map<String, Object>) newGroupDict.get("groupBudgets");
-            group.addGroupBudgets(parseBudgets(groupBudgetDict));
-
+            if (newGroupDict != null) {
+                group.addGroupBudgets(parseBudgets(groupBudgetDict));
+            }
             // Get the group users and their payments from the db
             Map<String, Object> groupMembersDict = (Map<String, Object>) newGroupDict.get("groupMembers");
             Map<String, User> groupMembersParsed = parseUsers(groupMembersDict, group);
@@ -105,6 +106,9 @@ public class SignInActivity extends AppCompatActivity {
 
     private Map<String, Budget> parseBudgets(Map<String, Object> budgetDictionary) {
         Map<String, Budget> parsedBudgets = new HashMap<>();
+        if (budgetDictionary == null) {
+            return new HashMap<String, Budget>();
+        }
         for (String budgetName : budgetDictionary.keySet()) {
             Map<String, Object> budget =  (Map<String, Object>) budgetDictionary.get(budgetName);
                 Boolean isGroupBudget = (Boolean) budget.get("groupBudget");
@@ -253,7 +257,4 @@ public class SignInActivity extends AppCompatActivity {
         }
         return false;
     }
-
-
-
 }
