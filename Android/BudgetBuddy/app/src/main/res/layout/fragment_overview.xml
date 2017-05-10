@@ -64,7 +64,6 @@
                     android:paddingTop="5dp"
                     android:paddingBottom="20dp"
                     android:paddingLeft="20dp"
-                    android:text="Joe made a payment to group budgets"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -84,7 +83,6 @@
                     android:layout_toRightOf="@id/alert2_image"
                     android:paddingBottom="20dp"
                     android:paddingLeft="20dp"
-                    android:text="You are nearing your Coffee Budget Limit"
                     android:textSize="16sp" />
             </RelativeLayout>
         </android.support.v7.widget.CardView>
