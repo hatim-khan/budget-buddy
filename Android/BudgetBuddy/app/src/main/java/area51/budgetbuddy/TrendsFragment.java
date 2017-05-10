@@ -177,17 +177,21 @@ public class TrendsFragment extends Fragment {
         BarChart chart = (BarChart) view.findViewById(R.id.chart);
         groupBarChart = (BarChart) view.findViewById(R.id.budgetChart);
 
+        ArrayList<BarEntry> personalBar = new ArrayList<>();
+        ArrayList<BarEntry> groupBar = new ArrayList<>();
         BarData data = new BarData(getXAxisValues(), getDataSet());
         chart.setData(data);
+        data.setGroupSpace(15);
         chart.setDescription("");
         chart.animateXY(2000, 2000);
         chart.invalidate();
+        chart.setFitsSystemWindows(true);
         chart.getLegend().setFormSize(15);
         chart.getLegend().setTextSize(15);
         XAxis xAxis = chart.getXAxis();
         YAxis yAxis = chart.getAxisLeft();
         YAxis yrAxis = chart.getAxisRight();
-        chart.setVisibleXRange(24);
+        chart.setVisibleXRange(100);
         xAxis.setSpaceBetweenLabels(0);
         xAxis.setEnabled(true);
         xAxis.setTextSize(15);
@@ -286,6 +290,7 @@ public class TrendsFragment extends Fragment {
         dataSets = new ArrayList<>();
         dataSets.add(barDataSet1);
         dataSets.add(barDataSet2);
+
 
         return dataSets;
     }
