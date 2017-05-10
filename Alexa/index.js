@@ -247,10 +247,10 @@ var budgetAddingHandlers = Alexa.CreateStateHandler(states.BUDGETADDING, {
             case 'type':
                 var typeSlot = this.event.request.intent.slots.type.value;
                 if (typeSlot == 'group') {
-                    this.attributes['budget'].type = true;
+                    this.attributes['budget'].type = 'group';
                 }
                 else {
-                    this.attributes['budget'].type = false;
+                    this.attributes['budget'].type = 'personal';
                     this.attributes['budgetAddingState'] = 'person';
                     this.emit(':ask', 'What is your name?');
                     break;
@@ -275,12 +275,24 @@ var budgetAddingHandlers = Alexa.CreateStateHandler(states.BUDGETADDING, {
                 this.attributes['budget'].amount = amountSlot;
 
                 var alexaThis = this;
-                console.log('about to push new budget');
+                var name = capitalizeFirstLetter(this.attributes['budget'].name);
+                
+                var uriString;
+                console.log(alexaThis.attributes['budget'].type);
+                if (alexaThis.attributes['budget'].type == 'personal') {
+                    uriString = 'https://budget-buddy-2.firebaseio.com/Group/Area 51/' + 'groupMembers' + '/' + alexaThis.attributes['budget'].person + '/personalBudgets/'
+                        + alexaThis.attributes['budget'].name + '.json';
+                }
+                else if (alexaThis.attributes['budget'].type == 'group') {
+                    uriString = 'https://budget-buddy-2.firebaseio.com/Group/Area 51/' + 'groupBudgets' + '/'
+                        + name + '.json';
+                }
+
                 var options = {
                     method: 'PUT',
-                    uri: generateBudgetAddingURI(alexaThis),
+                    uri: uriString,
                     body: {
-                        groupBudget: this.attributes['budget'].type,
+                        groupBudget: (this.attributes['budget'].type == 'group'),
                         name: this.attributes['budget'].name,
                         amountLeftInBudget: this.attributes['budget'].amount,
                         amountSpentInBudget: 0,
@@ -288,7 +300,8 @@ var budgetAddingHandlers = Alexa.CreateStateHandler(states.BUDGETADDING, {
                     },
                     json: true // Automatically stringifies the body to JSON 
                 };
-                 
+
+                console.log(options);
                 rp(options)
                     .then(function (parsedBody) {
                         console.log('successful push of budget');
@@ -381,13 +394,13 @@ function generateBudgetUpdatingURI(alexaThis) {
 
 function generateBudgetAddingURI(alexaThis) {
     var uriString;
-    if (alexaThis.attributes['budgetAddingState'].type == 'personal') {
-        uriString = 'https://budget-buddy-2.firebaseio.com/Group/Area 51/' + 'groupMembers' + '/' + alexaThis.attributes['budgetAddingState'].person + '/personalBudgets/'
-            + alexaThis.attributes['budgetAddingState'].budget + '.json';
+    if (alexaThis.attributes['budget'].type == 'personal') {
+        uriString = 'https://budget-buddy-2.firebaseio.com/Group/Area 51/' + 'groupMembers' + '/' + alexaThis.attributes['budget'].person + '/personalBudgets/'
+            + alexaThis.attributes['budget'].budget + '.json';
     }
-    else if (alexaThis.attributes['budgetAddingState'].type == 'group') {
+    else if (alexaThis.attributes['budget'].type == 'group') {
         uriString = 'https://budget-buddy-2.firebaseio.com/Group/Area 51/' + 'groupBudgets' + '/'
-            + alexaThis.attributes['budgetAddingState'].budget + '.json';
+            + alexaThis.attributes['budget'].budget + '.json';
     }
     return uriString;
 }
@@ -507,6 +520,10 @@ function calculateSpentInBudget(budgetName, type, memberName, amount) {
         budget = findBudget(groupBudgets, budgetName);
         return budget.amountSpentInBudget + amount;
     }
+}
+
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 var strings = {
