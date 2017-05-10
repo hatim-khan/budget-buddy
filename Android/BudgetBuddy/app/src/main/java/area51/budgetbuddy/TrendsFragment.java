@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
@@ -15,6 +16,8 @@ import android.widget.TextView;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.widget.Toast;
+
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -34,6 +37,14 @@ public class TrendsFragment extends Fragment {
     private int mPage;
 
     public static final String ARG_PAGE = "ARG_PAGE";
+
+    // Chart comparing spending between each user
+    BarChart groupBarChart;
+
+
+    // maps username to the amount that user spent in the currently selected budget
+    HashMap<String, Float> userToAmountSpentInBudget= new HashMap<>();
+
 
     public static TrendsFragment newInstance(int page) {
         Bundle args = new Bundle();
@@ -58,6 +69,12 @@ public class TrendsFragment extends Fragment {
         Context cont;
         cont=getActivity();
 
+        // Initializes the userToAmountSpentInBudget hashmap
+        for (String username : AppVariables.currentUser.getGroup().getGroupMembers().keySet()) {
+            // Just using 10 for now so we can see stuff
+            userToAmountSpentInBudget.put(username, 10.0f);
+        }
+
         Spinner monthSpinner = (Spinner) view.findViewById(R.id.month_spinner);
         ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(cont,android.R.layout.simple_spinner_item, months);
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -68,8 +85,24 @@ public class TrendsFragment extends Fragment {
         budgetAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         budgetSpinner.setAdapter(budgetAdapter);
 
+        budgetSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView adapter, View v, int i, long lng) {
+                String selectedBudget =  adapter.getItemAtPosition(i).toString();
+                // update the graph for the new budget
+
+
+                groupBarChart.notifyDataSetChanged();
+                groupBarChart.invalidate();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // di bitgubg
+            }
+        });
+
         BarChart chart = (BarChart) view.findViewById(R.id.chart);
-        BarChart groupBarChart = (BarChart) view.findViewById(R.id.budgetChart);
+        groupBarChart = (BarChart) view.findViewById(R.id.budgetChart);
 
         BarData data = new BarData(getXAxisValues(), getDataSet());
         chart.setData(data);
