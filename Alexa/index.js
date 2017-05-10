@@ -66,7 +66,7 @@ var newSessionHandlers = {
 
     'Unhandled': function() {
         this.emit('NewSession');
-    },
+    }
 };
 
 var mainMenuHandlers = Alexa.CreateStateHandler(states.MAINMENU, {
@@ -118,6 +118,7 @@ var trackPaymentHandlers = Alexa.CreateStateHandler(states.TRACKPAYMENT, {
                 this.attributes['payment'].amount = parseInt(amountSlot);
                 this.attributes['trackingPaymentState'] = 'item';
                 this.emit(':ask', 'What was the purchase?');
+                break;
             case 'item':
                 var itemSlot = this.event.request.intent.slots.item.value;
                 this.attributes['payment'].item = itemSlot;
@@ -126,7 +127,7 @@ var trackPaymentHandlers = Alexa.CreateStateHandler(states.TRACKPAYMENT, {
                 break;
             case 'type':
                 var typeSlot = this.event.request.intent.slots.type.value;
-                this.attributes['payment'].type = typeSlot;
+                this.attributes['payment'].type = typeSlot.toLowerCase;
                 this.attributes['trackingPaymentState'] = 'budget';
                 this.emit(':ask', 'What is the name of the budget?');
                 break;
@@ -134,15 +135,23 @@ var trackPaymentHandlers = Alexa.CreateStateHandler(states.TRACKPAYMENT, {
                 var budgetSlot = this.event.request.intent.slots.budget.value;
                 this.attributes['payment'].budget = budgetSlot;
 
+                var groupPayment = (this.attributes['payment'].type == 'group');
+                var amountRemainingInBudget = calculateRemainingInBudget(this.attributes['payment'].budget, this.attributes['payment'].type,
+                    this.attributes['payment'].person, this.attributes['payment'].amount);
+                var amountSpentInBudget = calculateSpentInBudget(this.attributes['payment'].budget, this.attributes['payment'].type,
+                    this.attributes['payment'].person, this.attributes['payment'].amount);
+
+
                 // currently only adding payments to Cleaning Supplies group budget
                 var options = {
                     method: 'PUT',
-                    uri: 'https://budget-buddy-2.firebaseio.com/Group/Area%2051/payments/1.json',
+                    uri: generateAddingPaymentURI.call(this),
                     body: {
                         amountSpent: this.attributes['payment'].amount,
                         notes: this.attributes['payment'].item,
                         purchaseDate: '4/25/2017',
-                        username: this.attributes['payment'].person
+                        username: this.attributes['payment'].person,
+                        groupPayment: groupPayment
                     },
                     json: true // Automatically stringifies the body to JSON 
                 };
@@ -151,14 +160,44 @@ var trackPaymentHandlers = Alexa.CreateStateHandler(states.TRACKPAYMENT, {
                 rp(options)
                     .then(function (parsedBody) {
                         console.log('succesful push of payment');
+
+                        // currently only adding payments to Cleaning Supplies group budget
+                        var options = {
+                            method: 'PATCH',
+                            uri: generateBudgetUpdatingURI(alexaThis),
+                            body: {
+                                amountLeftInBudget: amountRemainingInBudget,
+                                amountSpentInBudget: amountSpentInBudget
+                            },
+                            json: true // Automatically stringifies the body to JSON
+                        };
+
+                        rp(options)
+                            .then(function (parsedBody) {
+                                console.log('patched budget');
+                            })
+
+                            .catch(function (err) {
+                                console.log('something went wrong');
+                                alexaThis.handler.state = states.MAINMENU
+                                alexaThis.emit(':tell', 'Sorry, something went wrong. Please try again.');
+                            })
+                            .finally(function (body) {
+                            alexaThis.handler.state = states.MAINMENU;
+                            alexaThis.emit(':tell', 'Thanks for tracking a payment, you are now back at the main menu!');
+                        })
+
+
                     })
+
+                    //TODO: better error handling?
                     .catch(function (err) {
-                        // POST failed... 
-                        // this.emit(':tell', 'Ah, that did not work correctly. Returning to the main menu now.');
+                        // POST failed...
+                        alexaThis.handler.state = states.MAINMENU
+                        alexaThis.emit(':tell', 'Sorry, something went wrong. Please try again.');
                     })
                     .finally(function (body) {
-                        alexaThis.handler.state = states.MAINMENU;
-                        alexaThis.emit(':tell', 'Thanks for tracking a payment, you are now back at the main menu!');
+                        console.log('finished with PATCH to budget and PUT to payments');
                     });
         }
     },
@@ -178,10 +217,9 @@ var trackPaymentHandlers = Alexa.CreateStateHandler(states.TRACKPAYMENT, {
         this.emitWithState('Unhandled');
     },
 
+    //TODO: fully implement this
     'NoIntent': function() {
         this.attributes['requestedMainMenu'] = false;
-
-
     },
 
     'WhatCanISayIntent': function() {
@@ -207,6 +245,8 @@ var budgetAddingHandlers = Alexa.CreateStateHandler(states.BUDGETADDING, {
 
     'BudgetInformationIntent': function() {
         switch(this.attributes['budgetAddingState']) {
+
+            //TODO: Add name questioning for personal budgets
             case 'type':
                 var typeSlot = this.event.request.intent.slots.type.value;
                 if (typeSlot == 'group') {
@@ -215,7 +255,7 @@ var budgetAddingHandlers = Alexa.CreateStateHandler(states.BUDGETADDING, {
                 else {
                     this.attributes['budget'].type = false;
                 }
-                
+
                 this.attributes['budgetAddingState'] = 'name';
                 this.emit(':ask', 'What is the name of the budget?');
                 break;
@@ -303,22 +343,14 @@ var budgetSummaryHandlers = Alexa.CreateStateHandler(states.BUDGETSUMMARY, {
         
 });
 
-//constructor for GroupBudget object
-function GroupBudget(amountLeftInBudget, amountSpentInBudget, budgetLimit, groupBudget, name) {
+//constructor for Budget object
+function Budget(amountLeftInBudget, amountSpentInBudget, budgetLimit, groupBudget, name, payments) {
     this.amountLeftInBudget = amountLeftInBudget;
     this.amountSpentInBudget = amountSpentInBudget;
     this.budgetLimit = budgetLimit;
     this.groupBudget = groupBudget;
-    this.name = name;
-}
-
-//constructor for PersonalBudget object
-function PersonalBudget(amountLeftInBudget, amountSpentInBudget, budgetLimit, groupBudget, name) {
-    this.amountLeftInBudget = amountLeftInBudget;
-    this.amountSpentInBudget = amountSpentInBudget;
-    this.budgetLimit = budgetLimit;
-    this.groupBudget = groupBudget;
-    this.name = name;
+    this.budgetName = name;
+    this.payments = payments;
 }
 
 //constructor for GroupMember object
@@ -327,7 +359,34 @@ function GroupMember(username, personalBudgets) {
     this.personalBudgets = personalBudgets;
 }
 
-//create an array of 'GroupBudget' objects from parsed JSON input
+function generateBudgetUpdatingURI(alexaThis) {
+    var uriString;
+    if (alexaThis.attributes['payment'].type == 'personal') {
+        uriString = 'https://budget-buddy-2.firebaseio.com/Group/Area 51/' + 'groupMembers' + '/' + alexaThis.attributes['payment'].person + '/personalBudgets/'
+            + alexaThis.attributes['payment'].budget + '.json';
+    }
+    else if (alexaThis.attributes['payment'].type == 'group') {
+        uriString = 'https://budget-buddy-2.firebaseio.com/Group/Area 51/' + 'groupBudgets' + '/'
+            + alexaThis.attributes['payment'].budget + '.json';
+    }
+    return uriString;
+}
+
+function generateAddingPaymentURI() {
+    var paymentIndex = calculatePaymentIndex(this.attributes['payment'].budget, this.attributes['payment'].type, this.attributes['payment'].person);
+    var uriString;
+    if (this.attributes['payment'].type == 'personal') {
+        uriString = 'https://budget-buddy-2.firebaseio.com/Group/Area 51/' + 'groupMembers' + '/' + this.attributes['payment'].person + '/personalBudgets/'
+            + this.attributes['payment'].budget + '/payments/' + paymentIndex + '.json';
+    }
+    else if (this.attributes['payment'].type == 'group') {
+        uriString = 'https://budget-buddy-2.firebaseio.com/Group/Area 51/' + 'groupBudgets' + '/'
+            + this.attributes['payment'].budget + '/payments/' + paymentIndex + '.json';
+    }
+    return uriString;
+}
+
+//create an array of 'Budget' objects from parsed JSON input
 function createGroupBudgetsArray(groupBudgetsDict) {
     var groupBudgets = [];
     for (var key in groupBudgetsDict) {
@@ -335,12 +394,16 @@ function createGroupBudgetsArray(groupBudgetsDict) {
             continue;
         }
         var budgetObject = groupBudgetsDict[key];
-        var groupBudget = new GroupBudget(budgetObject['amountLeftInBudget'], 
+        if (budgetObject['payments'] == undefined) {
+            budgetObject['payments'] = {};
+        }
+        var budget = new Budget(budgetObject['amountLeftInBudget'],
                                 budgetObject['amountSpentInBudget'],
                                 budgetObject['budgetLimit'],
                                 budgetObject['groupBudget'],
-                                budgetObject['name']);
-        groupBudgets.push(groupBudget);
+                                budgetObject['name'],
+                                budgetObject['payments']);
+        groupBudgets.push(budget);
     }
     return groupBudgets;
 }
@@ -361,6 +424,69 @@ function createGroupMembersArray(groupMembersDict) {
         groupMembers.push(groupMember);
     }
     return groupMembers;
+}
+
+function findMember(name) {
+    for (var i = 0; i < groupMembers.length; i++) {
+        if (groupMembers[i].username == name) return groupMembers[i];
+    }
+}
+
+function findBudget(budgets, name) {
+    for (var i = 0; i < budgets.length; i++) {
+        if (budgets[i].budgetName == name) return budgets[i];
+    }
+}
+
+function getPayments(budget) {
+    return budget.payments;
+}
+
+function calculatePaymentIndex(budgetName, type, memberName) {
+    var payments;
+    var paymentIndex;
+    var budget;
+    if (type == 'personal') {
+        var member = findMember(memberName);
+        var budgets = getPersonalBudgets(member);
+        budget = findBudget(budgets, budgetName);
+        payments = getPayments(budget);
+        paymentIndex = Object.keys(payments).length;
+    }
+    else if (type == 'group') {
+        budget = findBudget(groupBudgets, budgetName);
+        payments = getPayments(budget);
+        paymentIndex = Object.keys(payments).length;
+    }
+    return paymentIndex;
+}
+
+function calculateRemainingInBudget(budgetName, type, memberName, amount) {
+    var budget;
+    if (type == 'personal') {
+        var member = findMember(memberName);
+        var budgets = getPersonalBudgets(member);
+        budget = findBudget(budgets, budgetName);
+        return budget.amountLeftInBudget - amount;
+    }
+    else if (type == 'group') {
+        budget = findBudget(groupBudgets, budgetName);
+        return budget.amountLeftInBudget - amount;
+    }
+}
+
+function calculateSpentInBudget(budgetName, type, memberName, amount) {
+    var budget;
+    if (type == 'personal') {
+        var member = findMember(memberName);
+        var budgets = getPersonalBudgets(member);
+        budget = findBudget(budgets, budgetName);
+        return budget.amountSpentInBudget + amount;
+    }
+    else if (type == 'group') {
+        budget = findBudget(groupBudgets, budgetName);
+        return budget.amountSpentInBudget + amount;
+    }
 }
 
 var strings = {
