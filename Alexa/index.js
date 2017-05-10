@@ -141,7 +141,6 @@ var trackPaymentHandlers = Alexa.CreateStateHandler(states.TRACKPAYMENT, {
                 var amountSpentInBudget = calculateSpentInBudget(this.attributes['payment'].budget, this.attributes['payment'].type,
                     this.attributes['payment'].person, this.attributes['payment'].amount);
 
-
                 // currently only adding payments to Cleaning Supplies group budget
                 var options = {
                     method: 'PUT',
@@ -186,8 +185,6 @@ var trackPaymentHandlers = Alexa.CreateStateHandler(states.TRACKPAYMENT, {
                             alexaThis.handler.state = states.MAINMENU;
                             alexaThis.emit(':tell', 'Thanks for tracking a payment, you are now back at the main menu!');
                         })
-
-
                     })
 
                     //TODO: better error handling?
@@ -254,8 +251,16 @@ var budgetAddingHandlers = Alexa.CreateStateHandler(states.BUDGETADDING, {
                 }
                 else {
                     this.attributes['budget'].type = false;
+                    this.attributes['budgetAddingState'] = 'person';
+                    this.emit(':ask', 'What is your name?');
+                    break;
                 }
-
+                this.attributes['budgetAddingState'] = 'name';
+                this.emit(':ask', 'What is the name of the budget?');
+                break;
+            case 'person':
+                var personSlot = this.event.request.intent.slots.person.value;
+                this.attributes['budget'].person = personSlot;
                 this.attributes['budgetAddingState'] = 'name';
                 this.emit(':ask', 'What is the name of the budget?');
                 break;
@@ -270,6 +275,10 @@ var budgetAddingHandlers = Alexa.CreateStateHandler(states.BUDGETADDING, {
                 this.attributes['budget'].amount = amountSlot;
                 this.handler.state = states.MAINMENU;
                 this.emit(':tell', 'Thanks for adding a budget, you are now back at the main menu!');
+
+
+
+
                 var options = {
                     method: 'PUT',
                     uri: 'https://budget-buddy-2.firebaseio.com/Group/Area%2051/groupBudgets/Food.json',
