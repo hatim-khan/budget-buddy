@@ -136,7 +136,7 @@ public class SignInActivity extends AppCompatActivity {
             if (paymentsArray != null) {
                 for (Object paymentObject : paymentsArray) {
                     Map<String, Object> paymentDict = (Map<String, Object>) paymentObject;
-                    if (paymentDict.keySet().size() == 4) {
+                    if (paymentDict.keySet().size() >= 4) {
                         Double amountSpent = new Double(paymentDict.get("amountSpent").toString());
                         String purchaseDateString = paymentDict.get("purchaseDate").toString();
                         String notes = paymentDict.get("notes").toString();
