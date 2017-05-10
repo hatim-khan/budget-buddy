@@ -7,6 +7,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import android.graphics.Color;
@@ -50,8 +53,23 @@ public class TrendsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_trends, container, false);
+        String months[] = {"January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"};
+        Context cont;
+        cont=getActivity();
+
+        Spinner monthSpinner = (Spinner) view.findViewById(R.id.month_spinner);
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(cont,android.R.layout.simple_spinner_item, months);
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        monthSpinner.setAdapter(spinnerArrayAdapter);
+
+        Spinner budgetSpinner = (Spinner) view.findViewById(R.id.budget_name_spinner);
+        final ArrayAdapter<String> budgetAdapter = new ArrayAdapter<String>(cont,android.R.layout.simple_spinner_item, AppVariables.currentUser.userGroupBudgetStrings());
+        budgetAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        budgetSpinner.setAdapter(budgetAdapter);
 
         BarChart chart = (BarChart) view.findViewById(R.id.chart);
+        BarChart groupBarChart = (BarChart) view.findViewById(R.id.budgetChart);
 
         BarData data = new BarData(getXAxisValues(), getDataSet());
         chart.setData(data);
@@ -71,7 +89,6 @@ public class TrendsFragment extends Fragment {
         yrAxis.setTextSize(15);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         chart.setTouchEnabled(false);
-
 
         // PERSONAL PIE CHART
 
@@ -187,6 +204,5 @@ public class TrendsFragment extends Fragment {
         xAxis.add("NOV");
         xAxis.add("DEC");
         return xAxis;
-
     }
 }
