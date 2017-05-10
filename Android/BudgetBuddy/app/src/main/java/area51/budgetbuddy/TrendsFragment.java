@@ -83,11 +83,11 @@ public class TrendsFragment extends Fragment {
             // Just using 10 for now so we can see stuff
             userToAmountSpentInBudget.put(username, 10.0f);
         }
-
+/*
         Spinner monthSpinner = (Spinner) view.findViewById(R.id.month_spinner);
         ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(cont,android.R.layout.simple_spinner_item, months);
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        monthSpinner.setAdapter(spinnerArrayAdapter);
+        monthSpinner.setAdapter(spinnerArrayAdapter);*/
 
         Spinner budgetSpinner = (Spinner) view.findViewById(R.id.budget_name_spinner);
         final ArrayAdapter<String> budgetAdapter = new ArrayAdapter<String>(cont,android.R.layout.simple_spinner_item, AppVariables.currentUser.userGroupBudgetStrings());
@@ -151,8 +151,8 @@ public class TrendsFragment extends Fragment {
 
                 groupBarChart.setDescription("");
                 groupBarChart.animateXY(2000, 2000);
-                groupBarChart.getLegend().setFormSize(15);
-                groupBarChart.getLegend().setTextSize(15);
+                groupBarChart.getLegend().setFormSize(0);
+                groupBarChart.getLegend().setTextSize(0);
                 XAxis xAxis = groupBarChart.getXAxis();
                 YAxis yAxis = groupBarChart.getAxisLeft();
                 YAxis yrAxis = groupBarChart.getAxisRight();
@@ -280,7 +280,7 @@ public class TrendsFragment extends Fragment {
         }
 
         BarDataSet barDataSet1 = new BarDataSet(personalBar, "Personal Budget");
-        barDataSet1.setColor(Color.rgb(64, 64, 64));
+        barDataSet1.setColor(Color.rgb(0, 128, 255));
         BarDataSet barDataSet2 = new BarDataSet(groupBar, "Group Budget");
         barDataSet2.setColor(Color.rgb(204, 0, 102));
         dataSets = new ArrayList<>();
