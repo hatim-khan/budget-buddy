@@ -103,6 +103,7 @@ public class TrendsFragment extends Fragment {
 
         BarChart chart = (BarChart) view.findViewById(R.id.chart);
         groupBarChart = (BarChart) view.findViewById(R.id.budgetChart);
+        BarData groupData = new BarData(getGroupXAxisValues(), getGroupDataSet());
 
         BarData data = new BarData(getXAxisValues(), getDataSet());
         chart.setData(data);
@@ -186,11 +187,6 @@ public class TrendsFragment extends Fragment {
     private ArrayList<BarDataSet> getDataSet() {
         ArrayList<BarDataSet> dataSets = null;
 
-        /*
-        * For all budgets in Budget
-        *   if Payment made in January
-        *       Add it in new float = (float) JanuaryEntry
-        * */
         ArrayList<BarEntry> personalBar = new ArrayList<>();
         ArrayList<BarEntry> groupBar = new ArrayList<>();
 
@@ -214,12 +210,36 @@ public class TrendsFragment extends Fragment {
         BarDataSet barDataSet1 = new BarDataSet(personalBar, "Personal Budget");
         barDataSet1.setColor(Color.rgb(64, 64, 64));
         BarDataSet barDataSet2 = new BarDataSet(groupBar, "Group Budget");
-        barDataSet1.setColor(Color.rgb(204, 0, 102));
+        barDataSet2.setColor(Color.rgb(204, 0, 102));
         dataSets = new ArrayList<>();
         dataSets.add(barDataSet1);
         dataSets.add(barDataSet2);
 
         return dataSets;
+    }
+
+    private ArrayList<BarDataSet> getGroupDataSet() {
+        ArrayList<BarDataSet> userDataSets = null;
+
+        ArrayList<BarEntry> userBar = new ArrayList<>();
+
+        int user = 0;
+        while (user < 12) {
+            // Set the group amount spent values
+            Float groupAmountSpent = AppVariables.getGroupSpendingForMonth(user);
+            if (groupAmountSpent > 0.0f) {
+                BarEntry userEntry = new BarEntry(groupAmountSpent, user);
+                userBar.add(userEntry);
+            }
+            user++;
+        }
+
+        BarDataSet barDataSet = new BarDataSet(userBar, "");
+        barDataSet.setColors(ColorTemplate.VORDIPLOM_COLORS);
+        userDataSets = new ArrayList<>();
+        userDataSets.add(barDataSet);
+
+        return userDataSets;
     }
 
     private ArrayList<String> getXAxisValues() {
