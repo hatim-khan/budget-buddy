@@ -178,7 +178,7 @@ var trackPaymentHandlers = Alexa.CreateStateHandler(states.TRACKPAYMENT, {
 
                             .catch(function (err) {
                                 console.log('something went wrong');
-                                alexaThis.handler.state = states.MAINMENU
+                                alexaThis.handler.state = states.MAINMENU;
                                 alexaThis.emit(':tell', 'Sorry, something went wrong. Please try again.');
                             })
                             .finally(function (body) {
@@ -276,9 +276,6 @@ var budgetAddingHandlers = Alexa.CreateStateHandler(states.BUDGETADDING, {
                 this.handler.state = states.MAINMENU;
                 this.emit(':tell', 'Thanks for adding a budget, you are now back at the main menu!');
 
-
-
-
                 var options = {
                     method: 'PUT',
                     uri: 'https://budget-buddy-2.firebaseio.com/Group/Area%2051/groupBudgets/Food.json',
@@ -287,7 +284,7 @@ var budgetAddingHandlers = Alexa.CreateStateHandler(states.BUDGETADDING, {
                         name: this.attributes['budget'].name,
                         amountLeftInBudget: this.attributes['budget'].amount,
                         amountSpentInBudget: 0,
-                        budgetLimit: this.attributes['budget'].amount,
+                        budgetLimit: this.attributes['budget'].amount
                     },
                     json: true // Automatically stringifies the body to JSON 
                 };
