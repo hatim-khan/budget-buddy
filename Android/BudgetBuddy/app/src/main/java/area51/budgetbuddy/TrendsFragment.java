@@ -60,6 +60,15 @@ public class TrendsFragment extends Fragment {
         mPage = getArguments().getInt(ARG_PAGE);
     }
 
+    private ArrayList<String> getGroupXAxisValues() {
+        ArrayList<String> groupXAxis = new ArrayList<>();
+        Collection<String> groupMembers = AppVariables.currentUser.getGroup().getGroupMembers().keySet();
+        for (String user : groupMembers) {;
+            groupXAxis.add(user);
+        }
+        return groupXAxis;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -94,7 +103,7 @@ public class TrendsFragment extends Fragment {
 
                 Budget selectedBudget = AppVariables.currentUser.getGroup().getGroupBudgets().get(selectedBudgetName);
 
-                // clear out the old data
+                 //clear out the old data
                 for (String username : userToAmountSpentInBudget.keySet()) {
                     userToAmountSpentInBudget.put(username, 0.0f);
                 }
@@ -107,6 +116,54 @@ public class TrendsFragment extends Fragment {
                 }
 
                 // TODO: set the groupbarchart's data set here!
+                ArrayList<String> usernames = new ArrayList<String>();
+                ArrayList<Float> amountSpent = new ArrayList<Float>();
+
+                for (String username : userToAmountSpentInBudget.keySet()) {
+                    usernames.add(username);
+                    amountSpent.add(userToAmountSpentInBudget.get(username));
+                }
+
+                ArrayList<BarEntry> userBar = new ArrayList<>();
+
+                int user = 0;
+                int users = userToAmountSpentInBudget.size();
+                while (user < users) {
+                    Collection<Float> userAmountSpent = userToAmountSpentInBudget.values();
+                    for (Float spent : amountSpent) {
+                        if (spent > 0.0f) {
+                            BarEntry userEntry = new BarEntry(spent, user);
+                            userBar.add(userEntry);
+                        }
+                        user++;
+                    }
+                }
+                    BarDataSet barDataSet = new BarDataSet(userBar, "");
+                    barDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+                    ArrayList<BarDataSet> userDataSets = new ArrayList<>();
+                    userDataSets.add(barDataSet);
+
+
+                BarData groupData = new BarData(getGroupXAxisValues(), userDataSets);
+                groupBarChart.setData(groupData);
+
+
+
+                groupBarChart.setDescription("");
+                groupBarChart.animateXY(2000, 2000);
+                groupBarChart.getLegend().setFormSize(15);
+                groupBarChart.getLegend().setTextSize(15);
+                XAxis xAxis = groupBarChart.getXAxis();
+                YAxis yAxis = groupBarChart.getAxisLeft();
+                YAxis yrAxis = groupBarChart.getAxisRight();
+                groupBarChart.setVisibleXRange(24);
+                xAxis.setSpaceBetweenLabels(0);
+                xAxis.setEnabled(true);
+                xAxis.setTextSize(15);
+                yAxis.setTextSize(15);
+                yrAxis.setTextSize(15);
+                xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+                groupBarChart.setTouchEnabled(false);
 
                 groupBarChart.notifyDataSetChanged();
                 groupBarChart.invalidate();
@@ -119,7 +176,6 @@ public class TrendsFragment extends Fragment {
 
         BarChart chart = (BarChart) view.findViewById(R.id.chart);
         groupBarChart = (BarChart) view.findViewById(R.id.budgetChart);
-        BarData groupData = new BarData(getGroupXAxisValues(), getGroupDataSet());
 
         BarData data = new BarData(getXAxisValues(), getDataSet());
         chart.setData(data);
@@ -234,30 +290,6 @@ public class TrendsFragment extends Fragment {
         return dataSets;
     }
 
-    private ArrayList<BarDataSet> getGroupDataSet() {
-        ArrayList<BarDataSet> userDataSets = null;
-
-        ArrayList<BarEntry> userBar = new ArrayList<>();
-
-        int user = 0;
-        while (user < 12) {
-            // Set the group amount spent values
-            Float groupAmountSpent = AppVariables.getGroupSpendingForMonth(user);
-            if (groupAmountSpent > 0.0f) {
-                BarEntry userEntry = new BarEntry(groupAmountSpent, user);
-                userBar.add(userEntry);
-            }
-            user++;
-        }
-
-        BarDataSet barDataSet = new BarDataSet(userBar, "");
-        barDataSet.setColors(ColorTemplate.VORDIPLOM_COLORS);
-        userDataSets = new ArrayList<>();
-        userDataSets.add(barDataSet);
-
-        return userDataSets;
-    }
-
     private ArrayList<String> getXAxisValues() {
         ArrayList<String> xAxis = new ArrayList<>();
         xAxis.add("JAN");
@@ -273,14 +305,5 @@ public class TrendsFragment extends Fragment {
         xAxis.add("NOV");
         xAxis.add("DEC");
         return xAxis;
-    }
-    private ArrayList<String> getGroupXAxisValues() {
-        ArrayList<String> groupXAxis = new ArrayList<>();
-        Collection<String> groupMembers = AppVariables.currentUser.getGroup().getGroupMembers().keySet();
-        for (int i=0; i < groupMembers.size(); i++) {
-            String groupMember = groupMembers.toString();
-            groupXAxis.add(groupMember);
-        }
-        return groupXAxis;
     }
 }
