@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
@@ -15,6 +16,8 @@ import android.widget.TextView;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.widget.Toast;
+
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -35,6 +38,14 @@ public class TrendsFragment extends Fragment {
 
     public static final String ARG_PAGE = "ARG_PAGE";
 
+    // Chart comparing spending between each user
+    BarChart groupBarChart;
+
+
+    // maps username to the amount that user spent in the currently selected budget
+    HashMap<String, Float> userToAmountSpentInBudget= new HashMap<>();
+
+
     public static TrendsFragment newInstance(int page) {
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, page);
@@ -49,6 +60,15 @@ public class TrendsFragment extends Fragment {
         mPage = getArguments().getInt(ARG_PAGE);
     }
 
+    private ArrayList<String> getGroupXAxisValues() {
+        ArrayList<String> groupXAxis = new ArrayList<>();
+        Collection<String> groupMembers = AppVariables.currentUser.getGroup().getGroupMembers().keySet();
+        for (String user : groupMembers) {;
+            groupXAxis.add(user);
+        }
+        return groupXAxis;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -57,6 +77,12 @@ public class TrendsFragment extends Fragment {
                 "July", "August", "September", "October", "November", "December"};
         Context cont;
         cont = getActivity();
+
+        // Initializes the userToAmountSpentInBudget hashmap
+        for (String username : AppVariables.currentUser.getGroup().getGroupMembers().keySet()) {
+            // Just using 10 for now so we can see stuff
+            userToAmountSpentInBudget.put(username, 10.0f);
+        }
 
         Spinner monthSpinner = (Spinner) view.findViewById(R.id.month_spinner);
         ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(cont,android.R.layout.simple_spinner_item, months);
@@ -68,8 +94,88 @@ public class TrendsFragment extends Fragment {
         budgetAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         budgetSpinner.setAdapter(budgetAdapter);
 
+        budgetSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView adapter, View v, int i, long lng) {
+                String selectedBudgetName =  adapter.getItemAtPosition(i).toString();
+                // update the graph for the new budget
+
+
+                Budget selectedBudget = AppVariables.currentUser.getGroup().getGroupBudgets().get(selectedBudgetName);
+
+                 //clear out the old data
+                for (String username : userToAmountSpentInBudget.keySet()) {
+                    userToAmountSpentInBudget.put(username, 0.0f);
+                }
+
+                // Calculate how much everyone has spent in this budget, and update
+                // the userToAmountSpentInBudget map with these values
+                for (Payment payment: selectedBudget.getPayments()) {
+                    Float amountSpentSoFar = userToAmountSpentInBudget.get(payment.getUsername());
+                    userToAmountSpentInBudget.put(payment.getUsername(), amountSpentSoFar + new Float(payment.getAmountSpent()));
+                }
+
+                // TODO: set the groupbarchart's data set here!
+                ArrayList<String> usernames = new ArrayList<String>();
+                ArrayList<Float> amountSpent = new ArrayList<Float>();
+
+                for (String username : userToAmountSpentInBudget.keySet()) {
+                    usernames.add(username);
+                    amountSpent.add(userToAmountSpentInBudget.get(username));
+                }
+
+                ArrayList<BarEntry> userBar = new ArrayList<>();
+
+                int user = 0;
+                int users = userToAmountSpentInBudget.size();
+                while (user < users) {
+                    Collection<Float> userAmountSpent = userToAmountSpentInBudget.values();
+                    for (Float spent : amountSpent) {
+                        if (spent > 0.0f) {
+                            BarEntry userEntry = new BarEntry(spent, user);
+                            userBar.add(userEntry);
+                        }
+                        user++;
+                    }
+                }
+                    BarDataSet barDataSet = new BarDataSet(userBar, "");
+                    barDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+                    ArrayList<BarDataSet> userDataSets = new ArrayList<>();
+                    userDataSets.add(barDataSet);
+
+
+                BarData groupData = new BarData(getGroupXAxisValues(), userDataSets);
+                groupBarChart.setData(groupData);
+
+
+
+                groupBarChart.setDescription("");
+                groupBarChart.animateXY(2000, 2000);
+                groupBarChart.getLegend().setFormSize(15);
+                groupBarChart.getLegend().setTextSize(15);
+                XAxis xAxis = groupBarChart.getXAxis();
+                YAxis yAxis = groupBarChart.getAxisLeft();
+                YAxis yrAxis = groupBarChart.getAxisRight();
+                groupBarChart.setVisibleXRange(24);
+                xAxis.setSpaceBetweenLabels(0);
+                xAxis.setEnabled(true);
+                xAxis.setTextSize(15);
+                yAxis.setTextSize(15);
+                yrAxis.setTextSize(15);
+                xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+                groupBarChart.setTouchEnabled(false);
+
+                groupBarChart.notifyDataSetChanged();
+                groupBarChart.invalidate();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // di bitgubg
+            }
+        });
+
         BarChart chart = (BarChart) view.findViewById(R.id.chart);
-        BarChart groupBarChart = (BarChart) view.findViewById(R.id.budgetChart);
+        groupBarChart = (BarChart) view.findViewById(R.id.budgetChart);
 
         BarData data = new BarData(getXAxisValues(), getDataSet());
         chart.setData(data);
@@ -153,11 +259,6 @@ public class TrendsFragment extends Fragment {
     private ArrayList<BarDataSet> getDataSet() {
         ArrayList<BarDataSet> dataSets = null;
 
-        /*
-        * For all budgets in Budget
-        *   if Payment made in January
-        *       Add it in new float = (float) JanuaryEntry
-        * */
         ArrayList<BarEntry> personalBar = new ArrayList<>();
         ArrayList<BarEntry> groupBar = new ArrayList<>();
 
@@ -181,7 +282,7 @@ public class TrendsFragment extends Fragment {
         BarDataSet barDataSet1 = new BarDataSet(personalBar, "Personal Budget");
         barDataSet1.setColor(Color.rgb(64, 64, 64));
         BarDataSet barDataSet2 = new BarDataSet(groupBar, "Group Budget");
-        barDataSet1.setColor(Color.rgb(204, 0, 102));
+        barDataSet2.setColor(Color.rgb(204, 0, 102));
         dataSets = new ArrayList<>();
         dataSets.add(barDataSet1);
         dataSets.add(barDataSet2);
@@ -204,14 +305,5 @@ public class TrendsFragment extends Fragment {
         xAxis.add("NOV");
         xAxis.add("DEC");
         return xAxis;
-    }
-    private ArrayList<String> getGroupXAxisValues() {
-        ArrayList<String> groupXAxis = new ArrayList<>();
-        Collection<String> groupMembers = AppVariables.currentUser.getGroup().getGroupMembers().keySet();
-        for (int i=0; i < groupMembers.size(); i++) {
-            String groupMember = groupMembers.toString();
-            groupXAxis.add(groupMember);
-        }
-        return groupXAxis;
     }
 }

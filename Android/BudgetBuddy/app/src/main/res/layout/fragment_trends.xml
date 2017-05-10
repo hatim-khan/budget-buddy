@@ -116,7 +116,7 @@
 
         <Spinner
             android:id="@+id/month_spinner"
-            android:layout_width="100dp"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:layout_weight="1"
@@ -125,7 +125,7 @@
 
         <Spinner
             android:id="@+id/budget_name_spinner"
-            android:layout_width="100dp"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:layout_marginLeft="200dp"
