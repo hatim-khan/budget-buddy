@@ -56,7 +56,7 @@ public class TrendsFragment extends Fragment {
         String months[] = {"January", "February", "March", "April", "May", "June",
                 "July", "August", "September", "October", "November", "December"};
         Context cont;
-        cont=getActivity();
+        cont = getActivity();
 
         Spinner monthSpinner = (Spinner) view.findViewById(R.id.month_spinner);
         ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(cont,android.R.layout.simple_spinner_item, months);
@@ -204,5 +204,14 @@ public class TrendsFragment extends Fragment {
         xAxis.add("NOV");
         xAxis.add("DEC");
         return xAxis;
+    }
+    private ArrayList<String> getGroupXAxisValues() {
+        ArrayList<String> groupXAxis = new ArrayList<>();
+        Collection<String> groupMembers = AppVariables.currentUser.getGroup().getGroupMembers().keySet();
+        for (int i=0; i < groupMembers.size(); i++) {
+            String groupMember = groupMembers.toString();
+            groupXAxis.add(groupMember);
+        }
+        return groupXAxis;
     }
 }
