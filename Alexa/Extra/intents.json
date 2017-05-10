@@ -1,7 +1,6 @@
 {
   "intents": [
     {
-      "intent": "TrackPaymentIntent",
       "slots": [
         {
           "name": "amount",
@@ -9,7 +8,7 @@
         },
         {
           "name": "purchaser",
-          "type": "PERSON"
+          "type": "AMAZON.US_FIRST_NAME"
         },
         {
           "name": "purchaseType",
@@ -21,16 +20,16 @@
         },
         {
           "name": "item",
-          "type": "ITEM"
+          "type": "AMAZON.Food"
         }
-      ]
+      ],
+      "intent": "TrackPaymentIntent"
     },
     {
-      "intent": "PaymentInformationIntent",
       "slots": [
         {
           "name": "person",
-          "type": "PERSON"
+          "type": "AMAZON.US_FIRST_NAME"
         },
         {
           "name": "amount",
@@ -42,16 +41,16 @@
         },
         {
           "name": "item",
-          "type": "ITEM"
+          "type": "AMAZON.Food"
         },
         {
           "name": "budget",
           "type": "BUDGET"
         }
-      ]
+      ],
+      "intent": "PaymentInformationIntent"
     },
     {
-      "intent": "BudgetAddingIntent",
       "slots": [
         {
           "name": "budget",
@@ -65,10 +64,10 @@
           "name": "amount",
           "type": "AMAZON.NUMBER"
         }
-      ]
+      ],
+      "intent": "BudgetAddingIntent"
     },
     {
-      "intent": "BudgetInformationIntent",
       "slots": [
         {
           "name": "budget",
@@ -82,20 +81,20 @@
           "name": "amount",
           "type": "AMAZON.NUMBER"
         }
-      ]
+      ],
+      "intent": "BudgetInformationIntent"
     },
-    
     {
       "intent": "WhatCanISayIntent"
     },
     {
-      "intent": "BudgetSummaryIntent",
       "slots": [
         {
           "name": "budget",
           "type": "BUDGET"
         }
-      ]
+      ],
+      "intent": "BudgetSummaryIntent"
     },
     {
       "intent": "MainMenuIntent"

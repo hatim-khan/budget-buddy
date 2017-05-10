@@ -10,6 +10,10 @@ TrackPaymentIntent I want to track a payment of {amount} for {item}
 TrackPaymentIntent I want to track a payment of {amount} for {item} under {budget}
 
 PaymentInformationIntent it was by {person}
+PaymentInformationIntent {person}
+PaymentInformationIntent {amount}
+PaymentInformationIntent {item}
+PaymentInformationIntent {budget}
 PaymentInformationIntent it was {amount} dollars
 PaymentInformationIntent it was a {item}
 PaymentInformationIntent it was for {budget}

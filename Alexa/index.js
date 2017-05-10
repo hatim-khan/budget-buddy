@@ -110,22 +110,41 @@ var trackPaymentHandlers = Alexa.CreateStateHandler(states.TRACKPAYMENT, {
             case 'person':
                 var personSlot = this.event.request.intent.slots.person.value;
                 this.attributes['payment'].person = personSlot;
+                if (personSlot == null) {
+                    console.log('person slot is null');
+                    this.emitWithState("WhatCanISayIntent")
+                }
                 this.attributes['trackingPaymentState'] = 'amount';
                 this.emit(':ask', 'How much was the purchase?');
                 break;
             case 'amount':
                 var amountSlot = this.event.request.intent.slots.amount.value;
                 this.attributes['payment'].amount = parseInt(amountSlot);
+                if (amountSlot == null) {
+                    console.log('amount slot is null');
+                    this.emitWithState("WhatCanISayIntent")
+                }
                 this.attributes['trackingPaymentState'] = 'item';
-                this.emit(':ask', 'What was the purchase?');
+                this.emit(':ask', 'What was the purchase for?');
+                break;
             case 'item':
                 var itemSlot = this.event.request.intent.slots.item.value;
+                if (itemSlot == null) {
+                    console.log('item slot is null');
+                    this.emitWithState("WhatCanISayIntent")
+                    break;
+                }
                 this.attributes['payment'].item = itemSlot;
                 this.attributes['trackingPaymentState'] = 'type';
                 this.emit(':ask', 'Was it for a personal or a group budget?');
                 break;
             case 'type':
                 var typeSlot = this.event.request.intent.slots.type.value;
+                if (typeSlot == null) {
+                    console.log('type slot is null');
+                    this.emitWithState("WhatCanISayIntent")
+                    break;
+                }
                 this.attributes['payment'].type = typeSlot;
                 this.attributes['trackingPaymentState'] = 'budget';
                 this.emit(':ask', 'What is the name of the budget?');
@@ -133,7 +152,11 @@ var trackPaymentHandlers = Alexa.CreateStateHandler(states.TRACKPAYMENT, {
             case 'budget':
                 var budgetSlot = this.event.request.intent.slots.budget.value;
                 this.attributes['payment'].budget = budgetSlot;
-
+                if (budgetSlot == null) {
+                    console.log('budget slot is null');
+                    this.emitWithState("WhatCanISayIntent")
+                    break;
+                }
                 // currently only adding payments to Cleaning Supplies group budget
                 var options = {
                     method: 'PUT',
@@ -180,12 +203,28 @@ var trackPaymentHandlers = Alexa.CreateStateHandler(states.TRACKPAYMENT, {
 
     'NoIntent': function() {
         this.attributes['requestedMainMenu'] = false;
-
-
     },
 
     'WhatCanISayIntent': function() {
-        this.emit(':ask', strings.TRACKPAYMENT_WHAT_CAN_I_SAY);
+        switch(this.attributes['trackingPaymentState']) {
+            case 'person':
+                var username = this.attributes['payment'].person;
+                this.emit(':ask', 'I could not find that user "' + username +
+                    '" in this group. Please provide a valid username');
+                break;
+            case 'amount':
+                this.emit(':ask', 'Sorry, I did not get that. How much did you spend on this payment?');
+            case 'item':
+                this.emit(':ask', 'Sorry, I did not get that. What was the purchase you made for?');
+                break;
+            case 'type':
+                this.emit(':ask', 'Sorry, I did not get that. Is your payment a personal or group payment?');
+                break;
+            case 'budget':
+                var budgetName = this.attributes['payment'].budget;
+                this.emit(':ask', 'The budget ' + budgetName + ' does not exist. What is the name of the budget?');
+                break;
+        }
     },
     
     'SessionEndedRequest': function () {
@@ -193,7 +232,27 @@ var trackPaymentHandlers = Alexa.CreateStateHandler(states.TRACKPAYMENT, {
     },
 
     'Unhandled': function() {
-        this.emitWithState('WhatCanISayIntent');
+        switch(this.attributes['trackingPaymentState']) {
+            case 'person':
+                var personSlot = this.event.request.intent.slots.person.value;
+                this.emit(':ask', 'I could not find the user ' + personSlot.toString() + ' in' +
+                    'this group. Please provide a valid username');
+                break;
+            case 'amount':
+                this.emit(':ask', 'Sorry, I did not get that. How much did you spend on this payment?');
+                break;
+            case 'item':
+                this.emit(':ask', 'Sorry, I did not get that. What was the purchase you made for? You can say' +
+                    'it was a purchase for mac and cheese');
+                break;
+            case 'type':
+                this.emit(':ask', 'Sorry, I did not get that. Is your payment a personal or group payment?');
+                break;
+            case 'budget':
+                var budgetSlot = this.event.request.intent.slots.budget.value;
+                this.emit(':ask', 'The budget ' + budgetSlot.toString() + ' does not exist. What is the name of the budget?');
+                break;
+        }
     }
 
 });
