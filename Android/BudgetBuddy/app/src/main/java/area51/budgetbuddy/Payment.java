@@ -47,7 +47,7 @@ public class Payment {
 
     public Date paymentPurchaseDate() {
         return new Date();
-    }
+    } // might have to modify
 
     public String getPurchaseDate() {
         return purchaseDate;

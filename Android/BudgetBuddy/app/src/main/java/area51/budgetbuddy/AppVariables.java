@@ -90,7 +90,9 @@ public class AppVariables extends Application {
 
         Collections.sort(allPayments, new Comparator<Payment>() {
             public int compare(Payment m1, Payment m2) {
-                return m1.paymentPurchaseDate().compareTo(m2.paymentPurchaseDate());
+                //return m1.paymentPurchaseDate().compareTo(m2.paymentPurchaseDate());
+                //changed to
+                return m1.dateForPayment().compareTo(m2.dateForPayment());
             }
         });
 
@@ -137,42 +139,19 @@ public class AppVariables extends Application {
         }
         return toReturn;
     }
-    // to modify
-//    Format formatter = new SimpleDateFormat("EEEE, MMMM dd");
-//    // right now showing Thurday, September, 01 (need )
-//    String dateString = formatter.format(date);
-//    return dateString; //date.toString();
 
     public static ArrayList<Date> getUniquePaymentDates(User user) {
         HashSet<Date> datesSet = new HashSet<>();
         ArrayList<Payment> allPayments = AppVariables.getAllPaymentsSorted(user); // was able to return successfully i believe
-        //HashSet<Date> was going to try and copy
         for (Payment payment: allPayments) {
-            // why did it print twice???
-            //System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!GETING STUCK!!!!!!!!!!!!!!!!!!!");
             Date paymentDate = convertStringToDate(payment.getPurchaseDate()); // here were we get stuck
             datesSet.add(paymentDate);
-        } // stuff up here looks good based on debugger
-        // Sort the dates so they are in order
-        //ArrayList<Date> sortedDates = new ArrayList<Date>();
-        // trying this
+        }
+
         ArrayList<Date> sortedList = new ArrayList(datesSet); // convert hashset to list
         Collections.sort(sortedList);
-//        for (Date date: datesSet) {
-//            Date newestDate = Collections.min(datesSet); // got weird when it got to one case???
-//            //System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!GETING STUCK!!!!!!!!!!!!!!!!!!!");
-//            sortedDates.add(newestDate);
-//            datesSet.remove(newestDate);
-//        }
-//        Set yourHashSet = new HashSet();
-//        List sortedList = new ArrayList(yourHashSet);
-//        Collections.sort(sortedList);
-        //System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-        //System.out.println(sortedList);
         return sortedList;  //sortedDates; // now returning sortedList
     }
-
-
 
     private static ArrayList<Payment> getAllPaymentsFromBudgetsForMonth(int monthNumber, Map<String, Budget> budgets) {
         // add all the personal budget payments to the array

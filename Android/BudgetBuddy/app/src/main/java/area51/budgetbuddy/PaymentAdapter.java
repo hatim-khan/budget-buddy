@@ -41,6 +41,7 @@ public class PaymentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         ArrayList<Date> uniqueDates = AppVariables.getUniquePaymentDates(AppVariables.currentUser); // array of uniqueDates
         ArrayList<String> datesString = AppVariables.getUniquePaymentDateStrings(AppVariables.currentUser); // datesString
         ArrayList<Payment> sortedPayments = AppVariables.getAllPaymentsSorted(AppVariables.currentUser); // sortedPayments
+
         ArrayList<PaymentsScreenCellDataModel> dateModel = new ArrayList<PaymentsScreenCellDataModel>(); // for dates
         ArrayList<PaymentsScreenCellDataModel> payModel = new ArrayList<PaymentsScreenCellDataModel>(); // for payments
 
@@ -51,7 +52,7 @@ public class PaymentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
 
         // completing payModel array
-        for (Payment payment : sortedPayments) {
+        for (Payment payment : sortedPayments) { // was sortedPayments
             PaymentsScreenCellDataModel payCellPayment = new PaymentsScreenCellDataModel(payment, payment.isGroupPayment());
             payModel.add(payCellPayment);
         }
@@ -59,10 +60,12 @@ public class PaymentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         outerLoop:
         while (i < datesString.size()) {
             boolean firstTime = true;
-            int counter = 0; // keeping track of total number of dates we have added to cells
+            //int counter = 0; // keeping track of total number of dates we have added to cells
             int done = datesString.size();
-            for (int j = 0; j < sortedPayments.size()+1; j++) {
-                if ((counter == done)||(j == sortedPayments.size())) {
+            // right now date size is smaller than sortedPayments size usually
+            // thus wont hit all cases
+            for (int j = 0; j < sortedPayments.size()+1; j++) { // (counter == done)||
+                if ((j == sortedPayments.size())) {
                     break outerLoop;
                 }
                 if (sortedPayments.get(j).getPurchaseDate().equals(datesString.get(i))) { // so if we find new dateModel with its first payment
@@ -72,13 +75,12 @@ public class PaymentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                             cells.add(firstDate);
                             cells.add(payModel.get(j));
                             firstTime = false;
-                            counter += 1;
+                            //counter += 1;
                         }
 
                     } else { // looking at a payment that is not the first
                         cells.add(payModel.get(j));
                         // counter += 1;  // not sure if this should be here
-                        // to test
                     }
 
                 } else { // we don't have matching dates so encountered new date
@@ -86,7 +88,7 @@ public class PaymentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     if (firstTime) {
                         if (i < dateModel.size() - 1) {
                             PaymentsScreenCellDataModel nextDate = dateModel.get(i + 1);
-                            counter += 1;
+                            //counter += 1;
                             cells.add(nextDate);
                             cells.add(payModel.get(j));
                             firstTime = false;
@@ -95,7 +97,6 @@ public class PaymentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     } else {
                         cells.add(payModel.get(j));
                         //counter += 1; // not sure if this should be here
-                        // to test still
                     }
                 }
             }
