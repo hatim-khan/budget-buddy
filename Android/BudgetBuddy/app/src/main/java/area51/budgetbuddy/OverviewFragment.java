@@ -78,26 +78,25 @@ public class OverviewFragment extends Fragment {
         rvBudgets.setLayoutManager(rvLinearLayoutManager);
 
         ArrayList<Payment> allPayments = AppVariables.getAllPaymentsSorted(currentUser);
-        if (allPayments.size() > 0) {
+        if (allPayments.size() > 1) {
+            alert1 = (TextView) view.findViewById(R.id.alert_content1);
+            Payment currPayment = allPayments.get(0);
 
+            alert1.setText(currPayment.getUsername() + " spent $" + currPayment.getAmountSpent()
+                    + " in " + AppVariables.getBudgetForPayment(currPayment));
+            mImageView1 = (ImageView) view.findViewById(R.id.alert1_image);
+            mImageView1.setImageResource(R.drawable.attention);
+
+            alert2 = (TextView) view.findViewById(R.id.alert_content2);
+            Payment secondPayment = allPayments.get(1);
+            alert2.setText(secondPayment.getUsername() + " spent $" + secondPayment.getAmountSpent()
+                    + " in " + AppVariables.getBudgetForPayment(secondPayment));
+            mImageView2 = (ImageView) view.findViewById(R.id.alert2_image);
+            mImageView2.setImageResource(R.drawable.attention);
+
+            adapter.notifyDataSetChanged();
         }
-        alert1 = (TextView) view.findViewById(R.id.alert_content1);
 
-        Payment currPayment = allPayments.get(0);
-
-        alert1.setText(currPayment.getUsername() + " spent $" + currPayment.getAmountSpent()
-                + " in " + AppVariables.getBudgetForPayment(currPayment));
-        mImageView1 = (ImageView) view.findViewById(R.id.alert1_image);
-        mImageView1.setImageResource(R.drawable.attention);
-
-        alert2 = (TextView) view.findViewById(R.id.alert_content2);
-        Payment secondPayment = allPayments.get(1);
-        alert2.setText(secondPayment.getUsername() + " spent $" + secondPayment.getAmountSpent()
-                + " in " + AppVariables.getBudgetForPayment(secondPayment));
-        mImageView2 = (ImageView) view.findViewById(R.id.alert2_image);
-        mImageView2.setImageResource(R.drawable.attention);
-
-        adapter.notifyDataSetChanged();
         return view;
 
     }
