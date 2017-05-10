@@ -1,7 +1,6 @@
 {
   "intents": [
     {
-      "intent": "TrackPaymentIntent",
       "slots": [
         {
           "name": "amount",
@@ -23,10 +22,10 @@
           "name": "item",
           "type": "ITEM"
         }
-      ]
+      ],
+      "intent": "TrackPaymentIntent"
     },
     {
-      "intent": "PaymentInformationIntent",
       "slots": [
         {
           "name": "person",
@@ -48,10 +47,10 @@
           "name": "budget",
           "type": "BUDGET"
         }
-      ]
+      ],
+      "intent": "PaymentInformationIntent"
     },
     {
-      "intent": "BudgetAddingIntent",
       "slots": [
         {
           "name": "budget",
@@ -65,10 +64,10 @@
           "name": "amount",
           "type": "AMAZON.NUMBER"
         }
-      ]
+      ],
+      "intent": "BudgetAddingIntent"
     },
     {
-      "intent": "BudgetInformationIntent",
       "slots": [
         {
           "name": "budget",
@@ -81,33 +80,25 @@
         {
           "name": "amount",
           "type": "AMAZON.NUMBER"
+        },
+        {
+          "name": "person",
+          "type": "PERSON"
         }
-      ]
+      ],
+      "intent": "BudgetInformationIntent"
     },
-    
     {
       "intent": "WhatCanISayIntent"
     },
     {
-      "intent": "BudgetSummaryIntent",
       "slots": [
         {
           "name": "budget",
           "type": "BUDGET"
         }
-      ]
-    },
-    {
-      "intent": "MainMenuIntent"
-    },
-    {
-      "intent": "ThanksIntent"
-    },
-    {
-      "intent": "AMAZON.YesIntent"
-    },
-    {
-      "intent": "AMAZON.NoIntent"
+      ],
+      "intent": "BudgetSummaryIntent"
     }
   ]
 }
