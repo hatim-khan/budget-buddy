@@ -67,7 +67,7 @@ public class TrendsFragment extends Fragment {
         String months[] = {"January", "February", "March", "April", "May", "June",
                 "July", "August", "September", "October", "November", "December"};
         Context cont;
-        cont=getActivity();
+        cont = getActivity();
 
         // Initializes the userToAmountSpentInBudget hashmap
         for (String username : AppVariables.currentUser.getGroup().getGroupMembers().keySet()) {
@@ -237,5 +237,14 @@ public class TrendsFragment extends Fragment {
         xAxis.add("NOV");
         xAxis.add("DEC");
         return xAxis;
+    }
+    private ArrayList<String> getGroupXAxisValues() {
+        ArrayList<String> groupXAxis = new ArrayList<>();
+        Collection<String> groupMembers = AppVariables.currentUser.getGroup().getGroupMembers().keySet();
+        for (int i=0; i < groupMembers.size(); i++) {
+            String groupMember = groupMembers.toString();
+            groupXAxis.add(groupMember);
+        }
+        return groupXAxis;
     }
 }
