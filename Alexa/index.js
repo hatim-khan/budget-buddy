@@ -266,7 +266,7 @@ var budgetAddingHandlers = Alexa.CreateStateHandler(states.BUDGETADDING, {
                 break;
             case 'name':
                 var nameSlot = this.event.request.intent.slots.budget.value;
-                this.attributes['budget'].name = nameSlot;
+                this.attributes['budget'].name = toTitleCase(nameSlot);
                 this.attributes['budgetAddingState'] = 'amount';
                 this.emit(':ask', 'How much are you planning to spend per month?');
                 break;
