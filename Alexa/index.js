@@ -133,7 +133,7 @@ var trackPaymentHandlers = Alexa.CreateStateHandler(states.TRACKPAYMENT, {
                 break;
             case 'budget':
                 var budgetSlot = this.event.request.intent.slots.budget.value;
-                this.attributes['payment'].budget = budgetSlot;
+                this.attributes['payment'].budget = toTitleCase(budgetSlot);
 
                 var groupPayment = (this.attributes['payment'].type == 'group');
                 var amountRemainingInBudget = calculateRemainingInBudget(this.attributes['payment'].budget, this.attributes['payment'].type,
@@ -179,7 +179,7 @@ var trackPaymentHandlers = Alexa.CreateStateHandler(states.TRACKPAYMENT, {
                             .catch(function (err) {
                                 console.log('something went wrong');
                                 alexaThis.handler.state = states.MAINMENU;
-                                alexaThis.emit(':tell', 'Sorry, something went wrong. Please try again.');
+                                alexaThis.emit(':tell', 'Sorry, something went wrong with updating the amount. Please try again.');
                             })
                             .finally(function (body) {
                             alexaThis.handler.state = states.MAINMENU;
@@ -190,8 +190,8 @@ var trackPaymentHandlers = Alexa.CreateStateHandler(states.TRACKPAYMENT, {
                     //TODO: better error handling?
                     .catch(function (err) {
                         // POST failed...
-                        alexaThis.handler.state = states.MAINMENU
-                        alexaThis.emit(':tell', 'Sorry, something went wrong. Please try again.');
+                        alexaThis.handler.state = states.MAINMENU;
+                        alexaThis.emit(':tell', 'Sorry, something went wrong with adding the payment. Please try again.');
                     })
                     .finally(function (body) {
                         console.log('finished with PATCH to budget and PUT to payments');
@@ -276,7 +276,7 @@ var budgetAddingHandlers = Alexa.CreateStateHandler(states.BUDGETADDING, {
 
                 var alexaThis = this;
                 var name = capitalizeFirstLetter(this.attributes['budget'].name);
-                
+
                 var uriString;
                 console.log(alexaThis.attributes['budget'].type);
                 if (alexaThis.attributes['budget'].type == 'personal') {
@@ -524,6 +524,11 @@ function calculateSpentInBudget(budgetName, type, memberName, amount) {
 
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+function toTitleCase(str)
+{
+    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 }
 
 var strings = {
