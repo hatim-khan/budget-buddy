@@ -36,11 +36,7 @@ public class SignInActivity extends AppCompatActivity {
         EditText passwordEditText = (EditText) findViewById(R.id.password_edit_text);
         EditText usernameEditText = (EditText) findViewById(R.id.username_edit_text);
         EditText groupNameEditText = (EditText) findViewById(R.id.group_name_edit_text);
-
-        usernameEditText.setText("Rupaul Charles");
-        passwordEditText.setText("password");
-        groupNameEditText.setText("Area 51");
-
+        
         FirebaseDatabase.getInstance().goOnline();
     }
 
