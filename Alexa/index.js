@@ -109,7 +109,7 @@ var trackPaymentHandlers = Alexa.CreateStateHandler(states.TRACKPAYMENT, {
         switch(this.attributes['trackingPaymentState']) {
             case 'person':
                 var personSlot = this.event.request.intent.slots.person.value;
-                this.attributes['payment'].person = personSlot;
+                this.attributes['payment'].person = toTitleCase(personSlot);
                 this.attributes['trackingPaymentState'] = 'amount';
                 this.emit(':ask', 'How much was the purchase?');
                 break;
@@ -127,7 +127,7 @@ var trackPaymentHandlers = Alexa.CreateStateHandler(states.TRACKPAYMENT, {
                 break;
             case 'type':
                 var typeSlot = this.event.request.intent.slots.type.value;
-                this.attributes['payment'].type = typeSlot.toLowerCase;
+                this.attributes['payment'].type = typeSlot.toLowerCase();
                 this.attributes['trackingPaymentState'] = 'budget';
                 this.emit(':ask', 'What is the name of the budget?');
                 break;
@@ -260,7 +260,7 @@ var budgetAddingHandlers = Alexa.CreateStateHandler(states.BUDGETADDING, {
                 break;
             case 'person':
                 var personSlot = this.event.request.intent.slots.person.value;
-                this.attributes['budget'].person = personSlot;
+                this.attributes['budget'].person = toTitleCase(personSlot);
                 this.attributes['budgetAddingState'] = 'name';
                 this.emit(':ask', 'What is the name of the budget?');
                 break;
